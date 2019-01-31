@@ -1,0 +1,60 @@
+<?php
+
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class TestUnit extends CI_Controller {
+
+    public function __construct() {
+        parent::__construct();
+        $this->load->library('unit_test');
+        $this->load->model('Assignment_model');
+        $this->load->model('Hof_model');
+        $this->load->model('Logs_model');
+        $this->load->model('Notifications_model');
+        $this->load->model('Queue_model');
+        $this->load->model('Scoreboard_model');
+        $this->load->model('Settings_model');
+        $this->load->model('Submit_model');
+        $this->load->model('User_model');
+        $this->load->model('User');
+    }
+
+    /* COBA METHOD TEST 1 */
+    private function sum($a, $b) {
+        return $a+$b;
+    }
+
+    public function index() {
+        // $testSum = $this->sum(4, 3);
+        // $sumResult = 7;
+        // $testName = 'SUM';
+        // echo $this->unit->run($testSum, $sumResult, $testName);
+
+        /*
+        *   Taruh code test di tempat masing2
+        *   untuk menghindari adanya conflict di git!
+        */
+
+        /** ----- INPUT KIPPI's CODE HERE ----- **/
+
+        /* ------------ END OF CODE ----------- */
+
+        /** --- INPUT YONATHAN's CODE HERE ---- **/
+
+        /* ------------ END OF CODE ----------- */
+
+        /** ---- INPUT REYNER's CODE HERE ----- **/
+
+        /* ------------ END OF CODE ----------- */
+
+        /** ---- INPUT ENRICO's CODE HERE ----- **/
+
+        /* ------------ END OF CODE ----------- */
+
+        /** ------ INPUT VIO's CODE HERE ------ **/
+
+
+    }
+}
+
+?>
