@@ -28,7 +28,7 @@ class TestUnit extends CI_Controller {
         // $testSum = $this->sum(4, 3);
         // $sumResult = 7;
         // $testName = 'SUM';
-        // echo $this->unit->run($testSum, $sumResult, $testName);
+        //  echo $this->unit->run($testSum, $sumResult, $testName);
 
         /*
         *   Taruh code test di tempat masing2
@@ -40,6 +40,41 @@ class TestUnit extends CI_Controller {
         /* ------------ END OF CODE ----------- */
 
         /** --- INPUT YONATHAN's CODE HERE ---- **/
+
+        //User_model.php model
+        $test=$this->User_model->have_user('yonathan41');
+        $result=True;
+        $testName= 'Test Have User Name by Username on judge';
+        $testNote= 'untuk hasil true jadi user sudah ada dalam database judge';
+        echo $this->unit->run($test,$result,$testName,$testNote);
+
+
+        $test=$this->User_model->have_user('yonathan');
+        $result=True;
+        $testName= 'Test Have User Name by Username on judge';
+        $testNote= 'untuk hasil false jadi username tidak ada dalam database judge';
+        echo $this->unit->run($test,$result,$testName,$testNote);
+
+
+        $test=$this->User_model->user_id_to_username('1');
+        $result='yonathan41';
+        $testName= 'Test get user name by user id on database';
+        $testNote= 'untuk hasil passed id dan username ada dalam database';
+        echo $this->unit->run($test,$result,$testName,$testNote);
+
+
+        $test=$this->User_model->user_id_to_username('asdf');
+        $result='yonathan41';
+        $testName= 'Test get user name by user id on database';
+        $testNote= 'untuk hasil failed id yang diinput bukan numeric';
+        echo $this->unit->run($test,$result,$testName,$testNote);
+
+
+        $test=$this->User_model->user_id_to_username('2');
+        $result='yonathan41';
+        $testName= 'Test get user name by user id on database';
+        $testNote= 'untuk hasil failed id tidak ada dalam database';
+        echo $this->unit->run($test,$result,$testName,$testNote);
 
         /* ------------ END OF CODE ----------- */
 
