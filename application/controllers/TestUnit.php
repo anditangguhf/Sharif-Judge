@@ -42,14 +42,14 @@ class TestUnit extends CI_Controller {
         /** --- INPUT YONATHAN's CODE HERE ---- **/
 
         //User_model.php model
-        $test=$this->User_model->have_user('yonathan41');
+        $test=$this->User_model->have_user('reyner');
         $result=True;
         $testName= 'Test Have User Name by Username on judge';
         $testNote= 'untuk hasil true jadi user sudah ada dalam database judge';
         echo $this->unit->run($test,$result,$testName,$testNote);
 
 
-        $test=$this->User_model->have_user('yonathan');
+        $test=$this->User_model->have_user('reyner');
         $result=True;
         $testName= 'Test Have User Name by Username on judge';
         $testNote= 'untuk hasil false jadi username tidak ada dalam database judge';
@@ -57,21 +57,21 @@ class TestUnit extends CI_Controller {
 
 
         $test=$this->User_model->user_id_to_username('1');
-        $result='yonathan41';
+        $result='reyner';
         $testName= 'Test get user name by user id on database';
         $testNote= 'untuk hasil passed id dan username ada dalam database';
         echo $this->unit->run($test,$result,$testName,$testNote);
 
 
         $test=$this->User_model->user_id_to_username('asdf');
-        $result='yonathan41';
+        $result=FALSE;
         $testName= 'Test get user name by user id on database';
         $testNote= 'untuk hasil failed id yang diinput bukan numeric';
         echo $this->unit->run($test,$result,$testName,$testNote);
 
 
         $test=$this->User_model->user_id_to_username('2');
-        $result='yonathan41';
+        $result=FALSE;
         $testName= 'Test get user name by user id on database';
         $testNote= 'untuk hasil failed id tidak ada dalam database';
         echo $this->unit->run($test,$result,$testName,$testNote);
@@ -79,7 +79,11 @@ class TestUnit extends CI_Controller {
         /* ------------ END OF CODE ----------- */
 
         /** ---- INPUT REYNER's CODE HERE ----- **/
-
+        $test=$this->Notifications_model->get_all_notifications();
+        $result=FALSE;
+        $testName= 'Test get all notification on judge';
+        $testNote= 'untuk hasil true jadi user sudah ada dalam database judge';
+        echo $this->unit->run($test,$result,$testName,$testNote);
         /* ------------ END OF CODE ----------- */
 
         /** ---- INPUT ENRICO's CODE HERE ----- **/
