@@ -82,7 +82,7 @@ class TestUnit extends CI_Controller {
         $test=$this->Notifications_model->get_all_notifications();
         $result=FALSE;
         $testName= 'Test get all notification on judge';
-        $testNote= 'untuk hasil true jadi user sudah ada dalam database judge';
+        $testNote= 'belum ada notifikasi, jadi hasil result masih false';
         echo $this->unit->run($test,$result,$testName,$testNote);
         /* ------------ END OF CODE ----------- */
 
