@@ -19,37 +19,58 @@ class TestUnit extends CI_Controller {
         $this->load->model('User');
     }
 
-    /* COBA METHOD TEST 1 */
-    private function sum($a, $b) {
-        return $a+$b;
+    private function report() {
+        if (self::ENABLE_COVERAGE) {
+            $this->coverage->stop();
+            $writer = new \SebastianBergmann\CodeCoverage\Report\Html\Facade;
+            $writer->process($this->coverage, '../reports/code-coverage');
+        }
+        // Generate Test Report HTML
+        file_put_contents('../reports/test_report.html', $this->unit->report());
+        // Output result to screen
+        $statistics = [
+            'Pass' => 0,
+            'Fail' => 0
+        ];
+        $results = $this->unit->result();
+        foreach ($results as $result) {
+            echo "=== " . $result['Test Name'] . " ===\n";
+            foreach ($result as $key => $value) {
+                echo "$key: $value\n";
+            }
+            echo "\n";
+            if ($result['Result'] === 'Passed') {
+                $statistics['Pass']++;
+            } else {
+                $statistics['Fail']++;
+            }
+        }
+        echo "==========\n";
+        foreach ($statistics as $key => $value) {
+            echo "$value test(s) $key\n";
+        }
+        if ($statistics['Fail'] > 0) {
+            exit(1);
+        }
     }
 
     public function index() {
-        // $testSum = $this->sum(4, 3);
-        // $sumResult = 7;
-        // $testName = 'SUM';
-        //   $this->unit->run($testSum, $sumResult, $testName);
+        /** KIPPI's FUNCTIONS HERE **/
+        $this->testGetSubmissionFalse();
 
-        /*
-        *   Taruh code test di tempat masing2
-        *   untuk menghindari adanya conflict di git!
-        */
+        /** YONATHAN's FUNCTIONS HERE **/
 
-        /** ----- INPUT KIPPI's CODE HERE ----- **/
+        /** REYNER's FUNCTIONS HERE **/
 
-        /*
-         * Testing function get_submission di file Submit_model.php
-         * Expected to return FALSE
-         */
-        $test       = $this->Submit_model->get_submission('kippi123', 'PBO1', 'TestJava1', 1);
-        $result     = FALSE;
-        $testName   = "testGetSubmissionFalse";
-        $testNote   = "Test get submission data that doesn't exists in db";
-        $this->unit->run($test, $result, $testName, $testNote);
-        // print_r($this->unit->result());
+        /** ENRICO's FUNCTIONS HERE **/
 
-        /* ------------ END OF CODE ----------- */
+        /** VIO's FUNCTIONS HERE **/
 
+        /** run report function here **/
+        $this->report();
+
+        /* ------------------------------------------------------------------ */
+        
         /** --- INPUT YONATHAN's CODE HERE ---- **/
 
         //User_model.php model
@@ -216,9 +237,34 @@ class TestUnit extends CI_Controller {
         $testNote= '';
         $this->unit->run($test,$result,$testName,$testNote);
 
-        /** run test here **/
-        print_r($this->unit->result());
     }
+
+    /** ----- INPUT KIPPI's CODE HERE ----- **/
+
+    /*
+     * Testing function get_submission di file Submit_model.php
+     * Expected to return FALSE
+     */
+    public function testGetSubmissionFalse() {
+        $test       = $this->Submit_model->get_submission('kippi123', 'PBO1', 'TestJava1', 1);
+        $result     = FALSE;
+        $testName   = "testGetSubmissionFalse";
+        $testNote   = "Test get submission data that doesn't exists in db";
+        $this->unit->run($test, $result, $testName, $testNote);
+    }
+
+    /** ----- INPUT YONATHAN's CODE HERE ----- **/
+
+
+    /** ----- INPUT REYNER's CODE HERE ----- **/
+
+
+    /** ----- INPUT ENRICO's CODE HERE ----- **/
+
+
+    /** ----- INPUT VIO's CODE HERE ----- **/
+
+
 }
 
 ?>
