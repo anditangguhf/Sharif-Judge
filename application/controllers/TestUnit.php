@@ -20,11 +20,11 @@ class TestUnit extends CI_Controller {
     }
 
     private function report() {
-        if (self::ENABLE_COVERAGE) {
-            $this->coverage->stop();
-            $writer = new \SebastianBergmann\CodeCoverage\Report\Html\Facade;
-            $writer->process($this->coverage, '../reports/code-coverage');
-        }
+        // if (self::ENABLE_COVERAGE) {
+        //     $this->coverage->stop();
+        //     $writer = new \SebastianBergmann\CodeCoverage\Report\Html\Facade;
+        //     $writer->process($this->coverage, '../reports/code-coverage');
+        // }
         // Generate Test Report HTML
         file_put_contents('../reports/test_report.html', $this->unit->report());
         // Output result to screen
