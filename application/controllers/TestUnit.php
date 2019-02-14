@@ -64,7 +64,7 @@ class TestUnit extends CI_Controller {
         $this->db->empty_table('shj_assignments');
         // // $this->db->empty_table('shj_logins');
         $this->db->empty_table('shj_notifications');
-        $this->db->empty_table('shj_problems');
+        $this->db->empty_table('shj_problems'); 
         $this->db->empty_table('shj_queue');
         $this->db->empty_table('shj_scoreboard');
         // $this->db->empty_table('shj_sessions');
