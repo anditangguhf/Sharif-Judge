@@ -7,15 +7,15 @@ class TestUnit extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->library('unit_test');
-        $this->load->model('Assignment_model');
+        $this->load->model('Assignment_model');     //VIO & COCO
         $this->load->model('Hof_model');
         $this->load->model('Logs_model');
-        $this->load->model('Notifications_model');
+        $this->load->model('Notifications_model');  //REYNER
         $this->load->model('Queue_model');
         $this->load->model('Scoreboard_model');
         $this->load->model('Settings_model');
-        $this->load->model('Submit_model');
-        $this->load->model('User_model');
+        $this->load->model('Submit_model');         //KIPPI
+        $this->load->model('User_model');           //YONATHAN
         $this->load->model('User');
     }
 
@@ -36,6 +36,17 @@ class TestUnit extends CI_Controller {
         */
 
         /** ----- INPUT KIPPI's CODE HERE ----- **/
+
+        /*
+         * Testing function get_submission di file Submit_model.php
+         * Expected to return FALSE
+         */
+        $test       = $this->Submit_model->get_submission('kippi123', 'PBO1', 'TestJava1', 1);
+        $result     = FALSE;
+        $testName   = "testGetSubmissionFalse";
+        $testNote   = "Test get submission data that doesn't exists in db";
+        $this->unit->run($test, $result, $testName, $testNote);
+        print_r($this->unit->result());
 
         /* ------------ END OF CODE ----------- */
 
