@@ -216,6 +216,8 @@ class TestUnit extends CI_Controller {
         $testNote= '';
         $this->unit->run($test,$result,$testName,$testNote);
 
+        /** run test here **/
+        print_r($this->unit->result());
     }
 }
 
