@@ -7,7 +7,6 @@ class TestUnit extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->library('unit_test');
-
         $this->load->model('Assignment_model');     //VIO & COCO
         $this->load->model('Hof_model');
         $this->load->model('Logs_model');
@@ -21,11 +20,11 @@ class TestUnit extends CI_Controller {
     }
 
     private function report() {
-        // if (self::ENABLE_COVERAGE) {
-        //     $this->coverage->stop();
-        //     $writer = new \SebastianBergmann\CodeCoverage\Report\Html\Facade;
-        //     $writer->process($this->coverage, '../reports/code-coverage');
-        // }
+        if (self::ENABLE_COVERAGE) {
+            $this->coverage->stop();
+            $writer = new \SebastianBergmann\CodeCoverage\Report\Html\Facade;
+            $writer->process($this->coverage, '../reports/code-coverage');
+        }
         // Generate Test Report HTML
         file_put_contents('../reports/test_report.html', $this->unit->report());
         // Output result to screen
@@ -56,25 +55,6 @@ class TestUnit extends CI_Controller {
     }
 
     public function index() {
-
-        /*
-        *   Clean sharifjudge's database tables by emptying the table
-        */
-
-        $this->db->empty_table('shj_assignments');
-        // // $this->db->empty_table('shj_logins');
-        $this->db->empty_table('shj_notifications');
-        $this->db->empty_table('shj_problems');
-        $this->db->empty_table('shj_queue');
-        $this->db->empty_table('shj_scoreboard');
-        // $this->db->empty_table('shj_sessions');
-        // $this->db->empty_table('shj_settings');
-        $this->db->empty_table('shj_submissions');
-        //only for 'shj_users' table, only delete records other than id = 1 (root)
-        // $this->db->query('DELETE FROM shj_users WHERE id != 1');
-
-        /* ------------------------------------------------------------------ */
-
         /** KIPPI's FUNCTIONS HERE **/
         $this->testGetSubmissionFalse();
 
@@ -244,9 +224,9 @@ class TestUnit extends CI_Controller {
     /** ----- INPUT KIPPI's CODE HERE ----- **/
 
     /*
-    *   Testing function get_submission di file Submit_model.php
-    *   Expected to return FALSE
-    */
+     * Testing function get_submission di file Submit_model.php
+     * Expected to return FALSE
+     */
     public function testGetSubmissionFalse() {
         $test       = $this->Submit_model->get_submission('kippi123', 'PBO1', 'TestJava1', 1);
         $result     = FALSE;
@@ -278,7 +258,7 @@ class TestUnit extends CI_Controller {
     $test=$this->Notifications_model->add_notification('notifikasi','Ada ujian');
     $result=$count+1;
     $testName='Test to add notification on judge';
-    $testNote='Menambah notifikasi';
+    $testNote='Add notifications';
     $this->unit->run($test,$result,$testName,$testNote);
   }
 
