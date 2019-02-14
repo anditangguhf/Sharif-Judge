@@ -55,6 +55,25 @@ class TestUnit extends CI_Controller {
     }
 
     public function index() {
+
+        /*
+        *   Clean sharifjudge's database tables by emptying the table
+        */
+
+        $this->db->empty_table('shj_assignments');
+        // // $this->db->empty_table('shj_logins');
+        $this->db->empty_table('shj_notifications');
+        $this->db->empty_table('shj_problems');
+        $this->db->empty_table('shj_queue');
+        $this->db->empty_table('shj_scoreboard');
+        // $this->db->empty_table('shj_sessions');
+        // $this->db->empty_table('shj_settings');
+        $this->db->empty_table('shj_submissions');
+        //only for 'shj_users' table, only delete records other than id = 1 (root)
+        // $this->db->query('DELETE FROM shj_users WHERE id != 1');
+
+        /* ------------------------------------------------------------------ */
+
         /** KIPPI's FUNCTIONS HERE **/
         $this->testGetSubmissionFalse();
 
@@ -68,6 +87,9 @@ class TestUnit extends CI_Controller {
         $this->testAddUserWrongUsernameAlphaNumeric();
 
         /** REYNER's FUNCTIONS HERE **/
+        $this->addNotifications();
+        $this->testGetAllNotifications();
+        $this->testGetLatestNotifications();
 
         /** ENRICO's FUNCTIONS HERE **/
 
@@ -151,27 +173,6 @@ class TestUnit extends CI_Controller {
         $testName= 'Test have email on database';
         $testNote= '';
          $this->unit->run($test,$result,$testName,$testNote);
-        /* ------------ END OF CODE ----------- */
-
-        /** ---- INPUT REYNER's CODE HERE ----- **/
-        $test=$this->Notifications_model->get_all_notifications();
-        $result=TRUE;
-        $testName= 'Test get all notification on judge';
-        $testNote= 'awal tes belum ada notifkasi jadi masih false, ketika sudah di add notifkasi resultnya true';
-        $this->unit->run($test,$result,$testName,$testNote);
-
-        $test=$this->Notifications_model->get_latest_notifications();
-        $result=TRUE;
-        $testName= 'Test get latest notification on judge';
-        $testNote= 'awal tes belum ada notifkasi jadi masih false, ketika sudah di add notifkasi resultnya true';
-        $this->unit->run($test,$result,$testName,$testNote);
-
-        // $test=$this->Notifications_model->add_notification('notifikasi','Ada ujian');
-        // $result=;
-        // $testName='Test to add notification on judge'
-        // $testNote='notifikasi harus di add terlebih dahulu'
-        // echo $this->unit->run($test,$result,$testName,$testNote);
-
         /* ------------ END OF CODE ----------- */
 
         /** ---- INPUT ENRICO's CODE HERE ----- **/
@@ -270,7 +271,30 @@ class TestUnit extends CI_Controller {
     }
 
     /** ----- INPUT REYNER's CODE HERE ----- **/
+    public function testGetAllNotifications(){
+    $test=$this->Notifications_model->get_all_notifications();
+    $result=TRUE;
+    $testName= 'Test get all notification on judge';
+    $testNote= 'awal tes belum ada notifkasi jadi masih false, ketika sudah di add notifkasi resultnya true';
+    $this->unit->run($test,$result,$testName,$testNote);
+  }
+  public function testGetLatestNotifications(){
+    $test=$this->Notifications_model->get_latest_notifications();
+    $result=TRUE;
+    $testName= 'Test get latest notification on judge';
+    $testNote= 'awal tes belum ada notifkasi jadi masih false, ketika sudah di add notifkasi resultnya true';
+    $this->unit->run($test,$result,$testName,$testNote);
+  }
+  public function addNotifications(){
+    $count=$this->query('SELECT COUNT (id) FROM shj_notifications');
+    $test=$this->Notifications_model->add_notification('notifikasi','Ada ujian');
+    $result=$count+1;
+    $testName='Test to add notification on judge';
+    $testNote='Add notifications';
+    $this->unit->run($test,$result,$testName,$testNote);
+  }
 
+  public function
 
     /** ----- INPUT ENRICO's CODE HERE ----- **/
 
