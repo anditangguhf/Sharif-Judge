@@ -110,7 +110,23 @@ class TestUnit extends CI_Controller {
         /* ------------ END OF CODE ----------- */
 
         /** ------ INPUT VIO's CODE HERE ------ **/
+        $test=$this->Assignment_model->add_assignment('DAA1', FALSE);
+        $result=FALSE;
+        $testName= '';
+        $testNote= '';
+        $this->unit->run($test,$result,$testName,$testNote);
 
+        $test=$this->Assignment_model->add_assignment('DAA2', TRUE);
+        $result=TRUE;
+        $testName= '';
+        $testNote= '';
+        $this->unit->run($test,$result,$testName,$testNote);
+
+        $test=$this->Assignment_model->delete_assignment('DAA1');
+        $result='';
+        $testName= '';
+        $testNote= '';
+        $this->unit->run($test,$result,$testName,$testNote);
 
     }
 }
