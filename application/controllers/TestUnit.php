@@ -46,7 +46,7 @@ class TestUnit extends CI_Controller {
         $testName   = "testGetSubmissionFalse";
         $testNote   = "Test get submission data that doesn't exists in db";
         $this->unit->run($test, $result, $testName, $testNote);
-        print_r($this->unit->result());
+        // print_r($this->unit->result());
 
         /* ------------ END OF CODE ----------- */
 
