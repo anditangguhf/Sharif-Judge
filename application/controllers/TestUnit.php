@@ -81,6 +81,9 @@ class TestUnit extends CI_Controller {
         /** YONATHAN's FUNCTIONS HERE **/
 
         /** REYNER's FUNCTIONS HERE **/
+        $this->addNotifications();
+        $this->testGetAllNotifications();
+        $this->testGetLatestNotifications();
 
         /** ENRICO's FUNCTIONS HERE **/
 
@@ -213,27 +216,6 @@ class TestUnit extends CI_Controller {
          $this->unit->run($test,$result,$testName,$testNote);
         /* ------------ END OF CODE ----------- */
 
-        /** ---- INPUT REYNER's CODE HERE ----- **/
-        $test=$this->Notifications_model->get_all_notifications();
-        $result=TRUE;
-        $testName= 'Test get all notification on judge';
-        $testNote= 'awal tes belum ada notifkasi jadi masih false, ketika sudah di add notifkasi resultnya true';
-        $this->unit->run($test,$result,$testName,$testNote);
-
-        $test=$this->Notifications_model->get_latest_notifications();
-        $result=TRUE;
-        $testName= 'Test get latest notification on judge';
-        $testNote= 'awal tes belum ada notifkasi jadi masih false, ketika sudah di add notifkasi resultnya true';
-        $this->unit->run($test,$result,$testName,$testNote);
-
-        // $test=$this->Notifications_model->add_notification('notifikasi','Ada ujian');
-        // $result=;
-        // $testName='Test to add notification on judge'
-        // $testNote='notifikasi harus di add terlebih dahulu'
-        // echo $this->unit->run($test,$result,$testName,$testNote);
-
-        /* ------------ END OF CODE ----------- */
-
         /** ---- INPUT ENRICO's CODE HERE ----- **/
         //testabcdsasdas
         /* ------------ END OF CODE ----------- */
@@ -277,7 +259,28 @@ class TestUnit extends CI_Controller {
 
 
     /** ----- INPUT REYNER's CODE HERE ----- **/
-
+    public function testGetAllNotifications(){
+    $test=$this->Notifications_model->get_all_notifications();
+    $result=TRUE;
+    $testName= 'Test get all notification on judge';
+    $testNote= 'awal tes belum ada notifkasi jadi masih false, ketika sudah di add notifkasi resultnya true';
+    $this->unit->run($test,$result,$testName,$testNote);
+  }
+  public function testGetLatestNotifications(){
+    $test=$this->Notifications_model->get_latest_notifications();
+    $result=TRUE;
+    $testName= 'Test get latest notification on judge';
+    $testNote= 'awal tes belum ada notifkasi jadi masih false, ketika sudah di add notifkasi resultnya true';
+    $this->unit->run($test,$result,$testName,$testNote);
+  }
+  public function addNotifications(){
+    $count=$this->query('SELECT COUNT (id) FROM shj_notifications');
+    $test=$this->Notifications_model->add_notification('notifikasi','Ada ujian');
+    $result=$count+1;
+    $testName='Test to add notification on judge'
+    $testNote=''
+    $this->unit->run($test,$result,$testName,$testNote);
+  }
 
     /** ----- INPUT ENRICO's CODE HERE ----- **/
 
