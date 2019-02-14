@@ -42,8 +42,12 @@ class TestUnit extends CI_Controller {
         /** --- INPUT YONATHAN's CODE HERE ---- **/
 
         //User_model.php model
+<<<<<<< HEAD
         //method untuk membuat user untuk test jangan di pake kalo metod lain belom kelar
         //base
+=======
+      //method untuk membuat user untuk test jangan di pake kalo metod lain belom kelar
+>>>>>>> 0ca55289d75bc5ae4899e5bb527cf732332bee04
         $test=$this->User_model->add_user('globaladmin','admin@gmail.com', 'administrator', 'Admin10', 'admin' );
         $result=true;
         $testName= 'Test Add User on judge';
@@ -164,10 +168,23 @@ class TestUnit extends CI_Controller {
 
         /** ---- INPUT REYNER's CODE HERE ----- **/
         $test=$this->Notifications_model->get_all_notifications();
-        $result=FALSE;
+        $result=TRUE;
         $testName= 'Test get all notification on judge';
-        $testNote= 'belum ada notifikasi, jadi hasil result masih false';
-         $this->unit->run($test,$result,$testName,$testNote);
+        $testNote= 'awal tes belum ada notifkasi jadi masih false, ketika sudah di add notifkasi resultnya true';
+        echo $this->unit->run($test,$result,$testName,$testNote);
+
+        $test=$this->Notifications_model->get_latest_notifications();
+        $result=TRUE;
+        $testName= 'Test get latest notification on judge';
+        $testNote= 'awal tes belum ada notifkasi jadi masih false, ketika sudah di add notifkasi resultnya true';
+        echo $this->unit->run($test,$result,$testName,$testNote);
+
+        // $test=$this->Notifications_model->add_notification('notifikasi','Ada ujian');
+        // $result=;
+        // $testName='Test to add notification on judge'
+        // $testNote='notifikasi harus di add terlebih dahulu'
+        // echo $this->unit->run($test,$result,$testName,$testNote);
+
         /* ------------ END OF CODE ----------- */
 
         /** ---- INPUT ENRICO's CODE HERE ----- **/
