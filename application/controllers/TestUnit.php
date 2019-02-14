@@ -42,12 +42,7 @@ class TestUnit extends CI_Controller {
         /** --- INPUT YONATHAN's CODE HERE ---- **/
 
         //User_model.php model
-<<<<<<< HEAD
         //method untuk membuat user untuk test jangan di pake kalo metod lain belom kelar
-        //base
-=======
-      //method untuk membuat user untuk test jangan di pake kalo metod lain belom kelar
->>>>>>> 0ca55289d75bc5ae4899e5bb527cf732332bee04
         $test=$this->User_model->add_user('globaladmin','admin@gmail.com', 'administrator', 'Admin10', 'admin' );
         $result=true;
         $testName= 'Test Add User on judge';
