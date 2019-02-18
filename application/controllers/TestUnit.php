@@ -286,7 +286,6 @@ class TestUnit extends CI_Controller {
     $this->unit->run($test,$result,$testName,$testNote);
   }
   public function addNotifications(){
-    // $count=$this->query('SELECT COUNT (id) FROM shj_notifications');
     $test=$this->Notifications_model->add_notification('notifikasi','Ada ujian');
     $result=$count+1;
     $testName='Test to add notification on judge';
