@@ -20,11 +20,11 @@ class TestUnit extends CI_Controller {
     }
 
     private function report() {
-        if (self::ENABLE_COVERAGE) {
-            $this->coverage->stop();
-            $writer = new \SebastianBergmann\CodeCoverage\Report\Html\Facade;
-            $writer->process($this->coverage, '../reports/code-coverage');
-        }
+        // if (self::ENABLE_COVERAGE) {
+        //     $this->coverage->stop();
+        //     $writer = new \SebastianBergmann\CodeCoverage\Report\Html\Facade;
+        //     $writer->process($this->coverage, '../reports/code-coverage');
+        // }
         // Generate Test Report HTML
         file_put_contents('../reports/test_report.html', $this->unit->report());
         // Output result to screen
@@ -55,12 +55,41 @@ class TestUnit extends CI_Controller {
     }
 
     public function index() {
+
+        /*
+        *   Clean sharifjudge's database tables by emptying the table
+        */
+
+        $this->db->empty_table('shj_assignments');
+        // // $this->db->empty_table('shj_logins');
+        $this->db->empty_table('shj_notifications');
+        $this->db->empty_table('shj_problems');
+        $this->db->empty_table('shj_queue');
+        $this->db->empty_table('shj_scoreboard');
+        // $this->db->empty_table('shj_sessions');
+        // $this->db->empty_table('shj_settings');
+        $this->db->empty_table('shj_submissions');
+        //only for 'shj_users' table, only delete records other than id = 1 (root)
+        // $this->db->query('DELETE FROM shj_users WHERE id != 1');
+
+        /* ------------------------------------------------------------------ */
+
         /** KIPPI's FUNCTIONS HERE **/
         $this->testGetSubmissionFalse();
 
         /** YONATHAN's FUNCTIONS HERE **/
+        $this->testAddUserTrue();
+        $this->testAddUserRoleInvalid();
+        $this->testAddUserUsernameExist();
+        $this->testAddUserErrorLowercase();
+        $this->testAddUserEmailExistError();
+        $this->testAddUserLengthUsernameError();
+        $this->testAddUserWrongUsernameAlphaNumeric();
 
         /** REYNER's FUNCTIONS HERE **/
+        $this->addNotifications();
+        $this->testGetAllNotifications();
+        $this->testGetLatestNotifications();
 
         /** ENRICO's FUNCTIONS HERE **/
 
@@ -73,58 +102,11 @@ class TestUnit extends CI_Controller {
         $this->report();
 
         /* ------------------------------------------------------------------ */
-        
+
         /** --- INPUT YONATHAN's CODE HERE ---- **/
 
         //User_model.php model
         //method untuk membuat user untuk test jangan di pake kalo metod lain belom kelar
-        $test=$this->User_model->add_user('globaladmin','admin@gmail.com', 'administrator', 'Admin10', 'admin' );
-        $result=true;
-        $testName= 'Test Add User on judge';
-        $testNote= 'create new user admin';
-         $this->unit->run($test,$result,$testName,$testNote);
-        //1
-        $test=$this->User_model->add_user('globaladmin!!!','admin@gmail.com', 'administrator', 'Admin10', 'admin' );
-        $result='Username may only contain alpha-numeric characters.';
-        $testName= 'Test Add User on judge';
-        $testNote= 'create new user admin';
-         $this->unit->run($test,$result,$testName,$testNote);
-        //2
-        $test=$this->User_model->add_user('glo','admin@gmail.com', 'administrator', 'Ad', 'admin' );
-        $result='Username or password length error.';
-        $testName= 'Test Add User on judge';
-        $testNote= 'create new user admin';
-         $this->unit->run($test,$result,$testName,$testNote);
-        //3
-        $test=$this->User_model->add_user('globaladmin','admin@gmail.com', 'administrator', 'Admin10', 'admin' );
-        $result='User with this username exists.';
-        $testName= 'Test Add User on judge';
-        $testNote= 'create new user admin';
-         $this->unit->run($test,$result,$testName,$testNote);
-        //4
-        $test=$this->User_model->add_user('globaladmin','admin@gmail.com', 'administrator', 'Admin10', 'admin' );
-        $result= 'User with this email exists.';
-        $testName= 'Test Add User on judge';
-        $testNote= 'create new user admin';
-         $this->unit->run($test,$result,$testName,$testNote);
-        //5
-        $test=$this->User_model->add_user('GlobalAdmin','admin@gmail.com', 'administrator', 'Admin10', 'admin' );
-        $result='Username must be lowercase.';
-        $testName= 'Test Add User on judge';
-        $testNote= 'create new user admin';
-         $this->unit->run($test,$result,$testName,$testNote);
-        //6
-        $test=$this->User_model->add_user('globaladmin','admin@gmail.com', 'administrator', 'Admin10', '' );
-        $result='Users role is not valid.';
-        $testName= 'Test Add User on judge';
-        $testNote= 'create new user admin';
-         $this->unit->run($test,$result,$testName,$testNote);
-        //7
-        $test=$this->User_model->add_user('globaladminn','admin1@gmail.com', 'administrator', 'Admin10', 'admin' );
-        $result=true;
-        $testName= 'Test Add User on judge';
-        $testNote= 'create new user admin';
-         $this->unit->run($test,$result,$testName,$testNote);
 
         $test=$this->User_model->have_user('globaladmin');
         $result=True;
@@ -196,27 +178,6 @@ class TestUnit extends CI_Controller {
          $this->unit->run($test,$result,$testName,$testNote);
         /* ------------ END OF CODE ----------- */
 
-        /** ---- INPUT REYNER's CODE HERE ----- **/
-        $test=$this->Notifications_model->get_all_notifications();
-        $result=TRUE;
-        $testName= 'Test get all notification on judge';
-        $testNote= 'awal tes belum ada notifkasi jadi masih false, ketika sudah di add notifkasi resultnya true';
-        $this->unit->run($test,$result,$testName,$testNote);
-
-        $test=$this->Notifications_model->get_latest_notifications();
-        $result=TRUE;
-        $testName= 'Test get latest notification on judge';
-        $testNote= 'awal tes belum ada notifkasi jadi masih false, ketika sudah di add notifkasi resultnya true';
-        $this->unit->run($test,$result,$testName,$testNote);
-
-        // $test=$this->Notifications_model->add_notification('notifikasi','Ada ujian');
-        // $result=;
-        // $testName='Test to add notification on judge'
-        // $testNote='notifikasi harus di add terlebih dahulu'
-        // echo $this->unit->run($test,$result,$testName,$testNote);
-
-        /* ------------ END OF CODE ----------- */
-
         /** ---- INPUT ENRICO's CODE HERE ----- **/
         $
         
@@ -258,9 +219,84 @@ class TestUnit extends CI_Controller {
     }
 
     /** ----- INPUT YONATHAN's CODE HERE ----- **/
+    private function testAddUserTrue(){
+      $test=$this->User_model->add_user('globaladmin','admin@gmail.com', 'administrator', 'Admin10', 'admin' );
+      $result=true;
+      $testName= 'Test Add User on judge';
+      $testNote= 'create new user admin';
+      $this->unit->run($test,$result,$testName,$testNote);
+    }
+    private function testAddUserWrongUsernameAlphaNumeric(){
+      $test=$this->User_model->add_user('globaladmin!!!','admin@gmail.com', 'administrator', 'Admin10', 'admin' );
+      $result='Username may only contain alpha-numeric characters.';
+      $testName= 'Test Add User on judge';
+      $testNote= 'create new user admin';
+      $this->unit->run($test,$result,$testName,$testNote);
+    }
+    private function testAddUserLengthUsernameError(){
+      $test=$this->User_model->add_user('glo','admin@gmail.com', 'administrator', 'Ad', 'admin' );
+      $result='Username or password length error.';
+      $testName= 'Test Add User on judge';
+      $testNote= 'create new user admin';
+      $this->unit->run($test,$result,$testName,$testNote);
+    }
+    private function testAddUserUsernameExist(){
+      $this->User_model->add_user('globaladmin','admin@gmail.com', 'administrator', 'Admin10', 'admin' );
+      $test=$this->User_model->add_user('globaladmin','admin@gmail.com', 'administrator', 'Admin10', 'admin' );
+      $result='User with this username exists.';
+      $testName= 'Test Add User on judge';
+      $testNote= 'create new user admin';
+      $this->unit->run($test,$result,$testName,$testNote);
+    }
+    private function testAddUserEmailExistError(){
+      $this->User_model->add_user('globalnakskd','admin@gmail.com', 'iahsundkaso', 'Admin10', 'admin' );
+      $test=$this->User_model->add_user('globalasdasd','admin@gmail.com', 'administrator', 'Admin10', 'admin' );
+      $result= 'User with this email exists.';
+      $testName= 'Test Add User on judge';
+      $testNote= 'create new user admin';
+      $this->unit->run($test,$result,$testName,$testNote);
 
+    }
+    private function testAddUserErrorLowercase(){
+      $test=$this->User_model->add_user('GlobalAdmin','admin@gmail.com', 'administrator', 'Admin10', 'admin' );
+      $result='Username must be lowercase.';
+      $testName= 'Test Add User on judge';
+      $testNote= 'create new user admin';
+      $this->unit->run($test,$result,$testName,$testNote);
+
+    }
+    private function testAddUserRoleInvalid(){
+      $test=$this->User_model->add_user('globaladmin','admin@gmail.com', 'administrator', 'Admin10', '' );
+      $result='Users role is not valid.';
+      $testName= 'Test Add User on judge';
+      $testNote= 'create new user admin';
+      $this->unit->run($test,$result,$testName,$testNote);
+
+    }
 
     /** ----- INPUT REYNER's CODE HERE ----- **/
+    public function testGetAllNotifications(){
+    $test=$this->Notifications_model->get_all_notifications();
+    $result=TRUE;
+    $testName= 'Test get all notification on judge';
+    $testNote= 'awal tes belum ada notifkasi jadi masih false, ketika sudah di add notifkasi resultnya true';
+    $this->unit->run($test,$result,$testName,$testNote);
+  }
+  public function testGetLatestNotifications(){
+    $test=$this->Notifications_model->get_latest_notifications();
+    $result=TRUE;
+    $testName= 'Test get latest notification on judge';
+    $testNote= 'awal tes belum ada notifkasi jadi masih false, ketika sudah di add notifkasi resultnya true';
+    $this->unit->run($test,$result,$testName,$testNote);
+  }
+  public function addNotifications(){
+    // $count=$this->query('SELECT COUNT (id) FROM shj_notifications');
+    $test=$this->Notifications_model->add_notification('notifikasi','Ada ujian');
+    $result=$count+1;
+    $testName='Test to add notification on judge';
+    $testNote='Add notifications';
+    $this->unit->run($test,$result,$testName,$testNote);
+  }
 
 
     /** ----- INPUT ENRICO's CODE HERE ----- **/
