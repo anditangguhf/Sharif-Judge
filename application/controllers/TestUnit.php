@@ -287,11 +287,25 @@ class TestUnit extends CI_Controller {
   }
   public function addNotifications(){
     $test=$this->Notifications_model->add_notification('notifikasi','Ada ujian');
+    $count=$this->db->query("select count id from shj_notifications");
     $result=$count+1;
     $testName='Test to add notification on judge';
     $testNote='Add notifications';
     $this->unit->run($test,$result,$testName,$testNote);
   }
+
+  // public function testUpdateNotification(){
+  //
+  //   $test=$this->Notifications_model->update_notifications('1','notifikasi','ada 2 ujian');
+  //   $result=TRUE;
+  //   $testName= 'Test update notification on judge';
+  //   $testNote= '';
+  //   $this->unit->run($test,$result,$testName,$testNote);
+  // }
+
+
+
+
 
 
     /** ----- INPUT ENRICO's CODE HERE ----- **/
