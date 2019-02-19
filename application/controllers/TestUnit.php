@@ -92,6 +92,7 @@ class TestUnit extends CI_Controller {
         $this->testUserIdToUsernameTrueId();
         $this->testUserIdToUsernameFalseIdNotfound();
         $this->testUserIdToUsernameFalseIdAlphanumeric();
+        $this->testInsertToLogs();
 
         /** REYNER's FUNCTIONS HERE **/
         $this->addNotifications();
@@ -285,6 +286,21 @@ class TestUnit extends CI_Controller {
 
     }
 
+    private function testInsertToLogs(){
+      $size= sizeof($this->Logs_model->get_all_logs());
+      $test=$this->Logs_model->insert_to_logs('globaladmin','192.168.12.2');
+      $sizee= sizeof($this->Logs_model->get_all_logs());
+      if($size!=$sizee){
+        $test=true;
+      }else{
+        $test=false;
+      }
+      $result=TRUE;
+      $testName= 'Test insert logs';
+      $testNote= 'dilakukan dengan membandingkan log sebelumnya dengan log sesudah di insert';
+      $this->unit->run($test,$result,$testName,$testNote);
+    }
+
     /** ----- INPUT REYNER's CODE HERE ----- **/
     public function testGetAllNotifications(){
     $test=$this->Notifications_model->get_all_notifications();
@@ -301,8 +317,15 @@ class TestUnit extends CI_Controller {
     $this->unit->run($test,$result,$testName,$testNote);
   }
   public function addNotifications(){
+    $count= $this->Notifications_model->get_all_notifications();
     $test=$this->Notifications_model->add_notification('notifikasi','Ada ujian');
-    $result=$count+1;
+    $countt= $this->Notifications_model->get_all_notifications();
+    if($count!=$countt){
+      $test=true;
+    }else{
+      $test=false;
+    }
+    $result=true;
     $testName='Test to add notification on judge';
     $testNote='Add notifications';
     $this->unit->run($test,$result,$testName,$testNote);
