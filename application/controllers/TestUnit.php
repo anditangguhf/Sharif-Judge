@@ -317,10 +317,10 @@ class TestUnit extends CI_Controller {
     $this->unit->run($test,$result,$testName,$testNote);
   }
   public function addNotifications(){
-    $count= $this->Notifications_model->get_all_notifications();
+    $count= sizeof($this->Notifications_model->get_all_notifications());
     $test=$this->Notifications_model->add_notification('notifikasi','Ada ujian');
 
-    $countt= $this->Notifications_model->get_all_notifications();
+    $countt= sizeof($this->Notifications_model->get_all_notifications());
     if($count!=$countt){
       $test=true;
     }else{
@@ -332,14 +332,9 @@ class TestUnit extends CI_Controller {
     $this->unit->run($test,$result,$testName,$testNote);
   }
 
-  // public function testUpdateNotification(){
-  //
-  //   $test=$this->Notifications_model->update_notifications('1','notifikasi','ada 2 ujian');
-  //   $result=TRUE;
-  //   $testName= 'Test update notification on judge';
-  //   $testNote= '';
-  //   $this->unit->run($test,$result,$testName,$testNote);
-  // }
+  public function testUpdateNotification(){
+      
+  }
 
 
 
