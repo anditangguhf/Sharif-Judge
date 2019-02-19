@@ -85,6 +85,13 @@ class TestUnit extends CI_Controller {
         $this->testAddUserEmailExistError();
         $this->testAddUserLengthUsernameError();
         $this->testAddUserWrongUsernameAlphaNumeric();
+        $this->testHaveUserTrue();
+        $this->testhaveUserFalse();
+        $this->testUsernameToUserId();
+        $this->testUsernameToUserIdFalse();
+        $this->testUserIdToUsernameTrueId();
+        $this->testUserIdToUsernameFalseIdNotfound();
+        $this->testUserIdToUsernameFalseIdAlphanumeric();
 
         /** REYNER's FUNCTIONS HERE **/
         $this->addNotifications();
@@ -261,6 +268,7 @@ class TestUnit extends CI_Controller {
 
     private function testUsernameToUserId(){
       $this->User_model->add_user('globaladmin','admin@gmail.com', 'administrator', 'Admin10', 'admin' );
+      $id=$this->User_model->username_to_user_id('globaladmin');
       $test=$this->User_model->username_to_user_id('globaladmin');
       $result=$id;
       $testName= 'Test get id by username on database';
