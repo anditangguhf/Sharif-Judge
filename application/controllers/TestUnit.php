@@ -92,6 +92,10 @@ class TestUnit extends CI_Controller {
         $this->testGetLatestNotifications();
 
         /** ENRICO's FUNCTIONS HERE **/
+        $this->testAllAssignments();
+        $this->testNewAssignmentId();
+        $this->testIncreaseTotalSubmits();
+        
 
     /* ------------ END OF CODE ----------- */
         
@@ -99,7 +103,7 @@ class TestUnit extends CI_Controller {
         /** VIO's FUNCTIONS HERE **/
 
         /** run report function here **/
-        $this->report();
+        //$this->report();
 
         /* ------------------------------------------------------------------ */
 
@@ -179,7 +183,8 @@ class TestUnit extends CI_Controller {
         /* ------------ END OF CODE ----------- */
 
         /** ---- INPUT ENRICO's CODE HERE ----- **/
-        $
+       
+       
         
         /* ------------ END OF CODE ----------- */
 
@@ -300,6 +305,33 @@ class TestUnit extends CI_Controller {
 
 
     /** ----- INPUT ENRICO's CODE HERE ----- **/
+    public function testAllAssignments(){
+      $test=$this->Assignment_model->all_assignments();
+      $result=$assignments;
+      $testName='Test all assignments';
+      $testNote='Returns a list of all assignments and their information';
+      $this->unit->run($test,$result,$testName,$testNote);
+    }
+
+    public function testNewAssignmentId(){
+        $test=$this->Assignment_model->new_assignment_id();
+        $result=$max;
+        $testName='Test new assignment id';
+        $testNote='Finds the smallest integer that can be uses as id for a new assignment';
+        $this->unit->run($test,$result,$testName,$testNote);
+    }
+
+    public function testIncreaseTotalSubmits(){
+        $this->Assignment_model->increase_total_submits('');
+        $test=$this->Assignment_model->increase_total_submits('T15062');
+        $result=$total+1;
+        $testName='Increse total submits';
+        $testNote='Increases number of total submits for given assignment by one';
+        $this->unit->run($test,$result,$testName,$testNote);
+    }
+
+
+    /* ------------ END OF CODE ----------- */
 
 
     /** ----- INPUT VIO's CODE HERE ----- **/
