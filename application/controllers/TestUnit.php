@@ -111,28 +111,6 @@ class TestUnit extends CI_Controller {
 
         /* ------------------------------------------------------------------ */
 
-        /** --- INPUT YONATHAN's CODE HERE ---- **/
-
-        //User_model.php model
-        //method untuk membuat user untuk test jangan di pake kalo metod lain belom kelar
-
-
-
-
-
-
-
-
-
-
-
-
-        /* ------------ END OF CODE ----------- */
-
-        /** ---- INPUT ENRICO's CODE HERE ----- **/
-        //testabcdsasdas
-        /* ------------ END OF CODE ----------- */
-
         /** ------ INPUT VIO's CODE HERE ------ **/
         $test=$this->Assignment_model->add_assignment('DAA1', FALSE);
         $result=FALSE;
