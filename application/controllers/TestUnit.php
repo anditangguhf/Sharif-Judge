@@ -108,7 +108,7 @@ class TestUnit extends CI_Controller {
 
         /** run report function here **/
         $this->report();
-
+        echo $this->unit->report();
         /* ------------------------------------------------------------------ */
 
         /** ------ INPUT VIO's CODE HERE ------ **/
@@ -360,11 +360,7 @@ class TestUnit extends CI_Controller {
     $count= sizeof($this->Notifications_model->get_all_notifications());
     $test=$this->Notifications_model->add_notification('notifikasi','Ada ujian');
 
-<<<<<<< HEAD
-    $countt= $this->Notifications_model->get_all_notifications();
-=======
     $countt= sizeof($this->Notifications_model->get_all_notifications());
->>>>>>> f58876dcc8dcd077571413f4f49c580d9b948241
     if($count!=$countt){
       $test=true;
     }else{
