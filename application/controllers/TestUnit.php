@@ -108,7 +108,7 @@ class TestUnit extends CI_Controller {
 
         /** run report function here **/
         $this->report();
-        echo $this->unit->report();
+        $this->generateFile($this->unit->report());
         /* ------------------------------------------------------------------ */
 
         /** ------ INPUT VIO's CODE HERE ------ **/
@@ -339,6 +339,12 @@ class TestUnit extends CI_Controller {
       $testName= 'Test insert logs';
       $testNote= 'dilakukan dengan membandingkan log sebelumnya dengan log sesudah di insert';
       $this->unit->run($test,$result,$testName,$testNote);
+    }
+
+    private function generateFile($test){
+      $myfile = fopen("TestFile.html", "w") or die("Unable to open file!");
+      fwrite($myfile, $test);
+      fclose($myfile);
     }
 
     /** ----- INPUT REYNER's CODE HERE ----- **/
