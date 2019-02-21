@@ -8,12 +8,12 @@ class TestUnit extends CI_Controller {
         parent::__construct();
         $this->load->library('unit_test');
         $this->load->model('Assignment_model');     //VIO & COCO
-        $this->load->model('Hof_model');
-        $this->load->model('Logs_model');
+        $this->load->model('Hof_model');            //REYNER
+        $this->load->model('Logs_model');           //YONATHAN
         $this->load->model('Notifications_model');  //REYNER
-        $this->load->model('Queue_model');
+        $this->load->model('Queue_model');          //KIPPI
         $this->load->model('Scoreboard_model');
-        $this->load->model('Settings_model');
+        $this->load->model('Settings_model');       //KIPPI
         $this->load->model('Submit_model');         //KIPPI
         $this->load->model('User_model');           //YONATHAN
         $this->load->model('User');
@@ -75,7 +75,10 @@ class TestUnit extends CI_Controller {
         /* ------------------------------------------------------------------ */
 
         /** KIPPI's FUNCTIONS HERE **/
-        $this->testGetSubmissionFalse();
+        // $this->testGetSubmission('kippi123', 'PBO1', 'Test1', 1);
+        // $this->testSetASetting('enable_log', 1);
+        // $this->testEmptyAQueue();
+        $this->testAddQueue();
 
         /** YONATHAN's FUNCTIONS HERE **/
         $this->testAddUserTrue();
@@ -95,9 +98,9 @@ class TestUnit extends CI_Controller {
         $this->testInsertToLogs();
 
         /** REYNER's FUNCTIONS HERE **/
-        $this->addNotifications();
-        $this->testGetAllNotifications();
-        $this->testGetLatestNotifications();
+        // $this->addNotifications();
+        // $this->testGetAllNotifications();
+        // $this->testGetLatestNotifications();
 
         /** ENRICO's FUNCTIONS HERE **/
 
@@ -107,28 +110,6 @@ class TestUnit extends CI_Controller {
         $this->report();
 
         /* ------------------------------------------------------------------ */
-
-        /** --- INPUT YONATHAN's CODE HERE ---- **/
-
-        //User_model.php model
-        //method untuk membuat user untuk test jangan di pake kalo metod lain belom kelar
-
-
-
-
-
-
-
-
-
-
-
-
-        /* ------------ END OF CODE ----------- */
-
-        /** ---- INPUT ENRICO's CODE HERE ----- **/
-        //testabcdsasdas
-        /* ------------ END OF CODE ----------- */
 
         /** ------ INPUT VIO's CODE HERE ------ **/
         $test=$this->Assignment_model->add_assignment('DAA1', FALSE);
@@ -155,14 +136,73 @@ class TestUnit extends CI_Controller {
 
     /*
      * Testing function get_submission di file Submit_model.php
-     * Expected to return FALSE
      */
-    public function testGetSubmissionFalse() {
-        $test       = $this->Submit_model->get_submission('kippi123', 'PBO1', 'TestJava1', 1);
+    private function testGetSubmission($username, $assignment, $problem, $submit_id) {
+        $test       = $this->Submit_model->get_submission($username, $assignment, $problem, $submit_id);
         $result     = FALSE;
         $testName   = "testGetSubmissionFalse";
         $testNote   = "Test get submission data that doesn't exists in db";
         $this->unit->run($test, $result, $testName, $testNote);
+    }
+
+    /*
+    *   Testing function to get submission after a submission is added to db
+    *   Expected to return a table row of the added submission
+    */
+    private function testGetSubmissionAfterAdd($username, $assignment, $problem, $submit_id) {
+        // do add submission first
+
+        // do test get submission here
+        testGetSubmission($username, $assignment, $problem, $submit_id);
+    }
+
+    /*
+    *   SETTINGS_MODEL
+    *   Testing function to set single setting
+    *   Expected to return a different value than the setting before
+    *   (compare the old and new, expect to return FALSE since the old is
+    *   not the same as the new setting)
+    *   @param $key : the setting name
+    */
+    private function testSetASetting($key, $value) {
+        $currentSettingValue = $this->Settings_model->get_setting($key);
+
+        $test = $this->Settings_model->set_setting($key, $value);
+
+        $updatedSettingValue = $this->Settings_model->get_setting($key);
+
+        ($currentSettingValue != $updatedSettingValue) ? $result = FALSE : $result = TRUE;
+        $testName = "testSetASetting";
+        $testNote  = "Test set a setting key to a new value";
+        $this->unit->run($test, $result, $testName, $testNote);
+    }
+
+    /*
+    *   QUEUE_MODEL
+    *   Testing function to empty a queue
+    *   Expected to return true, meaning test succeed
+    */
+    private function testEmptyAQueue() {
+        $totalQueue = sizeof($this->Queue_model->get_queue());
+        $test       = $this->Queue_model->empty_queue();
+        $result     = true;
+        $testName   = 'testEmptyAQueue';
+        $testNote   = 'test to empty queue table from db, expected to return true';
+        $this->unit->run($test,$result,$testName,$testNote);
+    }
+
+    /*
+    *   QUEUE_MODEL
+    *   Testing function to add a submission to submission table and queue table
+    *   Expected to return rows+1 on both submission & queue table
+    *   var $submit_info contains submit_id, username, assignment, and problem
+    */
+    private function testAddQueue() {
+
+        /*
+        *   flow: get available assignment id->add new assignment->add to queue
+        */
+
     }
 
     /** ----- INPUT YONATHAN's CODE HERE ----- **/
@@ -337,7 +377,7 @@ class TestUnit extends CI_Controller {
   }
 
   public function testUpdateNotification(){
-      
+
   }
 
 
