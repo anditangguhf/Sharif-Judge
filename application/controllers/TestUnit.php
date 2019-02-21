@@ -281,27 +281,33 @@ class TestUnit extends CI_Controller {
 
     /** ----- INPUT REYNER's CODE HERE ----- **/
     public function testGetAllNotifications(){
-    $test=$this->Notifications_model->get_all_notifications();
-    $result=TRUE;
-    $testName= 'Test get all notification on judge';
-    $testNote= 'awal tes belum ada notifkasi jadi masih false, ketika sudah di add notifkasi resultnya true';
-    $this->unit->run($test,$result,$testName,$testNote);
-  }
-  public function testGetLatestNotifications(){
-    $test=$this->Notifications_model->get_latest_notifications();
-    $result=TRUE;
-    $testName= 'Test get latest notification on judge';
-    $testNote= 'awal tes belum ada notifkasi jadi masih false, ketika sudah di add notifkasi resultnya true';
-    $this->unit->run($test,$result,$testName,$testNote);
-  }
+      $test=$this->Notifications_model->get_all_notifications();
+      $result=TRUE;
+      $testName= 'Test get all notification on judge';
+      $testNote= 'awal tes belum ada notifkasi jadi masih false, ketika sudah di add notifkasi resultnya true';
+      $this->unit->run($test,$result,$testName,$testNote);
+    }
+    public function testGetLatestNotifications(){
+      $test=$this->Notifications_model->get_latest_notifications();
+      $result=TRUE;
+      $testName= 'Test get latest notification on judge';
+      $testNote= 'awal tes belum ada notifkasi jadi masih false, ketika sudah di add notifkasi resultnya true';
+      $this->unit->run($test,$result,$testName,$testNote);
+    }
   public function addNotifications(){
     // $count=$this->query('SELECT COUNT (id) FROM shj_notifications');
     $test=$this->Notifications_model->add_notification('notifikasi','Ada ujian');
-    $result=$count+1;
-    $testName='Test to add notification on judge';
-    $testNote='Add notifications';
-    $this->unit->run($test,$result,$testName,$testNote);
-  }
+      $countt= sizeof($this->Notifications_model->get_all_notifications());
+      if($count!=$countt){
+        $test=true;
+      }else{
+        $test=false;
+      }
+      $result=true;
+      $testName='Test to add notification on judge';
+      $testNote='Add notifications';
+      $this->unit->run($test,$result,$testName,$testNote);
+    }
 
 
     /** ----- INPUT ENRICO's CODE HERE ----- **/
