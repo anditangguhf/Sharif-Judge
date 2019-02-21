@@ -81,13 +81,21 @@ class TestUnit extends CI_Controller {
         $this->testAddQueue();
 
         /** YONATHAN's FUNCTIONS HERE **/
-        // $this->testAddUserTrue();
-        // $this->testAddUserRoleInvalid();
-        // $this->testAddUserUsernameExist();
-        // $this->testAddUserErrorLowercase();
-        // $this->testAddUserEmailExistError();
-        // $this->testAddUserLengthUsernameError();
-        // $this->testAddUserWrongUsernameAlphaNumeric();
+        $this->testAddUserTrue();
+        $this->testAddUserRoleInvalid();
+        $this->testAddUserUsernameExist();
+        $this->testAddUserErrorLowercase();
+        $this->testAddUserEmailExistError();
+        $this->testAddUserLengthUsernameError();
+        $this->testAddUserWrongUsernameAlphaNumeric();
+        $this->testHaveUserTrue();
+        $this->testhaveUserFalse();
+        $this->testUsernameToUserId();
+        $this->testUsernameToUserIdFalse();
+        $this->testUserIdToUsernameTrueId();
+        $this->testUserIdToUsernameFalseIdNotfound();
+        $this->testUserIdToUsernameFalseIdAlphanumeric();
+        $this->testInsertToLogs();
 
         /** REYNER's FUNCTIONS HERE **/
         // $this->addNotifications();
@@ -108,74 +116,17 @@ class TestUnit extends CI_Controller {
         //User_model.php model
         //method untuk membuat user untuk test jangan di pake kalo metod lain belom kelar
 
-        $test=$this->User_model->have_user('globaladmin');
-        $result=True;
-        $testName= 'Test Have User Name by Username on judge';
-        $testNote= 'untuk hasil true jadi user sudah ada dalam database judge input ("globaladmin")';
-         $this->unit->run($test,$result,$testName,$testNote);
 
 
-        $test=$this->User_model->have_user('yonathan');
-        $result=False;
-        $testName= 'Test Have User Name by Username on judge';
-        $testNote= 'untuk hasil false jadi username tidak ada dalam database judge input ("yonathan")';
-         $this->unit->run($test,$result,$testName,$testNote);
 
 
-        $id= $this->User_model->username_to_user_id('globaladmin');
-        $test=$this->User_model->user_id_to_username($id);
-        $result='globaladmin';
-        $testName= 'Test get user name by user id on database';
-        $testNote= 'untuk hasil passed id dan username ada dalam database input("1")';
-         $this->unit->run($test,$result,$testName,$testNote);
 
 
-        $test=$this->User_model->user_id_to_username('asdf');
-        $result=False;
-        $testName= 'Test get user name by user id on database';
-        $testNote= 'untuk hasil failed id yang diinput bukan numeric input ("asdf")';
-         $this->unit->run($test,$result,$testName,$testNote);
 
 
-        $test=$this->User_model->user_id_to_username('2');
-        $result=False;
-        $testName= 'Test get user name by user id on database';
-        $testNote= 'untuk hasil failed id tidak ada dalam database input ("2")';
-         $this->unit->run($test,$result,$testName,$testNote);
 
 
-        $test=$this->User_model->username_to_user_id('globaladmin');
-        $result=$id;
-        $testName= 'Test get id by username on database';
-        $testNote= 'untuk hasil passed username ada dalam database input ("globaladmin")';
-         $this->unit->run($test,$result,$testName,$testNote);
 
-        $test=$this->User_model->username_to_user_id('yonathan');
-        $result=FALSE;
-        $testName= 'Test get id by username on database';
-        $testNote= 'untuk hasil passed username tidak ada dalam database input ("yonathan")';
-         $this->unit->run($test,$result,$testName,$testNote);
-
-        //have email
-        $test=$this->User_model->have_email('admin@gmail.com');
-        $result=FALSE;
-        $testName= 'Test have email on database';
-        $testNote= '';
-         $this->unit->run($test,$result,$testName,$testNote);
-
-
-        $test=$this->User_model->have_email('admin@gmail.com','adminglobal');
-        $result=FALSE;
-        $testName= 'Test have email on database';
-        $testNote= '';
-         $this->unit->run($test,$result,$testName,$testNote);
-
-
-        $test=$this->User_model->have_email('admin@gmail.com','adminasdasda');
-        $result=True;
-        $testName= 'Test have email on database';
-        $testNote= '';
-         $this->unit->run($test,$result,$testName,$testNote);
         /* ------------ END OF CODE ----------- */
 
         /** ---- INPUT ENRICO's CODE HERE ----- **/
@@ -316,7 +267,7 @@ class TestUnit extends CI_Controller {
 
     }
     private function testAddUserErrorLowercase(){
-      $test=$this->User_model->add_user('GlobalAdmin','admin@gmail.com', 'administrator', 'Admin10', 'admin' );
+      $test=$this->User_model->add_user('GlobalAdmin','aasadasd@gmail.com', 'administrator', 'Admin10', 'admin' );
       $result='Username must be lowercase.';
       $testName= 'Test Add User on judge';
       $testNote= 'create new user admin';
@@ -324,12 +275,92 @@ class TestUnit extends CI_Controller {
 
     }
     private function testAddUserRoleInvalid(){
+      $id= $this->User_model->username_to_user_id('globaladmin');
+      $this->User_model->delete_user($id);
       $test=$this->User_model->add_user('globaladmin','admin@gmail.com', 'administrator', 'Admin10', '' );
       $result='Users role is not valid.';
       $testName= 'Test Add User on judge';
       $testNote= 'create new user admin';
       $this->unit->run($test,$result,$testName,$testNote);
 
+    }
+
+    private function testHaveUserTrue(){
+      $test=$this->User_model->have_user('globaladmin');
+      $result=True;
+      $testName= 'Test Have User Name by Username on judge';
+      $testNote= 'untuk hasil true jadi user sudah ada dalam database judge input ("globaladmin")';
+      $this->unit->run($test,$result,$testName,$testNote);
+    }
+    private function testhaveUserFalse(){
+      $test=$this->User_model->have_user('yonathan');
+      $result=False;
+      $testName= 'Test Have User Name by Username on judge';
+      $testNote= 'untuk hasil false jadi username tidak ada dalam database judge input ("yonathan")';
+      $this->unit->run($test,$result,$testName,$testNote);
+    }
+
+    private function testUserIdToUsernameTrueId(){
+      $id= $this->User_model->username_to_user_id('globaladmin');
+      $test=$this->User_model->user_id_to_username($id);
+      $result='globaladmin';
+      $testName= 'Test get user name by user id on database';
+      $testNote= 'untuk hasil passed id dan username ada dalam database input("1")';
+      $this->unit->run($test,$result,$testName,$testNote);
+    }
+
+    private function testUserIdToUsernameFalseIdAlphanumeric(){
+      $test=$this->User_model->user_id_to_username('asdf');
+      $result=False;
+      $testName= 'Test get user name by user id on database';
+      $testNote= 'untuk hasil failed id yang diinput bukan numeric input ("asdf")';
+      $this->unit->run($test,$result,$testName,$testNote);
+
+    }
+
+    private function testUserIdToUsernameFalseIdNotfound(){
+      $user=$this->User_model->get_all_users();
+      $id=$user[sizeof($user)-1]['id'];
+      $test=$this->User_model->user_id_to_username($id+1);
+      $result=False;
+      $testName= 'Test get user name by user id on database';
+      $testNote= 'untuk hasil failed id tidak ada dalam database input ("2")';
+      $this->unit->run($test,$result,$testName,$testNote);
+
+    }
+
+    private function testUsernameToUserId(){
+      $this->User_model->add_user('globaladmin','admin@gmail.com', 'administrator', 'Admin10', 'admin' );
+      $id=$this->User_model->username_to_user_id('globaladmin');
+      $test=$this->User_model->username_to_user_id('globaladmin');
+      $result=$id;
+      $testName= 'Test get id by username on database';
+      $testNote= 'untuk hasil passed username ada dalam database input ("globaladmin")';
+      $this->unit->run($test,$result,$testName,$testNote);
+    }
+
+    private function testUsernameToUserIdFalse(){
+      $test=$this->User_model->username_to_user_id('yonathan');
+      $result=FALSE;
+      $testName= 'Test get id by username on database';
+      $testNote= 'untuk hasil passed username tidak ada dalam database input ("yonathan")';
+      $this->unit->run($test,$result,$testName,$testNote);
+
+    }
+
+    private function testInsertToLogs(){
+      $size= sizeof($this->Logs_model->get_all_logs());
+      $test=$this->Logs_model->insert_to_logs('globaladmin','192.168.12.2');
+      $sizee= sizeof($this->Logs_model->get_all_logs());
+      if($size!=$sizee){
+        $test=true;
+      }else{
+        $test=false;
+      }
+      $result=TRUE;
+      $testName= 'Test insert logs';
+      $testNote= 'dilakukan dengan membandingkan log sebelumnya dengan log sesudah di insert';
+      $this->unit->run($test,$result,$testName,$testNote);
     }
 
     /** ----- INPUT REYNER's CODE HERE ----- **/
@@ -348,12 +379,28 @@ class TestUnit extends CI_Controller {
     $this->unit->run($test,$result,$testName,$testNote);
   }
   public function addNotifications(){
+    $count= sizeof($this->Notifications_model->get_all_notifications());
     $test=$this->Notifications_model->add_notification('notifikasi','Ada ujian');
-    $result=$count+1;
+
+    $countt= sizeof($this->Notifications_model->get_all_notifications());
+    if($count!=$countt){
+      $test=true;
+    }else{
+      $test=false;
+    }
+    $result=true;
     $testName='Test to add notification on judge';
     $testNote='Add notifications';
     $this->unit->run($test,$result,$testName,$testNote);
   }
+
+  public function testUpdateNotification(){
+
+  }
+
+
+
+
 
 
     /** ----- INPUT ENRICO's CODE HERE ----- **/
