@@ -110,6 +110,8 @@ class TestUnit extends CI_Controller {
         // $this->testNewAssignmentId();
         // $this->testIncreaseTotalSubmits();
 
+        /** VIO **/
+        $this->deleteUser();
 
     /* ------------ END OF CODE ----------- */
 
