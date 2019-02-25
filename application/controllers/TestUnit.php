@@ -76,13 +76,13 @@ class TestUnit extends CI_Controller {
 
         /** KIPPI's FUNCTIONS HERE **/
         // $this->testGetSubmission('kippi123', 'PBO1', 'Test1', 1);
-        $this->getASetting('enable_log');
+        // $this->getASetting('enable_log');
         // $this->testSetASetting('enable_log', 1);
-        $this->testEmptyAQueue();
-        $this->testAddQueue();
+        // $this->testEmptyAQueue();
+        // $this->testAddQueue();
 
         /** YONATHAN's FUNCTIONS HERE **/
-         $this->testAddUserTrue();
+         // $this->testAddUserTrue();
         // $this->testAddUserRoleInvalid();
         // $this->testAddUserUsernameExist();
         // $this->testAddUserErrorLowercase();
@@ -99,54 +99,46 @@ class TestUnit extends CI_Controller {
         // $this->testInsertToLogs();
 
         /** REYNER's FUNCTIONS HERE **/
-        $this->testAddNotifications();
-        $this->testGetAllNotifications();
-        $this->testGetLatestNotifications();
-        $this->testUpdateNotification();
-        $this->testDeleteNotification();
-
-        /** ENRICO's FUNCTIONS HERE **/
-        $this->testAllAssignments();
-        $this->testNewAssignmentId();
-        $this->testIncreaseTotalSubmits();
+        // $this->testAddNotifications();
+        // $this->testGetAllNotifications();
+        // $this->testGetLatestNotifications();
+        // $this->testUpdateNotification();
+        // $this->testDeleteNotification();
+        //
+        // /** ENRICO's FUNCTIONS HERE **/
+        // $this->testAllAssignments();
+        // $this->testNewAssignmentId();
+        // $this->testIncreaseTotalSubmits();
 
         /** VIO **/
         $this->deleteUser();
 
     /* ------------ END OF CODE ----------- */
 
-         $this->add_user_manual();
-        //$this->add_assignment_manual();
+        // $this->add_user_manual();
+        // $this->add_assignment_manual();
+        // $this->deleteUser();
 
         /** run report function here **/
         $this->report();
         $this->generateFile($this->unit->report());
         /* ------------------------------------------------------------------ */
-
-        /** ------ INPUT VIO's CODE HERE ------ **/
-        $test=$this->Assignment_model->add_assignment('DAA1', FALSE);
-        $result=FALSE;
-        $testName= '';
-        $testNote= '';
-        $this->unit->run($test,$result,$testName,$testNote);
-
-        $test=$this->Assignment_model->add_assignment('DAA2', TRUE);
-        $result=TRUE;
-        $testName= '';
-        $testNote= '';
-        $this->unit->run($test,$result,$testName,$testNote);
-
+    }
     /* GLOBAL FUNCTIONS FOR TESTING */
 
     /*
     *   Function untuk add user menggunakan mysql $query
     */
-    private function add_user_manual(){
+    private function add_user_manual() {
+
+        /* clean shj_users db table first. clean all row except UID = 1 */
+        $this->db->query('DELETE FROM shj_users WHERE id != 1');
+
         $data = array(
             'username'  => 'testuser',
             'password'  => '$2a$08$ZVY15Ckd5JpQjD6hViEP/OOto/mTjGPKJGtSz9.8TV5ofUoblsk2W',
-            'display_name'  => 'adminn',
-            'email' => 'adminn@gmail.com',
+            'display_name'  => 'TestUser',
+            'email' => 'tu@mail.com',
             'role'  => 'admin',
         );
         echo var_dump($this->db->insert('shj_users',$data));
@@ -154,60 +146,61 @@ class TestUnit extends CI_Controller {
     /*
     *   Function untuk add assignment menggunakan mysql $query
     */
-    // private function add_assignment_manual(){
-    //     // echo var_dump($this->db->get('shj_assignments')->result());
-    //
-    //     $data =array(
-    //         'name'  => 'cobaaa',
-    //         'problmes'  => '1',
-    //         'total_submits' => '0',
-    //         'open'  => '0',
-    //         'scoreboard'    => '0',
-    //         'javaexceptions' => '0',
-	// 		'description' => 'cobacobacoba',
-	// 		'start_time' => '2019-02-21 00:00:00',
-	// 		'finish_time' => '2019-02-22 00:00:00',
-	// 		'extra_time' => '300',
-	// 		'late_rule' => '/*
-        //  * Put coefficient (from 100) in variable $coefficient.
-        //  * You can use variables $extra_time and $delay.
-        //  * $extra_time is the total extra time given to users
-        //  * (in seconds) and $delay is number of seconds passed
-        //  * from finish time (can be negative).
-        //  *  In this example, $extra_time is 172800 (2 days):
-        //  */
-        //
-        // if ($delay<=0)
-        //   // no delay
-        //   $coefficient = 100;
-        //
-        // elseif ($delay<=3600)
-        //   // delay less than 1 hour
-        //   $coefficient = ceil(100-((30*$delay)/3600));
-        //
-        // elseif ($delay<=86400)
-        //   // delay more than 1 hour and less than 1 day
-        //   $coefficient = 70;
-        //
-        // elseif (($delay-86400)<=3600)
-        //   // delay less than 1 hour in second day
-        //   $coefficient = ceil(70-((20*($delay-86400))/3600));
-        //
-        // elseif (($delay-86400)<=86400)
-        //   // delay more than 1 hour in second day
-        //   $coefficient = 50;
-        //
-        // elseif ($delay > $extra_time)
-        //   // too late
-        //   $coefficient = 0;',
-			// 'participants' => 'ALL',
-            // 'moss_update'   => 'Never',
-			// 'archived_assignment' => '0',
-        // );
-        // echo var_dump("test");
-        // echo var_dump($this->db->insert('shj_assignments',$data));
-    // }
+    private function add_assignment_manual() {
 
+        /* clean shj_assignments table first */
+        $this->db->query('DELETE FROM shj_assignments');
+
+        $data =array(
+            'name'  => 'Testing Assignment',
+            'problems'  => '1',
+            'total_submits' => '0',
+            'open'  => '0',
+            'scoreboard'    => '0',
+            'javaexceptions' => '0',
+			'description' => 'Testing',
+			'start_time' => '2019-02-21 00:00:00',
+			'finish_time' => '2019-07-22 00:00:00',
+			'extra_time' => '300',
+			'late_rule' => '/*
+         * Put coefficient (from 100) in variable $coefficient.
+         * You can use variables $extra_time and $delay.
+         * $extra_time is the total extra time given to users
+         * (in seconds) and $delay is number of seconds passed
+         * from finish time (can be negative).
+         *  In this example, $extra_time is 172800 (2 days):
+         */
+
+        if ($delay<=0)
+          // no delay
+          $coefficient = 100;
+
+        elseif ($delay<=3600)
+          // delay less than 1 hour
+          $coefficient = ceil(100-((30*$delay)/3600));
+
+        elseif ($delay<=86400)
+          // delay more than 1 hour and less than 1 day
+          $coefficient = 70;
+
+        elseif (($delay-86400)<=3600)
+          // delay less than 1 hour in second day
+          $coefficient = ceil(70-((20*($delay-86400))/3600));
+
+        elseif (($delay-86400)<=86400)
+          // delay more than 1 hour in second day
+          $coefficient = 50;
+
+        elseif ($delay > $extra_time)
+          // too late
+          $coefficient = 0;',
+			'participants' => 'ALL',
+            'moss_update'   => 'Never',
+			'archived_assignment' => '0',
+        );
+
+        echo var_dump($this->db->insert('shj_assignments',$data));
+    }
     /** ----- INPUT KIPPI's CODE HERE ----- **/
 
     /*
