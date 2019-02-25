@@ -562,7 +562,7 @@ class TestUnit extends CI_Controller {
 
     }
 
-    publix fuction testIsParticipant(){
+    public fuction testIsParticipant(){
       $test=$this->Assignment_model->is_participant('user1','i15062');
       $result=TRUE;
       $testName='Test is Participant';
@@ -588,6 +588,8 @@ private function deleteUser(){
     $testName='Test to delete user';
     $testNote='Delete user';
     $this->unit->run($test,$result,$testName,$testNote);
+}
+
 }
 
 ?>
