@@ -104,6 +104,7 @@ class TestUnit extends CI_Controller {
         // $this->testGetLatestNotifications();
         // $this->testUpdateNotification();
         // $this->testDeleteNotification();
+        // $this->testGetNotifications();
         //
         // /** ENRICO's FUNCTIONS HERE **/
         //$this->testAllAssignments();
@@ -453,6 +454,40 @@ class TestUnit extends CI_Controller {
       fclose($myfile);
     }
 
+    //add_users
+    //delete submissions
+    //select assignment
+    private function testValidateUserTrue(){
+      $this->User_model->add_user('globaladmin','admin@gmail.com', 'administrator', 'Admin10', 'admin' );
+      $test=$this->User_model->validate_user('globaladmin','Admin10');
+      $result=True;
+      $testName= 'Test username and password valid for login';
+      $testNote= 'untuk hasil passed username dan password ada dalam database';
+      $this->unit->run($test,$result,$testName,$testNote);
+    }
+    private function testValidateUserFalseInvalidUsername(){
+      $this->User_model->add_user('globaladmin','admin@gmail.com', 'administrator', 'Admin10', 'admin' );
+      $test=$this->User_model->validate_user('globaladminnnn','Admin10');
+      $result=False;
+      $testName= 'Test username and password invalid username for login';
+      $testNote= 'untuk hasil passed username tidak ada dalam database';
+      $this->unit->run($test,$result,$testName,$testNote);
+    }
+    private function testGetNames(){
+      $test=$this->User_model->get_names();
+      if(sizeof($test)>0){
+        $test=true;
+      }
+      else{
+        $test=false;
+      }
+      $result=true;
+      $testName= 'Test to get names ';
+      $testNote= 'if return test > 0 test passed else failed';
+      $this->unit->run($test,$result,$testName,$testNote);
+    }
+
+
     /** ----- INPUT REYNER's CODE HERE ----- **/
     public function testGetAllNotifications(){
       $test=$this->Notifications_model->get_all_notifications();
@@ -515,8 +550,18 @@ class TestUnit extends CI_Controller {
       $this->unit->run($testt,$result,$testName,$testNote);
     }
 
-
-
+    public function testGetNotifications(){
+      $add=$this->Notifications_model->add_notification('notifikasi','Ada ujian');
+      $all=$this->Notifications_model->get_all_notifications();
+      $test=$this->Notifications_model-> get_notification($add[0]['id']);
+      if($test == false){
+        $test=true;
+      }
+      $result=TRUE;
+      $testName= 'Test get notification on judge';
+      $testNote= 'get specific notification';
+      $this->unit->run($test,$result,$testName,$testNote);
+    }
 
 
 
