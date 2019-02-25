@@ -592,8 +592,7 @@ class TestUnit extends CI_Controller {
     }
 
     public function testAllProblem(){
-      $this->Assignment_model->all_problems('T15062');
-      $test=$this->Assignment_model->all_problems('T15060');
+      $test=$this->Assignment_model->all_problems('T15062');
       $result=$this->db->order_by('id')->get_where('problems', array('assignment'=>$assignment_id))->result_array();
       $testName='Test all Problems of an Assignment';
       $testNote='Returns an array containing all problems of given assignment';
