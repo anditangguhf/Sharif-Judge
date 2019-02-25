@@ -12,7 +12,7 @@ class TestUnit extends CI_Controller {
         $this->load->model('Logs_model');           //YONATHAN
         $this->load->model('Notifications_model');  //REYNER
         $this->load->model('Queue_model');          //KIPPI
-        $this->load->model('Scoreboard_model');       //COCO
+        $this->load->model('Scoreboard_model');     //COCO
         $this->load->model('Settings_model');       //KIPPI
         $this->load->model('Submit_model');         //KIPPI
         $this->load->model('User_model');           //YONATHAN
@@ -104,11 +104,14 @@ class TestUnit extends CI_Controller {
         // $this->testGetLatestNotifications();
         // $this->testUpdateNotification();
         // $this->testDeleteNotification();
+        // $this->testGetNotifications();
         //
         // /** ENRICO's FUNCTIONS HERE **/
-        // $this->testAllAssignments();
-        // $this->testNewAssignmentId();
-        // $this->testIncreaseTotalSubmits();
+        $this->testAllAssignments();
+        $this->testNewAssignmentId();
+        $this->testIncreaseTotalSubmits();
+        $this->testAllProblem();
+        $this->testIsParticipant();
 
         /** VIO **/
         // $this->deleteUser();
@@ -525,6 +528,40 @@ class TestUnit extends CI_Controller {
       fclose($myfile);
     }
 
+    //add_users
+    //delete submissions
+    //select assignment
+    private function testValidateUserTrue(){
+      $this->User_model->add_user('globaladmin','admin@gmail.com', 'administrator', 'Admin10', 'admin' );
+      $test=$this->User_model->validate_user('globaladmin','Admin10');
+      $result=True;
+      $testName= 'Test username and password valid for login';
+      $testNote= 'untuk hasil passed username dan password ada dalam database';
+      $this->unit->run($test,$result,$testName,$testNote);
+    }
+    private function testValidateUserFalseInvalidUsername(){
+      $this->User_model->add_user('globaladmin','admin@gmail.com', 'administrator', 'Admin10', 'admin' );
+      $test=$this->User_model->validate_user('globaladminnnn','Admin10');
+      $result=False;
+      $testName= 'Test username and password invalid username for login';
+      $testNote= 'untuk hasil passed username tidak ada dalam database';
+      $this->unit->run($test,$result,$testName,$testNote);
+    }
+    private function testGetNames(){
+      $test=$this->User_model->get_names();
+      if(sizeof($test)>0){
+        $test=true;
+      }
+      else{
+        $test=false;
+      }
+      $result=true;
+      $testName= 'Test to get names ';
+      $testNote= 'if return test > 0 test passed else failed';
+      $this->unit->run($test,$result,$testName,$testNote);
+    }
+
+
     /** ----- INPUT REYNER's CODE HERE ----- **/
     public function testGetAllNotifications(){
       $test=$this->Notifications_model->get_all_notifications();
@@ -587,23 +624,42 @@ class TestUnit extends CI_Controller {
       $this->unit->run($testt,$result,$testName,$testNote);
     }
 
+    public function testGetNotifications(){
+      $add=$this->Notifications_model->add_notification('notifikasi','Ada ujian');
+      $all=$this->Notifications_model->get_all_notifications();
+      $test=$this->Notifications_model-> get_notification($add[0]['id']);
+      if($test == false){
+        $test=true;
+      }
+      $result=TRUE;
+      $testName= 'Test get notification on judge';
+      $testNote= 'get specific notification';
+      $this->unit->run($test,$result,$testName,$testNote);
+    }
 
-
+    // public function testHaveNewNotifications(){
+    //
+    // }
 
 
 
     /** ----- INPUT ENRICO's CODE HERE ----- **/
     public function testAllAssignments(){
       $test=$this->Assignment_model->all_assignments();
-      $result=$assignments;
+      $result = $this->db->order_by('id')->get('assignments')->result_array();
+  		$resultt = array();
+  		foreach ($result as $item)
+  		{
+  			$resultt[$item['id']] = $item;
+  		}
       $testName='Test all assignments';
       $testNote='Returns a list of all assignments and their information';
-      $this->unit->run($test,$result,$testName,$testNote);
+      $this->unit->run($test,$resultt,$testName,$testNote);
     }
 
     public function testNewAssignmentId(){
         $test=$this->Assignment_model->new_assignment_id();
-        $result=$max;
+        $result=($this->db->select_max('id', 'max_id')->get('assignments')->row()->max_id) + 1;;
         $testName='Test new assignment id';
         $testNote='Finds the smallest integer that can be uses as id for a new assignment';
         $this->unit->run($test,$result,$testName,$testNote);
@@ -613,9 +669,30 @@ class TestUnit extends CI_Controller {
         $this->Assignment_model->increase_total_submits('');
         $test=$this->Assignment_model->increase_total_submits('T15062');
         $result=$total+1;
-        $testName='Increse total submits';
+        $testName='Test increase total submits';
         $testNote='Increases number of total submits for given assignment by one';
         $this->unit->run($test,$result,$testName,$testNote);
+    }
+
+    public function testAllProblem(){
+      $test=$this->Assignment_model->all_problems('T15062');
+      $result=$this->db->order_by('id')->get_where('problems', array('assignment'=>'T15062'))->result_array();
+      $testName='Test all Problems of an Assignment';
+      $testNote='Returns an array containing all problems of given assignment';
+      $this->unit->run($test,$result,$testName,$testNote);
+
+
+    }
+
+    public function testIsParticipant(){
+      $this->Assignment_model->is_participant('user1','i15062');
+      $test=$this->Assignment_model->is_participant('ALL','i15062');
+      $result=TRUE;
+      $testName='Test is Participant';
+      $testNote='Returns TRUE if $username if one of the $participants';
+      $this->unit->run($test,$result,$testName,$testNote);
+
+
     }
 
 
