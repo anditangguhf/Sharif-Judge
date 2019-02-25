@@ -563,6 +563,10 @@ class TestUnit extends CI_Controller {
       $this->unit->run($test,$result,$testName,$testNote);
     }
 
+    // public function testHaveNewNotifications(){
+    // 
+    // }
+
 
 
     /** ----- INPUT ENRICO's CODE HERE ----- **/
