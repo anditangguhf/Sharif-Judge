@@ -107,9 +107,11 @@ class TestUnit extends CI_Controller {
         // $this->testGetNotifications();
         //
         // /** ENRICO's FUNCTIONS HERE **/
-        // $this->testAllAssignments();
-        // $this->testNewAssignmentId();
-        // $this->testIncreaseTotalSubmits();
+        //$this->testAllAssignments();
+        //$this->testNewAssignmentId();
+        //$this->testIncreaseTotalSubmits();
+        //$this->testAllProblem();
+        //$this->testIsParticipant();
 
         /** VIO **/
         $this->deleteUser();
@@ -570,7 +572,7 @@ class TestUnit extends CI_Controller {
     /** ----- INPUT ENRICO's CODE HERE ----- **/
     public function testAllAssignments(){
       $test=$this->Assignment_model->all_assignments();
-      $result=$assignments;
+      $result=$this->db->order_by('id')->get('assignments')->result_array();;
       $testName='Test all assignments';
       $testNote='Returns a list of all assignments and their information';
       $this->unit->run($test,$result,$testName,$testNote);
@@ -594,9 +596,8 @@ class TestUnit extends CI_Controller {
     }
 
     public function testAllProblem(){
-      $this->Assignment_model->all_problems('T15062');
-      $test=$this->Assignment_model->all_problems('T15060');
-      $result=$problems;
+      $test=$this->Assignment_model->all_problems('T15062');
+      $result=$this->db->order_by('id')->get_where('problems', array('assignment'=>$assignment_id))->result_array();
       $testName='Test all Problems of an Assignment';
       $testNote='Returns an array containing all problems of given assignment';
       $this->unit->run($test,$result,$testName,$testNote);
@@ -605,7 +606,8 @@ class TestUnit extends CI_Controller {
     }
 
     public function testIsParticipant(){
-      $test=$this->Assignment_model->is_participant('user1','i15062');
+      $this->Assignment_model->is_participant('user1','i15062');
+      $test=$this->Assignment_model->is_participant('ALL','i15062');
       $result=TRUE;
       $testName='Test is Participant';
       $testNote='Returns TRUE if $username if one of the $participants';
