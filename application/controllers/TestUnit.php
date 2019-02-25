@@ -555,7 +555,7 @@ class TestUnit extends CI_Controller {
 
     }
 
-    public fuction testIsParticipant(){
+    public function testIsParticipant(){
       $test=$this->Assignment_model->is_participant('user1','i15062');
       $result=TRUE;
       $testName='Test is Participant';
