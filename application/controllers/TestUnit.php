@@ -104,6 +104,7 @@ class TestUnit extends CI_Controller {
         // $this->testGetLatestNotifications();
         // $this->testUpdateNotification();
         // $this->testDeleteNotification();
+        // $this->testGetNotifications();
         //
         // /** ENRICO's FUNCTIONS HERE **/
         // $this->testAllAssignments();
@@ -546,6 +547,20 @@ class TestUnit extends CI_Controller {
       $testNote='Delete notifications';
       $this->unit->run($testt,$result,$testName,$testNote);
     }
+
+    public function testGetNotifications(){
+      $add=$this->Notifications_model->add_notification('notifikasi','Ada ujian');
+      $all=$this->Notifications_model->get_all_notifications();
+      $test=$this->Notifications_model-> get_notification($add[0]['id']);
+      if($test == false){
+        $test=true;
+      }
+      $result=TRUE;
+      $testName= 'Test get notification on judge';
+      $testNote= 'get specific notification';
+      $this->unit->run($test,$result,$testName,$testNote);
+    }
+
 
 
     /** ----- INPUT ENRICO's CODE HERE ----- **/
