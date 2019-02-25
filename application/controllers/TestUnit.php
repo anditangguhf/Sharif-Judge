@@ -107,14 +107,14 @@ class TestUnit extends CI_Controller {
         // $this->testGetNotifications();
         //
         // /** ENRICO's FUNCTIONS HERE **/
-        //$this->testAllAssignments();
-        //$this->testNewAssignmentId();
-        //$this->testIncreaseTotalSubmits();
-        //$this->testAllProblem();
-        //$this->testIsParticipant();
+        $this->testAllAssignments();
+        $this->testNewAssignmentId();
+        $this->testIncreaseTotalSubmits();
+        $this->testAllProblem();
+        $this->testIsParticipant();
 
         /** VIO **/
-        $this->deleteUser();
+        //$this->deleteUser();
 
     /* ------------ END OF CODE ----------- */
 
@@ -568,10 +568,15 @@ class TestUnit extends CI_Controller {
     /** ----- INPUT ENRICO's CODE HERE ----- **/
     public function testAllAssignments(){
       $test=$this->Assignment_model->all_assignments();
-      $result=$this->db->order_by('id')->get('assignments')->result_array();;
+      $result = $this->db->order_by('id')->get('assignments')->result_array();
+  		$resultt = array();
+  		foreach ($result as $item)
+  		{
+  			$resultt[$item['id']] = $item;
+  		}
       $testName='Test all assignments';
       $testNote='Returns a list of all assignments and their information';
-      $this->unit->run($test,$result,$testName,$testNote);
+      $this->unit->run($test,$resultt,$testName,$testNote);
     }
 
     public function testNewAssignmentId(){
@@ -593,7 +598,7 @@ class TestUnit extends CI_Controller {
 
     public function testAllProblem(){
       $test=$this->Assignment_model->all_problems('T15062');
-      $result=$this->db->order_by('id')->get_where('problems', array('assignment'=>$assignment_id))->result_array();
+      $result=$this->db->order_by('id')->get_where('problems', array('assignment'=>'T15062'))->result_array();
       $testName='Test all Problems of an Assignment';
       $testNote='Returns an array containing all problems of given assignment';
       $this->unit->run($test,$result,$testName,$testNote);
