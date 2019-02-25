@@ -457,6 +457,49 @@ class TestUnit extends CI_Controller {
       fclose($myfile);
     }
 
+    //add_users
+    //delete submissions
+    //select assignment
+    private function testValidateUserTrue(){
+      $this->User_model->add_user('globaladmin','admin@gmail.com', 'administrator', 'Admin10', 'admin' );
+      $test=$this->User_model->validate_user('globaladmin','Admin10');
+      $result=True;
+      $testName= 'Test username and password valid for login';
+      $testNote= 'untuk hasil passed username dan password ada dalam database';
+      $this->unit->run($test,$result,$testName,$testNote);
+    }
+
+    private function testValidateUserTrue(){
+      $this->User_model->add_user('globaladmin','admin@gmail.com', 'administrator', 'Admin10', 'admin' );
+      $test=$this->User_model->validate_user('globaladmin','Admin10');
+      $result=True;
+      $testName= 'Test username and password valid for login';
+      $testNote= 'untuk hasil passed username dan password ada dalam database';
+      $this->unit->run($test,$result,$testName,$testNote);
+    }
+    private function testValidateUserFalseInvalidUsername(){
+      $this->User_model->add_user('globaladmin','admin@gmail.com', 'administrator', 'Admin10', 'admin' );
+      $test=$this->User_model->validate_user('globaladminnnn','Admin10');
+      $result=False;
+      $testName= 'Test username and password invalid username for login';
+      $testNote= 'untuk hasil passed username tidak ada dalam database';
+      $this->unit->run($test,$result,$testName,$testNote);
+    }
+    private function testGetNames(){
+      $test=$this->User_model->get_names();
+      if(sizeof($test)>0){
+        $test=true;
+      }
+      else{
+        $test=false;
+      }
+      $result=true;
+      $testName= 'Test to get names ';
+      $testNote= 'if return test > 0 test passed else failed';
+      $this->unit->run($test,$result,$testName,$testNote);
+    }
+    
+
     /** ----- INPUT REYNER's CODE HERE ----- **/
     public function testGetAllNotifications(){
       $test=$this->Notifications_model->get_all_notifications();
