@@ -520,10 +520,6 @@ class TestUnit extends CI_Controller {
     }
 
 
-
-
-
-
     /** ----- INPUT ENRICO's CODE HERE ----- **/
     public function testAllAssignments(){
       $test=$this->Assignment_model->all_assignments();
