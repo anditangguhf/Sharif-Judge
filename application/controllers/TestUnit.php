@@ -12,7 +12,7 @@ class TestUnit extends CI_Controller {
         $this->load->model('Logs_model');           //YONATHAN
         $this->load->model('Notifications_model');  //REYNER
         $this->load->model('Queue_model');          //KIPPI
-        $this->load->model('Scoreboard_model');       //COCO 
+        $this->load->model('Scoreboard_model');       //COCO
         $this->load->model('Settings_model');       //KIPPI
         $this->load->model('Submit_model');         //KIPPI
         $this->load->model('User_model');           //YONATHAN
@@ -60,15 +60,15 @@ class TestUnit extends CI_Controller {
         *   Clean sharifjudge's database tables by emptying the table
         */
 
-        $this->db->empty_table('shj_assignments');
-        // // $this->db->empty_table('shj_logins');
-        $this->db->empty_table('shj_notifications');
-        $this->db->empty_table('shj_problems');
-        $this->db->empty_table('shj_queue');
-        $this->db->empty_table('shj_scoreboard');
-        // $this->db->empty_table('shj_sessions');
-        // $this->db->empty_table('shj_settings');
-        $this->db->empty_table('shj_submissions');
+        // $this->db->empty_table('shj_assignments');
+        // // // $this->db->empty_table('shj_logins');
+        // $this->db->empty_table('shj_notifications');
+        // $this->db->empty_table('shj_problems');
+        // $this->db->empty_table('shj_queue');
+        // $this->db->empty_table('shj_scoreboard');
+        // // $this->db->empty_table('shj_sessions');
+        // // $this->db->empty_table('shj_settings');
+        // $this->db->empty_table('shj_submissions');
         //only for 'shj_users' table, only delete records other than id = 1 (root)
         // $this->db->query('DELETE FROM shj_users WHERE id != 1');
 
@@ -76,26 +76,27 @@ class TestUnit extends CI_Controller {
 
         /** KIPPI's FUNCTIONS HERE **/
         // $this->testGetSubmission('kippi123', 'PBO1', 'Test1', 1);
+        $this->getASetting('enable_log');
         // $this->testSetASetting('enable_log', 1);
-        // $this->testEmptyAQueue();
+        $this->testEmptyAQueue();
         $this->testAddQueue();
 
         /** YONATHAN's FUNCTIONS HERE **/
-        $this->testAddUserTrue();
-        $this->testAddUserRoleInvalid();
-        $this->testAddUserUsernameExist();
-        $this->testAddUserErrorLowercase();
-        $this->testAddUserEmailExistError();
-        $this->testAddUserLengthUsernameError();
-        $this->testAddUserWrongUsernameAlphaNumeric();
-        $this->testHaveUserTrue();
-        $this->testhaveUserFalse();
-        $this->testUsernameToUserId();
-        $this->testUsernameToUserIdFalse();
-        $this->testUserIdToUsernameTrueId();
-        $this->testUserIdToUsernameFalseIdNotfound();
-        $this->testUserIdToUsernameFalseIdAlphanumeric();
-        $this->testInsertToLogs();
+         $this->testAddUserTrue();
+        // $this->testAddUserRoleInvalid();
+        // $this->testAddUserUsernameExist();
+        // $this->testAddUserErrorLowercase();
+        // $this->testAddUserEmailExistError();
+        // $this->testAddUserLengthUsernameError();
+        // $this->testAddUserWrongUsernameAlphaNumeric();
+        // $this->testHaveUserTrue();
+        // $this->testhaveUserFalse();
+        // $this->testUsernameToUserId();
+        // $this->testUsernameToUserIdFalse();
+        // $this->testUserIdToUsernameTrueId();
+        // $this->testUserIdToUsernameFalseIdNotfound();
+        // $this->testUserIdToUsernameFalseIdAlphanumeric();
+        // $this->testInsertToLogs();
 
         /** REYNER's FUNCTIONS HERE **/
         $this->testAddNotifications();
@@ -112,8 +113,9 @@ class TestUnit extends CI_Controller {
 
     /* ------------ END OF CODE ----------- */
 
-
-        /** VIO's FUNCTIONS HERE **/
+         $this->add_user_manual();
+        //$this->add_assignment_manual();
+        $this->deleteUser();
 
         /** run report function here **/
         $this->report();
@@ -133,13 +135,77 @@ class TestUnit extends CI_Controller {
         $testNote= '';
         $this->unit->run($test,$result,$testName,$testNote);
 
-        $test=$this->Assignment_model->delete_assignment('DAA1');
-        $result='';
-        $testName= '';
-        $testNote= '';
-        $this->unit->run($test,$result,$testName,$testNote);
+    /* GLOBAL FUNCTIONS FOR TESTING */
 
+    /*
+    *   Function untuk add user menggunakan mysql $query
+    */
+    private function add_user_manual(){
+        $data = array(
+            'username'  => 'testuser',
+            'password'  => '$2a$08$ZVY15Ckd5JpQjD6hViEP/OOto/mTjGPKJGtSz9.8TV5ofUoblsk2W',
+            'display_name'  => 'adminn',
+            'email' => 'adminn@gmail.com',
+            'role'  => 'admin',
+        );
+        echo var_dump($this->db->insert('shj_users',$data));
     }
+    /*
+    *   Function untuk add assignment menggunakan mysql $query
+    */
+    // private function add_assignment_manual(){
+    //     // echo var_dump($this->db->get('shj_assignments')->result());
+    //
+    //     $data =array(
+    //         'name'  => 'cobaaa',
+    //         'problmes'  => '1',
+    //         'total_submits' => '0',
+    //         'open'  => '0',
+    //         'scoreboard'    => '0',
+    //         'javaexceptions' => '0',
+	// 		'description' => 'cobacobacoba',
+	// 		'start_time' => '2019-02-21 00:00:00',
+	// 		'finish_time' => '2019-02-22 00:00:00',
+	// 		'extra_time' => '300',
+	// 		'late_rule' => '/*
+        //  * Put coefficient (from 100) in variable $coefficient.
+        //  * You can use variables $extra_time and $delay.
+        //  * $extra_time is the total extra time given to users
+        //  * (in seconds) and $delay is number of seconds passed
+        //  * from finish time (can be negative).
+        //  *  In this example, $extra_time is 172800 (2 days):
+        //  */
+        //
+        // if ($delay<=0)
+        //   // no delay
+        //   $coefficient = 100;
+        //
+        // elseif ($delay<=3600)
+        //   // delay less than 1 hour
+        //   $coefficient = ceil(100-((30*$delay)/3600));
+        //
+        // elseif ($delay<=86400)
+        //   // delay more than 1 hour and less than 1 day
+        //   $coefficient = 70;
+        //
+        // elseif (($delay-86400)<=3600)
+        //   // delay less than 1 hour in second day
+        //   $coefficient = ceil(70-((20*($delay-86400))/3600));
+        //
+        // elseif (($delay-86400)<=86400)
+        //   // delay more than 1 hour in second day
+        //   $coefficient = 50;
+        //
+        // elseif ($delay > $extra_time)
+        //   // too late
+        //   $coefficient = 0;',
+			// 'participants' => 'ALL',
+            // 'moss_update'   => 'Never',
+			// 'archived_assignment' => '0',
+        // );
+        // echo var_dump("test");
+        // echo var_dump($this->db->insert('shj_assignments',$data));
+    // }
 
     /** ----- INPUT KIPPI's CODE HERE ----- **/
 
@@ -187,6 +253,23 @@ class TestUnit extends CI_Controller {
     }
 
     /*
+    *   SETTINGS_MODEL
+    *   Testing function to get a setting
+    *   Expected to return a setting value
+    *   @param $key : the setting name
+    */
+    private function getASetting($key) {
+        //set the setting to a value first, and get the value to be tested
+        $this->Settings_model->set_setting($key, 1);
+
+        $test = $this->Settings_model->get_setting($key);
+        $result = 1;
+        $testName = "testSetASetting";
+        $testNote  = "Test get a setting value after update value";
+        $this->unit->run($test, $result, $testName, $testNote);
+    }
+
+    /*
     *   QUEUE_MODEL
     *   Testing function to empty a queue
     *   Expected to return true, meaning test succeed
@@ -211,6 +294,24 @@ class TestUnit extends CI_Controller {
         /*
         *   flow: get available assignment id->add new assignment->add to queue
         */
+
+        //add testUser for testing purpose
+        $this->User_model->add_user('testuser','tu@mail.com', 'testuser', 'test123', 'admin' );
+
+        $available_id = $this->Assignment_model->new_assignment_id(); //returns 1 karena table kosong
+
+        echo var_dump($available_id);
+        //add new assignment using current available id
+        echo var_dump($this->Assignment_model->add_assignment($id));
+
+        //then add a submission to the assignment queue for submimssion id = 1
+        // $submit_info = array(
+        //     'submit_id' => 1,
+        //     'username'  => 'globaladmin',
+        //     'assignment'=> '',  //assignment name
+        //     'problem'   => ''   //problem name
+        // );
+        // $test = $this->Queue_model->add_to_queue($submit_info);
 
     }
 
@@ -454,8 +555,17 @@ class TestUnit extends CI_Controller {
 
 
     /** ----- INPUT VIO's CODE HERE ----- **/
-
-
+private function deleteUser(){
+    $this->User_model->add_user('nadyavio','7315005@student.unpar.ac.id','nadya','Nadya123','admin');
+    $user=$this->User_model->get_all_users();
+    $count = sizeof($user);
+    $test=$this->User_model->delete_user($user[$count-1]['id']);
+    $count2 = sizeof($this->User_model->get_all_users());
+    $result = FALSE;
+    if($count!=$count2){$result = TRUE;}
+    $testName='Test to delete user';
+    $testNote='Delete user';
+    $this->unit->run($test,$result,$testName,$testNote);
 }
 
 ?>
