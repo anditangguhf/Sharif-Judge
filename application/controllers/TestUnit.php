@@ -12,7 +12,7 @@ class TestUnit extends CI_Controller {
         $this->load->model('Logs_model');           //YONATHAN
         $this->load->model('Notifications_model');  //REYNER
         $this->load->model('Queue_model');          //KIPPI
-        $this->load->model('Scoreboard_model');       //COCO
+        $this->load->model('Scoreboard_model');     //COCO
         $this->load->model('Settings_model');       //KIPPI
         $this->load->model('Submit_model');         //KIPPI
         $this->load->model('User_model');           //YONATHAN
@@ -535,7 +535,7 @@ class TestUnit extends CI_Controller {
 
     public function testNewAssignmentId(){
         $test=$this->Assignment_model->new_assignment_id();
-        $result=$max;
+        $result=($this->db->select_max('id', 'max_id')->get('assignments')->row()->max_id) + 1;;
         $testName='Test new assignment id';
         $testNote='Finds the smallest integer that can be uses as id for a new assignment';
         $this->unit->run($test,$result,$testName,$testNote);
@@ -545,9 +545,30 @@ class TestUnit extends CI_Controller {
         $this->Assignment_model->increase_total_submits('');
         $test=$this->Assignment_model->increase_total_submits('T15062');
         $result=$total+1;
-        $testName='Increse total submits';
+        $testName='Test increase total submits';
         $testNote='Increases number of total submits for given assignment by one';
         $this->unit->run($test,$result,$testName,$testNote);
+    }
+
+    public function testAllProblem(){
+      $this->Assignment_model->all_problems('T15062');
+      $test=$this->Assignment_model->all_problems('T15060');
+      $result=$problems;
+      $testName='Test all Problems of an Assignment';
+      $testNote='Returns an array containing all problems of given assignment';
+      $this->unit->run($test,$result,$testName,$testNote);
+
+
+    }
+
+    publix fuction testIsParticipant(){
+      $test=$this->Assignment_model->is_participant('user1','i15062');
+      $result=TRUE;
+      $testName='Test is Participant';
+      $testNote='Returns TRUE if $username if one of the $participants';
+      $this->unit->run($test,$result,$testName,$testNote);
+
+
     }
 
 
