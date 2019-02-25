@@ -114,17 +114,18 @@ class TestUnit extends CI_Controller {
         $this->testIsParticipant();
 
         /** VIO **/
-        //$this->deleteUser();
+        // $this->deleteUser();
 
     /* ------------ END OF CODE ----------- */
 
         // $this->add_user_manual();
         // $this->add_assignment_manual();
-        // $this->deleteUser();
+        $this->add_submission_manual();
+        $this->add_queue_manual();
 
         /** run report function here **/
-        $this->report();
-        $this->generateFile($this->unit->report());
+        // $this->report();
+        // $this->generateFile($this->unit->report());
         /* ------------------------------------------------------------------ */
     }
     /* GLOBAL FUNCTIONS FOR TESTING */
@@ -146,6 +147,7 @@ class TestUnit extends CI_Controller {
         );
         echo var_dump($this->db->insert('shj_users',$data));
     }
+
     /*
     *   Function untuk add assignment menggunakan mysql $query
     */
@@ -203,7 +205,79 @@ class TestUnit extends CI_Controller {
         );
 
         echo var_dump($this->db->insert('shj_assignments',$data));
+
+        /*
+        *   after assignment is added, do add a test problem to db
+        *   clean shj_problems db first
+        */
+        $this->db->query('DELETE FROM shj_problems');
+
+        // echo var_dump($this->db->get('shj_problems')->result());
+        $prob = array(
+            'assignment'        => '1',
+            'id'                => '1',
+            'name'              => 'Test Problem',
+            'score'             => '100',
+            'is_upload_only'    => '0',
+            'c_time_limit'      => '500',
+            'python_time_limit' => '1500',
+            'java_time_limit'   => '2000',
+            'memory_limit'      => '50000',
+            'allowed_languages' => 'C,C++,Python 2, Python 3, Java',
+            'diff_cmd'          => 'diff',
+            'diff_arg'          => '-bB'
+        );
+        // echo var_dump($prob);
+        echo var_dump($this->db->insert('shj_problems', $prob));
     }
+
+    /*
+    *   Function untuk menambah submission ke dalam queue
+    *   kemudian set submission tersebut menjadi final submission
+    */
+    private function add_submission_manual() {
+        /* clean shj_submissions db */
+        // $this->db->query('DELETE FROM shj_submissions');
+
+
+        $submit_info = array(
+            'submit_id'     => '1',
+            'username'      => 'testuser',
+            'assignment'    => '1',
+            'problem'       => '1',
+            // 'is_final'      => '1',
+            'time'          => date('Y-m-d H:i:s'),
+            'status'        => '0',
+            'pre-score'     => '0',
+            'coefficient'   => '100%',
+            'file_name'     => 'test_file.java',
+            'main_file_name'=> 'test_file.java',
+            'file_type'     => 'java'
+        );
+        // echo var_dump($submit_info);
+
+        //add to submission db
+        echo var_dump($this->db->insert('shj_submissions', $submit_info));
+    }
+
+    private function add_queue_manual() {
+        /* clean shj_queue db */
+        $this->db->query('DELETE FROM shj_queue');
+
+        $queue_info = array(
+            'submit_id' => '1',
+			'username' => 'testuser',
+			'assignment' => '1',
+			'problem' => '1',
+			'type' => 'judge'
+        );
+
+        //add to queue db
+        echo var_dump($this->db->insert('shj_queue', $queue_info));
+    }
+
+
+
     /** ----- INPUT KIPPI's CODE HERE ----- **/
 
     /*
