@@ -75,9 +75,10 @@ class TestUnit extends CI_Controller {
         /* ------------------------------------------------------------------ */
 
         /** KIPPI's FUNCTIONS HERE **/
-        // $this->testGetSubmission('kippi123', 'PBO1', 'Test1', 1);
+        // $this->testGetSubmission('kippi123', 'PBO1', 'Test1', 1); 
+        $this->getASetting('enable_log');
         // $this->testSetASetting('enable_log', 1);
-        // $this->testEmptyAQueue();
+        $this->testEmptyAQueue();
         $this->testAddQueue();
 
         /** YONATHAN's FUNCTIONS HERE **/
@@ -98,9 +99,9 @@ class TestUnit extends CI_Controller {
         $this->testInsertToLogs();
 
         /** REYNER's FUNCTIONS HERE **/
-        // $this->addNotifications();
-        // $this->testGetAllNotifications();
-        // $this->testGetLatestNotifications();
+        $this->addNotifications();
+        $this->testGetAllNotifications();
+        $this->testGetLatestNotifications();
 
         /** ENRICO's FUNCTIONS HERE **/
 
@@ -178,6 +179,23 @@ class TestUnit extends CI_Controller {
     }
 
     /*
+    *   SETTINGS_MODEL
+    *   Testing function to get a setting
+    *   Expected to return a setting value
+    *   @param $key : the setting name
+    */
+    private function getASetting($key) {
+        //set the setting to a value first, and get the value to be tested
+        $this->Settings_model->set_setting($key, 1);
+
+        $test = $this->Settings_model->get_setting($key);
+        $result = 1;
+        $testName = "testSetASetting";
+        $testNote  = "Test get a setting value after update value";
+        $this->unit->run($test, $result, $testName, $testNote);
+    }
+
+    /*
     *   QUEUE_MODEL
     *   Testing function to empty a queue
     *   Expected to return true, meaning test succeed
@@ -202,6 +220,24 @@ class TestUnit extends CI_Controller {
         /*
         *   flow: get available assignment id->add new assignment->add to queue
         */
+
+        //add testUser for testing purpose
+        $this->User_model->add_user('testuser','tu@mail.com', 'testuser', 'test123', 'admin' );
+
+        $available_id = $this->Assignment_model->new_assignment_id(); //returns 1 karena table kosong
+
+        echo var_dump($available_id);
+        //add new assignment using current available id
+        echo var_dump($this->Assignment_model->add_assignment($id));
+
+        //then add a submission to the assignment queue for submimssion id = 1
+        // $submit_info = array(
+        //     'submit_id' => 1,
+        //     'username'  => 'globaladmin',
+        //     'assignment'=> '',  //assignment name
+        //     'problem'   => ''   //problem name
+        // );
+        // $test = $this->Queue_model->add_to_queue($submit_info);
 
     }
 
