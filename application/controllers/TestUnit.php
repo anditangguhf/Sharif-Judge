@@ -75,10 +75,12 @@ class TestUnit extends CI_Controller {
         /* ------------------------------------------------------------------ */
 
         /** KIPPI's FUNCTIONS HERE **/
-        // $this->testGetSubmission('kippi123', 'PBO1', 'Test1', 1);
         // $this->getASetting('enable_log');
         // $this->testSetASetting('enable_log', 1);
+        // $this->getAllSettings();
         // $this->testEmptyAQueue();
+
+        // $this->testGetSubmission('kippi123', 'PBO1', 'Test1', 1);
         // $this->testAddQueue();
 
         /** YONATHAN's FUNCTIONS HERE **/
@@ -107,11 +109,11 @@ class TestUnit extends CI_Controller {
         // $this->testGetNotifications();
         //
         // /** ENRICO's FUNCTIONS HERE **/
-        $this->testAllAssignments();
-        $this->testNewAssignmentId();
-        $this->testIncreaseTotalSubmits();
-        $this->testAllProblem();
-        $this->testIsParticipant();
+        // $this->testAllAssignments();
+        // $this->testNewAssignmentId();
+        // $this->testIncreaseTotalSubmits();
+        // $this->testAllProblem();
+        // $this->testIsParticipant();
 
         /** VIO **/
         // $this->deleteUser();
@@ -124,7 +126,7 @@ class TestUnit extends CI_Controller {
         // $this->add_queue_manual();
 
         /** run report function here **/
-        // $this->report();
+        $this->report();
         // $this->generateFile($this->unit->report());
         /* ------------------------------------------------------------------ */
     }
@@ -357,7 +359,13 @@ class TestUnit extends CI_Controller {
     *   by comparing expected settings row with get_all_settings() function
     */
     private function getAllSettings() {
-        $count =
+        $count = $this->db->get('shj_settings')->num_rows();
+        // echo var_dump();
+        $test = sizeof($this->Settings_model->get_all_settings());
+        $result = $count;
+        $testName = "testSetAllSettings";
+        $testNote  = "Test get all setting by comparing row count, expected to return 26 rows";
+        $this->unit->run($test, $result, $testName, $testNote);
     }
 
     /*
@@ -366,11 +374,15 @@ class TestUnit extends CI_Controller {
     *   Expected to return true, meaning test succeed
     */
     private function testEmptyAQueue() {
-        $totalQueue = sizeof($this->Queue_model->get_queue());
+        $this->add_user_manual();
+        $this->add_assignment_manual();
+        $this->add_queue_manual();
+
         $test       = $this->Queue_model->empty_queue();
-        $result     = true;
+        $totalQueue = sizeof($this->Queue_model->get_queue());
+        $result     = ($totalQueue == 0) ? true : false;
         $testName   = 'testEmptyAQueue';
-        $testNote   = 'test to empty queue table from db, expected to return true';
+        $testNote   = 'test to empty queue table from db, expected to return true if totalQueue == 0';
         $this->unit->run($test,$result,$testName,$testNote);
     }
 
@@ -385,25 +397,25 @@ class TestUnit extends CI_Controller {
         /*
         *   flow: get available assignment id->add new assignment->add to queue
         */
-
-        //add testUser for testing purpose
-        $this->User_model->add_user('testuser','tu@mail.com', 'testuser', 'test123', 'admin' );
-
-        $available_id = $this->Assignment_model->new_assignment_id(); //returns 1 karena table kosong
-
-        echo var_dump($available_id);
-        //add new assignment using current available id
-        echo var_dump($this->Assignment_model->add_assignment($id));
-
-        //then add a submission to the assignment queue for submimssion id = 1
-        // $submit_info = array(
-        //     'submit_id' => 1,
-        //     'username'  => 'globaladmin',
-        //     'assignment'=> '',  //assignment name
-        //     'problem'   => ''   //problem name
+        // $this->add_user_manual();
+        // $this->add_assignment_manual();
+        // $this->add_queue_manual();
+        //
+        // $current_queue = sizeof($this->Queue_model->get_queue());
+        //
+        // $queue_info = array(
+        //     'submit_id' => '1',
+        //     'username' => 'testuser',
+        //     'assignment' => '1',
+        //     'problem' => '1',
+        //     'type' => 'judge'
         // );
-        // $test = $this->Queue_model->add_to_queue($submit_info);
-
+        //
+        // $test       = $this->Queue_model->add_to_queue($queue_info);
+        // $result     = $current_queue+1;
+        // $testName   = 'testAddQueue';
+        // $testNote   = 'test to add queue to db, expected to return queue_count + 1';
+        // $this->unit->run($test,$result,$testName,$testNote);
     }
 
     /** ----- INPUT YONATHAN's CODE HERE ----- **/
