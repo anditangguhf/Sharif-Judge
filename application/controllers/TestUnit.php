@@ -759,6 +759,8 @@ class TestUnit extends CI_Controller {
     }
 
     public function testIncreaseTotalSubmits(){
+        $this->add_user_manual();
+        $this->add_assignment_manual();
         $this->Assignment_model->increase_total_submits('');
         $test=$this->Assignment_model->increase_total_submits('T15062');
         $result=$total+1;
