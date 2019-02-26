@@ -112,13 +112,14 @@ class TestUnit extends CI_Controller {
         // $this->testGetLatestNotifications();
         // $this->testUpdateNotification();
         // $this->testDeleteNotification();
+        // $this->testGetNotifications();
         //
         // /** ENRICO's FUNCTIONS HERE **/
-         $this->testAllAssignments();
-         $this->testNewAssignmentId();
-         $this->testIncreaseTotalSubmits();
-         $this->testAllProblem();
-         $this->testIsParticipant();
+        $this->testAllAssignments();
+        $this->testNewAssignmentId();
+        $this->testIncreaseTotalSubmits();
+        $this->testAllProblem();
+        $this->testIsParticipant();
 
         /** VIO **/
       //  $this->deleteUser();
@@ -127,7 +128,8 @@ class TestUnit extends CI_Controller {
 
         // $this->add_user_manual();
         // $this->add_assignment_manual();
-        // $this->deleteUser();
+        // $this->add_submission_manual(); /* TODO: masih error */
+        // $this->add_queue_manual();
 
         /** run report function here **/
         $this->report();
@@ -135,6 +137,13 @@ class TestUnit extends CI_Controller {
         /* ------------------------------------------------------------------ */
     }
     /* GLOBAL FUNCTIONS FOR TESTING */
+
+    /**
+    *   function to get current assignment id
+    */
+    private function get_current_assignment_id() {
+        return $this->db->select_max('id', 'max_id')->get('assignments')->row()->max_id;
+    }
 
     /*
     *   Function untuk add user menggunakan mysql $query
@@ -151,8 +160,10 @@ class TestUnit extends CI_Controller {
             'email' => 'tu@mail.com',
             'role'  => 'admin',
         );
-        echo var_dump($this->db->insert('shj_users',$data));
+        // echo var_dump($this->db->insert('shj_users',$data));
+        $this->db->insert('shj_users',$data);
     }
+
     /*
     *   Function untuk add assignment menggunakan mysql $query
     */
@@ -210,10 +221,85 @@ class TestUnit extends CI_Controller {
         );
 
         echo var_dump($this->db->insert('shj_assignments',$data));
+
+        /*
+        *   after assignment is added, do add a test problem to db
+        *   clean shj_problems db first
+        */
+        $this->db->query('DELETE FROM shj_problems');
+
+        // echo var_dump($this->db->get('shj_problems')->result());
+        $prob = array(
+            'assignment'        => '1',
+            'id'                => '1',
+            'name'              => 'Test Problem',
+            'score'             => '100',
+            'is_upload_only'    => '0',
+            'c_time_limit'      => '500',
+            'python_time_limit' => '1500',
+            'java_time_limit'   => '2000',
+            'memory_limit'      => '50000',
+            'allowed_languages' => 'C,C++,Python 2, Python 3, Java',
+            'diff_cmd'          => 'diff',
+            'diff_arg'          => '-bB'
+        );
+        // echo var_dump($prob);
+        // echo var_dump($this->db->insert('shj_problems', $prob));
+        $this->db->insert('shj_problems', $prob);
     }
-    /** ----- INPUT KIPPI's CODE HERE ----- **/
 
     /*
+    *   Function untuk menambah submission ke dalam queue
+    *   kemudian set submission tersebut menjadi final submission
+    *   // TODO: masih error belum bisa masukin data ke db secara manual
+    */
+    private function add_submission_manual() {
+        /* clean shj_submissions db */
+        // $this->db->query('DELETE FROM shj_submissions');
+
+
+        $submit_info = array(
+            'submit_id'     => '1',
+            'username'      => 'testuser',
+            'assignment'    => '1',
+            'problem'       => '1',
+            'is_final'      => 1,
+            'time'          => date('Y-m-d H:i:s'),
+            'status'        => '0',
+            'pre-score'     => 100,
+            'coefficient'   => '100%',
+            'file_name'     => 'test_file.java',
+            'main_file_name'=> 'test_file.java',
+            'file_type'     => 'java'
+        );
+        // echo var_dump($submit_info);
+
+        //add to submission db
+        echo var_dump($this->db->insert('shj_submissions', $submit_info));
+    }
+
+    private function add_queue_manual() {
+        /* clean shj_queue db */
+        $this->db->query('DELETE FROM shj_queue');
+
+        $queue_info = array(
+            'submit_id' => '1',
+			'username' => 'testuser',
+			'assignment' => '1',
+			'problem' => '1',
+			'type' => 'judge'
+        );
+
+        //add to queue db
+        // echo var_dump($this->db->insert('shj_queue', $queue_info));
+        $this->db->insert('shj_queue', $queue_info);
+    }
+
+
+
+    /** ----- INPUT KIPPI's CODE HERE ----- **/
+
+    /**
      * Testing function get_submission di file Submit_model.php
      */
     private function testGetSubmission($username, $assignment, $problem, $submit_id) {
@@ -224,7 +310,7 @@ class TestUnit extends CI_Controller {
         $this->unit->run($test, $result, $testName, $testNote);
     }
 
-    /*
+    /**
     *   Testing function to get submission after a submission is added to db
     *   Expected to return a table row of the added submission
     */
@@ -235,7 +321,7 @@ class TestUnit extends CI_Controller {
         testGetSubmission($username, $assignment, $problem, $submit_id);
     }
 
-    /*
+    /**
     *   SETTINGS_MODEL
     *   Testing function to set single setting
     *   Expected to return a different value than the setting before
@@ -256,7 +342,7 @@ class TestUnit extends CI_Controller {
         $this->unit->run($test, $result, $testName, $testNote);
     }
 
-    /*
+    /**
     *   SETTINGS_MODEL
     *   Testing function to get a setting
     *   Expected to return a setting value
@@ -628,18 +714,37 @@ class TestUnit extends CI_Controller {
       $this->unit->run($testt,$result,$testName,$testNote);
     }
 
+    public function testGetNotifications(){
+      $add=$this->Notifications_model->add_notification('notifikasi','Ada ujian');
+      $all=$this->Notifications_model->get_all_notifications();
+      $test=$this->Notifications_model-> get_notification($add[0]['id']);
+      if($test == false){
+        $test=true;
+      }
+      $result=TRUE;
+      $testName= 'Test get notification on judge';
+      $testNote= 'get specific notification';
+      $this->unit->run($test,$result,$testName,$testNote);
+    }
 
-
+    // public function testHaveNewNotifications(){
+    //
+    // }
 
 
 
     /** ----- INPUT ENRICO's CODE HERE ----- **/
     public function testAllAssignments(){
       $test=$this->Assignment_model->all_assignments();
-      $result=$assignments;
+      $result = $this->db->order_by('id')->get('assignments')->result_array();
+  		$resultt = array();
+  		foreach ($result as $item)
+  		{
+  			$resultt[$item['id']] = $item;
+  		}
       $testName='Test all assignments';
       $testNote='Returns a list of all assignments and their information';
-      $this->unit->run($test,$result,$testName,$testNote);
+      $this->unit->run($test,$resultt,$testName,$testNote);
     }
 
     public function testNewAssignmentId(){
@@ -647,7 +752,7 @@ class TestUnit extends CI_Controller {
         $this->add_assignment_manual();
         $current_id = $this->get_current_assignment_id();
         $test=$this->Assignment_model->new_assignment_id();
-        $result=($this->db->select_max('id', 'max_id')->get('assignments')->row()->max_id) + 1;;
+        $result=$current_id+1;
         $testName='Test new assignment id';
         $testNote='Finds the smallest integer that can be uses as id for a new assignment';
         $this->unit->run($test,$result,$testName,$testNote);
@@ -665,9 +770,7 @@ class TestUnit extends CI_Controller {
     }
 
     public function testAllProblem(){
-      $this->Assignment_model->all_problems('T15062');
-      $test=$this->Assignment_model->all_problems('T15060');
-      $result=$problems;
+      $test=$this->Assignment_model->all_problems('T15062');
       $testName='Test all Problems of an Assignment';
       $testNote='Returns an array containing all problems of given assignment';
       $this->unit->run($test,$result,$testName,$testNote);
@@ -676,7 +779,8 @@ class TestUnit extends CI_Controller {
     }
 
     public function testIsParticipant(){
-      $test=$this->Assignment_model->is_participant('user1','i15062');
+      $this->Assignment_model->is_participant('user1','i15062');
+      $test=$this->Assignment_model->is_participant('ALL','i15062');
       $result=TRUE;
       $testName='Test is Participant';
       $testNote='Returns TRUE if $username if one of the $participants';
