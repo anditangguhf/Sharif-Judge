@@ -115,19 +115,11 @@ class TestUnit extends CI_Controller {
         // $this->testGetNotifications();
         //
         // /** ENRICO's FUNCTIONS HERE **/
-<<<<<<< HEAD
         $this->testAllAssignments();
         $this->testNewAssignmentId();
         $this->testIncreaseTotalSubmits();
         $this->testAllProblem();
         $this->testIsParticipant();
-=======
-        // $this->testAllAssignments();
-        // $this->testNewAssignmentId();
-        // $this->testIncreaseTotalSubmits();
-        // $this->testAllProblem();
-        // $this->testIsParticipant();
->>>>>>> 178b1a5d55dcd8ae547f12740ff59fa6ef85e667
 
         /** VIO **/
       //  $this->deleteUser();
@@ -140,11 +132,7 @@ class TestUnit extends CI_Controller {
         // $this->add_queue_manual();
 
         /** run report function here **/
-<<<<<<< HEAD
-        // $this->report();
-=======
         $this->report();
->>>>>>> 178b1a5d55dcd8ae547f12740ff59fa6ef85e667
         // $this->generateFile($this->unit->report());
         /* ------------------------------------------------------------------ */
     }
@@ -377,9 +365,6 @@ class TestUnit extends CI_Controller {
     *   by comparing expected settings row with get_all_settings() function
     */
     private function getAllSettings() {
-<<<<<<< HEAD
-        $count =
-=======
         $count = $this->db->get('shj_settings')->num_rows();
         // echo var_dump();
         $test = sizeof($this->Settings_model->get_all_settings());
@@ -387,7 +372,6 @@ class TestUnit extends CI_Controller {
         $testName = "testSetAllSettings";
         $testNote  = "Test get all setting by comparing row count, expected to return 26 rows";
         $this->unit->run($test, $result, $testName, $testNote);
->>>>>>> 178b1a5d55dcd8ae547f12740ff59fa6ef85e667
     }
 
     /*
@@ -764,11 +748,8 @@ class TestUnit extends CI_Controller {
     }
 
     public function testNewAssignmentId(){
-<<<<<<< HEAD
-=======
         $this->add_user_manual();
         $this->add_assignment_manual();
->>>>>>> 178b1a5d55dcd8ae547f12740ff59fa6ef85e667
         $current_id = $this->get_current_assignment_id();
         $test=$this->Assignment_model->new_assignment_id();
         $result=$current_id+1;
