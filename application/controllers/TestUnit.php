@@ -152,6 +152,7 @@ class TestUnit extends CI_Controller {
             'role'  => 'admin',
         );
         echo var_dump($this->db->insert('shj_users',$data));
+
     }
     /*
     *   Function untuk add assignment menggunakan mysql $query
