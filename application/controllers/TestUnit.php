@@ -678,6 +678,8 @@ class TestUnit extends CI_Controller {
     }
 
     public function testNewAssignmentId(){
+        $this->add_user_manual();
+        $this->add_assignment_manual();
         $current_id = $this->get_current_assignment_id();
         $test=$this->Assignment_model->new_assignment_id();
         $result=$current_id+1;
