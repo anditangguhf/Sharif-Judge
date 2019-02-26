@@ -130,6 +130,13 @@ class TestUnit extends CI_Controller {
     }
     /* GLOBAL FUNCTIONS FOR TESTING */
 
+    /**
+    *   function to get current assignment id
+    */
+    private function get_current_assignment_id() {
+        return $this->db->select_max('id', 'max_id')->get('assignments')->row()->max_id;
+    }
+
     /*
     *   Function untuk add user menggunakan mysql $query
     */
