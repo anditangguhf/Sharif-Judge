@@ -12,7 +12,7 @@ class TestUnit extends CI_Controller {
         $this->load->model('Logs_model');           //YONATHAN
         $this->load->model('Notifications_model');  //REYNER
         $this->load->model('Queue_model');          //KIPPI
-        $this->load->model('Scoreboard_model');     //COCO
+        $this->load->model('Scoreboard_model');       //COCO
         $this->load->model('Settings_model');       //KIPPI
         $this->load->model('Submit_model');         //KIPPI
         $this->load->model('User_model');           //YONATHAN
