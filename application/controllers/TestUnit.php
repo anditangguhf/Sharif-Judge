@@ -220,7 +220,8 @@ class TestUnit extends CI_Controller {
 			'archived_assignment' => '0',
         );
 
-        echo var_dump($this->db->insert('shj_assignments',$data));
+        // echo var_dump($this->db->insert('shj_assignments',$data));
+        $this->db->insert('shj_assignments',$data);
 
         /*
         *   after assignment is added, do add a test problem to db
