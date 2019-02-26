@@ -12,7 +12,7 @@ class TestUnit extends CI_Controller {
         $this->load->model('Logs_model');           //YONATHAN
         $this->load->model('Notifications_model');  //REYNER
         $this->load->model('Queue_model');          //KIPPI
-        $this->load->model('Scoreboard_model');       //COCO
+        $this->load->model('Scoreboard_model');     //COCO
         $this->load->model('Settings_model');       //KIPPI
         $this->load->model('Submit_model');         //KIPPI
         $this->load->model('User_model');           //YONATHAN
@@ -107,11 +107,11 @@ class TestUnit extends CI_Controller {
         // $this->testGetNotifications();
         //
         // /** ENRICO's FUNCTIONS HERE **/
-        // $this->testAllAssignments();
+        $this->testAllAssignments();
         $this->testNewAssignmentId();
-        // $this->testIncreaseTotalSubmits();
-        // $this->testAllProblem();
-        // $this->testIsParticipant();
+        $this->testIncreaseTotalSubmits();
+        $this->testAllProblem();
+        $this->testIsParticipant();
 
         /** VIO **/
         // $this->deleteUser();
@@ -120,11 +120,11 @@ class TestUnit extends CI_Controller {
 
         // $this->add_user_manual();
         // $this->add_assignment_manual();
-        // $this->add_submission_manual();
+        // $this->add_submission_manual(); /* TODO: masih error */
         // $this->add_queue_manual();
 
         /** run report function here **/
-        $this->report();
+        // $this->report();
         // $this->generateFile($this->unit->report());
         /* ------------------------------------------------------------------ */
     }
@@ -145,8 +145,7 @@ class TestUnit extends CI_Controller {
             'email' => 'tu@mail.com',
             'role'  => 'admin',
         );
-        // echo var_dump($this->db->insert('shj_users',$data));
-        $this->db->insert('shj_users',$data);
+        echo var_dump($this->db->insert('shj_users',$data));
     }
 
     /*
@@ -205,8 +204,7 @@ class TestUnit extends CI_Controller {
 			'archived_assignment' => '0',
         );
 
-        // echo var_dump($this->db->insert('shj_assignments',$data));
-        $this->db->insert('shj_assignments',$data);
+        echo var_dump($this->db->insert('shj_assignments',$data));
 
         /*
         *   after assignment is added, do add a test problem to db
@@ -230,8 +228,7 @@ class TestUnit extends CI_Controller {
             'diff_arg'          => '-bB'
         );
         // echo var_dump($prob);
-        // echo var_dump($this->db->insert('shj_problems', $prob));
-        $this->db->insert('shj_problems', $prob);
+        echo var_dump($this->db->insert('shj_problems', $prob));
     }
 
     /*
@@ -249,10 +246,10 @@ class TestUnit extends CI_Controller {
             'username'      => 'testuser',
             'assignment'    => '1',
             'problem'       => '1',
-            // 'is_final'      => '1',
+            'is_final'      => 1,
             'time'          => date('Y-m-d H:i:s'),
             'status'        => '0',
-            'pre-score'     => '0',
+            'pre-score'     => 100,
             'coefficient'   => '100%',
             'file_name'     => 'test_file.java',
             'main_file_name'=> 'test_file.java',
@@ -277,15 +274,14 @@ class TestUnit extends CI_Controller {
         );
 
         //add to queue db
-        // echo var_dump($this->db->insert('shj_queue', $queue_info));
-        $this->db->insert('shj_queue', $queue_info);
+        echo var_dump($this->db->insert('shj_queue', $queue_info));
     }
 
 
 
     /** ----- INPUT KIPPI's CODE HERE ----- **/
 
-    /*
+    /**
      * Testing function get_submission di file Submit_model.php
      */
     private function testGetSubmission($username, $assignment, $problem, $submit_id) {
@@ -296,7 +292,7 @@ class TestUnit extends CI_Controller {
         $this->unit->run($test, $result, $testName, $testNote);
     }
 
-    /*
+    /**
     *   Testing function to get submission after a submission is added to db
     *   Expected to return a table row of the added submission
     */
@@ -307,7 +303,7 @@ class TestUnit extends CI_Controller {
         testGetSubmission($username, $assignment, $problem, $submit_id);
     }
 
-    /*
+    /**
     *   SETTINGS_MODEL
     *   Testing function to set single setting
     *   Expected to return a different value than the setting before
@@ -328,7 +324,7 @@ class TestUnit extends CI_Controller {
         $this->unit->run($test, $result, $testName, $testNote);
     }
 
-    /*
+    /**
     *   SETTINGS_MODEL
     *   Testing function to get a setting
     *   Expected to return a setting value
@@ -343,6 +339,15 @@ class TestUnit extends CI_Controller {
         $testName = "testSetASetting";
         $testNote  = "Test get a setting value after update value";
         $this->unit->run($test, $result, $testName, $testNote);
+    }
+
+    /**
+    *   SETTINGS MODEL
+    *   Testing function to get all settings
+    *   by comparing expected settings row with get_all_settings() function
+    */
+    private function getAllSettings() {
+        $count =
     }
 
     /*
@@ -663,13 +668,8 @@ class TestUnit extends CI_Controller {
     }
 
     public function testNewAssignmentId(){
-        $this->add_user_manual();
-        $this->add_assignment_manual();
-        $current_id = $this->db->select_max('id', 'max_id')->get('assignments')->row()->max_id;
-        // echo var_dump($current_id);
-        // echo var_dump($this->Assignment_model->new_assignment_id());
         $test=$this->Assignment_model->new_assignment_id();
-        $result=$current_id+1;
+        $result=($this->db->select_max('id', 'max_id')->get('assignments')->row()->max_id) + 1;;
         $testName='Test new assignment id';
         $testNote='Finds the smallest integer that can be uses as id for a new assignment';
         $this->unit->run($test,$result,$testName,$testNote);
