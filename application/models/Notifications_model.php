@@ -19,7 +19,7 @@ class Notifications_model extends CI_Model
 
 
 	/**
-	 * Returns all notification
+	 * Returns all notifications
 	 */
 	public function get_all_notifications()
 	{
