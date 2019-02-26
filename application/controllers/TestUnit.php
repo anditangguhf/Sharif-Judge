@@ -234,6 +234,7 @@ class TestUnit extends CI_Controller {
     /*
     *   Function untuk menambah submission ke dalam queue
     *   kemudian set submission tersebut menjadi final submission
+    *   // TODO: masih error belum bisa masukin data ke db secara manual
     */
     private function add_submission_manual() {
         /* clean shj_submissions db */
