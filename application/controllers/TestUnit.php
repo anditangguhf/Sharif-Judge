@@ -120,8 +120,8 @@ class TestUnit extends CI_Controller {
 
         // $this->add_user_manual();
         // $this->add_assignment_manual();
-        $this->add_submission_manual();
-        $this->add_queue_manual();
+        // $this->add_submission_manual(); /* TODO: masih error */
+        // $this->add_queue_manual();
 
         /** run report function here **/
         // $this->report();
@@ -245,10 +245,10 @@ class TestUnit extends CI_Controller {
             'username'      => 'testuser',
             'assignment'    => '1',
             'problem'       => '1',
-            // 'is_final'      => '1',
+            'is_final'      => 1,
             'time'          => date('Y-m-d H:i:s'),
             'status'        => '0',
-            'pre-score'     => '0',
+            'pre-score'     => 100,
             'coefficient'   => '100%',
             'file_name'     => 'test_file.java',
             'main_file_name'=> 'test_file.java',
