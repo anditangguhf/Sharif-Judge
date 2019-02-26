@@ -97,6 +97,12 @@ class TestUnit extends CI_Controller {
         // $this->testUserIdToUsernameFalseIdNotfound();
         // $this->testUserIdToUsernameFalseIdAlphanumeric();
         // $this->testInsertToLogs();
+        // $this->testValidateUserTrue();
+        // $this->testValidateUserFalseInvalidUsername();
+        // $this->testGetNames();
+        // $this->testAddUsers();
+        //$this->testGetAllUsers();
+        $this->testGetUser();
 
         /** REYNER's FUNCTIONS HERE **/
         // $this->testAddNotifications();
@@ -111,7 +117,7 @@ class TestUnit extends CI_Controller {
         // $this->testIncreaseTotalSubmits();
 
         /** VIO **/
-        $this->deleteUser();
+      //  $this->deleteUser();
 
     /* ------------ END OF CODE ----------- */
 
@@ -451,9 +457,13 @@ class TestUnit extends CI_Controller {
       fclose($myfile);
     }
 
-    //add_users
     //delete submissions
-    //select assignment
+    //selected assignment
+    //update profile
+    //send password reset mail
+    //pass change is valid
+    //reset passwords
+    //update login time
     private function testValidateUserTrue(){
       $this->User_model->add_user('globaladmin','admin@gmail.com', 'administrator', 'Admin10', 'admin' );
       $test=$this->User_model->validate_user('globaladmin','Admin10');
@@ -481,10 +491,58 @@ class TestUnit extends CI_Controller {
       $result=true;
       $testName= 'Test to get names ';
       $testNote= 'if return test > 0 test passed else failed';
-      $this->unit->run($test,$result,$testName,$testNote);
+       $this->unit->run($test,$result,$testName,$testNote);
     }
 
+    private function testAddUsers(){
+      $text="andy \r\n reyner";
+      $send_mail="7315016@student.unpar.ac.id";
+      $delay="10";
 
+      $test=$this->User_model->add_users($text,$send_mail,$delay);
+      if(sizeof($test)>0){
+        $test=true;
+      }
+      else{
+        $test=false;
+      }
+      $result=true;
+      $testName= 'Test add users ';
+      $testNote= 'result passed if test > 0 and failed if test<=0';
+      $this->unit->run($test,$result,$testName,$testNote);
+
+    }
+    private function testGetAllUsers(){
+      $text="andy \r\n reyner";
+      $send_mail="7315016@student.unpar.ac.id";
+      $delay="10";
+      $this->User_model->add_users($text,$send_mail,$delay);
+      $test=$this->User_model->get_all_users();
+      if(sizeof($test)>0){
+        $test=true;
+      }
+      else {
+        $test=false;
+      }
+      $result=true;
+      $testName= 'Test get users ';
+      $testNote= 'result passed if test > 0 and failed if test<=0';
+      $this->unit->run($test,$result,$testName,$testNote);
+    }
+    private function testGetUser(){
+      $ids=$this->db->get_where('users', array('id'))->result();
+      $test=$this->User_model->get_user($ids[0]->id);
+      if(sizeof($test)>0){
+        $test=true;
+      }
+      else {
+        $test=false;
+      }
+      $result=true;
+      $testName= 'Test get user by id user ';
+      $testNote= 'result passed if test > 0 and failed if test<=0';
+      $this->unit->run($test,$result,$testName,$testNote);
+    }
     /** ----- INPUT REYNER's CODE HERE ----- **/
     public function testGetAllNotifications(){
       $test=$this->Notifications_model->get_all_notifications();
