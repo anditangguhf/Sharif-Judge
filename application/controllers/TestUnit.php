@@ -75,54 +75,57 @@ class TestUnit extends CI_Controller {
         /* ------------------------------------------------------------------ */
 
         /** KIPPI's FUNCTIONS HERE **/
-        // $this->getASetting('enable_log');
-        // $this->testSetASetting('enable_log', 1);
-        // $this->getAllSettings();
-        // $this->testEmptyAQueue();
+        $this->getASetting('enable_log');
+        $this->testSetASetting('enable_log', 1);
+        $this->getAllSettings();
+        $this->testEmptyAQueue();
 
-        // $this->testGetSubmission('kippi123', 'PBO1', 'Test1', 1);
-        // $this->testAddQueue();
+        //$this->testGetSubmission('kippi123', 'PBO1', 'Test1', 1);
+        //$this->testAddQueue();
 
         /** YONATHAN's FUNCTIONS HERE **/
-         // $this->testAddUserTrue();
-        // $this->testAddUserRoleInvalid();
-        // $this->testAddUserUsernameExist();
-        // $this->testAddUserErrorLowercase();
-        // $this->testAddUserEmailExistError();
-        // $this->testAddUserLengthUsernameError();
-        // $this->testAddUserWrongUsernameAlphaNumeric();
-        // $this->testHaveUserTrue();
-        // $this->testhaveUserFalse();
-        // $this->testUsernameToUserId();
-        // $this->testUsernameToUserIdFalse();
-        // $this->testUserIdToUsernameTrueId();
-        // $this->testUserIdToUsernameFalseIdNotfound();
-        // $this->testUserIdToUsernameFalseIdAlphanumeric();
-        // $this->testInsertToLogs();
-        // $this->testValidateUserTrue();
-        // $this->testValidateUserFalseInvalidUsername();
-        // $this->testGetNames();
-        // $this->testAddUsers();
-        //$this->testGetAllUsers();
+        $this->testAddUserTrue();
+        $this->testAddUserRoleInvalid();
+        $this->testAddUserUsernameExist();
+        $this->testAddUserErrorLowercase();
+        $this->testAddUserEmailExistError();
+        $this->testAddUserLengthUsernameError();
+        $this->testAddUserWrongUsernameAlphaNumeric();
+        $this->testHaveUserTrue();
+        $this->testhaveUserFalse();
+        $this->testUsernameToUserId();
+        $this->testUsernameToUserIdFalse();
+        $this->testUserIdToUsernameTrueId();
+        $this->testUserIdToUsernameFalseIdNotfound();
+        $this->testUserIdToUsernameFalseIdAlphanumeric();
+        $this->testInsertToLogs();
+        $this->testValidateUserTrue();
+        $this->testValidateUserFalseInvalidUsername();
+        $this->testGetNames();
+        $this->testAddUsers();
+        $this->testGetAllUsers();
         $this->testGetUser();
 
         /** REYNER's FUNCTIONS HERE **/
-        // $this->testAddNotifications();
-        // $this->testGetAllNotifications();
-        // $this->testGetLatestNotifications();
-        // $this->testUpdateNotification();
-        // $this->testDeleteNotification();
-        // $this->testGetNotifications();
-        //
+        $this->testAddNotifications();
+        $this->testGetAllNotifications();
+        $this->testGetLatestNotifications();
+        $this->testUpdateNotification();
+        $this->testDeleteNotification();
+        $this->testGetNotifications();
+
         // /** ENRICO's FUNCTIONS HERE **/
         $this->testAllAssignments();
         $this->testNewAssignmentId();
         $this->testIncreaseTotalSubmits();
         $this->testAllProblem();
         $this->testIsParticipant();
+        $this->testAssignmentInfo();
+        $this->testProblemInfo();
+        $this->testMossTime();
 
         /** VIO **/
-      //  $this->deleteUser();
+        $this->deleteUser();
 
     /* ------------ END OF CODE ----------- */
 
@@ -132,8 +135,9 @@ class TestUnit extends CI_Controller {
         // $this->add_queue_manual();
 
         /** run report function here **/
+        $this->generateFile($this->unit->report());
         $this->report();
-        // $this->generateFile($this->unit->report());
+
         /* ------------------------------------------------------------------ */
     }
     /* GLOBAL FUNCTIONS FOR TESTING */
@@ -736,6 +740,8 @@ class TestUnit extends CI_Controller {
 
     /** ----- INPUT ENRICO's CODE HERE ----- **/
     public function testAllAssignments(){
+      $this->add_user_manual();
+      $this->add_assignment_manual();
       $test=$this->Assignment_model->all_assignments();
       $result = $this->db->order_by('id')->get('assignments')->result_array();
   		$resultt = array();
@@ -762,8 +768,14 @@ class TestUnit extends CI_Controller {
     public function testIncreaseTotalSubmits(){
         $this->add_user_manual();
         $this->add_assignment_manual();
-        $this->Assignment_model->increase_total_submits('');
-        $test=$this->Assignment_model->increase_total_submits('T15062');
+        $query = $this->db->query("SELECT id from shj_assignments")->result();
+        $assignment_id = "";
+        foreach ($query as $key => $value) {
+            $assignment_id = $value->id;
+        }
+        $test=$this->Assignment_model->increase_total_submits($assignment_id);
+        $total = $this->db->select('total_submits')->get_where('assignments', array('id'=>$assignment_id))->row()->total_submits;
+        $this->db->where('id', $assignment_id)->update('assignments', array('total_submits'=>($total+1)));
         $result=$total+1;
         $testName='Test increase total submits';
         $testNote='Increases number of total submits for given assignment by one';
@@ -771,10 +783,23 @@ class TestUnit extends CI_Controller {
     }
 
     public function testAllProblem(){
-      $test=$this->Assignment_model->all_problems('T15062');
+      $this->add_user_manual();
+      $this->add_assignment_manual();
+      $query = $this->db->query("SELECT id from shj_assignments")->result();
+      $assignment_id = "";
+      foreach ($query as $key => $value) {
+          $assignment_id = $value->id;
+      }
+      $test=$this->Assignment_model->all_problems($assignment_id);
+      $result = $this->db->order_by('id')->get_where('problems', array('assignment'=>$assignment_id))->result_array();
+      $resultt = array();
+      foreach ($result as $row)
+      {
+          $resultt[$row['id']] = $row;
+      }
       $testName='Test all Problems of an Assignment';
       $testNote='Returns an array containing all problems of given assignment';
-      $this->unit->run($test,$result,$testName,$testNote);
+      $this->unit->run($test,$resultt,$testName,$testNote);
 
 
     }
@@ -788,6 +813,58 @@ class TestUnit extends CI_Controller {
       $this->unit->run($test,$result,$testName,$testNote);
 
 
+    }
+
+    public function testProblemInfo(){
+        $this->add_user_manual();
+        $this->add_assignment_manual();
+        $query = $this->db->query("SELECT id from shj_assignments")->result();
+        $queryy = $this->db->query("SELECT id from shj_problems")->result();
+        $assignment_id = "";
+        $problem_id="";
+        foreach ($query as $key => $value) {
+            $assignment_id = $value->id;
+        }
+        foreach ($queryy as $key => $value) {
+            $problem_id = $value->id;
+        }
+        $test=$this->Assignment_model->problem_info($assignment_id,$problem_id);
+        $result=$this->db->get_where('problems', array('assignment'=>$assignment_id, 'id'=>$problem_id))->row_array();
+        $testName='Problem Info';
+        $testNote='Returns database row for given problem (from given assignment)';
+        $this->unit->run($test,$result,$testName,$testNote);
+    }
+
+    public function testAssignmentInfo(){
+        $this->add_user_manual();
+        $this->add_assignment_manual();
+        $query = $this->db->query("SELECT id from shj_assignments")->result();
+        $assignment_id = "";
+        foreach ($query as $key => $value) {
+            $assignment_id = $value->id;
+        }
+        $test=$this->Assignment_model->assignment_info($assignment_id);
+        $query = $this->db->get_where('assignments', array('id'=>$assignment_id));
+        $result=$query->row_array();
+        $testName='Assignment Info';
+        $testNote='Returns database row for given assignment';
+        $this->unit->run($test,$result,$testName,$testNote);
+
+    }
+
+    public function testMossTime(){
+        $this->add_user_manual();
+        $this->add_assignment_manual();
+        $query = $this->db->query("SELECT id from shj_assignments")->result();
+        $assignment_id = "";
+        foreach ($query as $key => $value) {
+            $assignment_id = $value->id;
+        }        $test=$this->Assignment_model->set_moss_time($assignment_id);
+        $now = shj_now_str();
+        $result=$this->db->where('id', $assignment_id)->update('assignments', array('moss_update'=>$now));
+        $testName='Set Moss Time';
+        $testNote='Moss Update Time" for given assignment';
+        $this->unit->run($test,$result,$testName,$testNote);
     }
 
 
