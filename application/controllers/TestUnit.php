@@ -84,7 +84,7 @@ class TestUnit extends CI_Controller {
         //$this->testAddQueue();
 
         /** YONATHAN's FUNCTIONS HERE **/
-        $this->testAddUserTrue();
+         $this->testAddUserTrue();
         $this->testAddUserRoleInvalid();
         $this->testAddUserUsernameExist();
         $this->testAddUserErrorLowercase();
@@ -113,7 +113,7 @@ class TestUnit extends CI_Controller {
         $this->testUpdateNotification();
         $this->testDeleteNotification();
         $this->testGetNotifications();
-
+        //
         // /** ENRICO's FUNCTIONS HERE **/
         $this->testAllAssignments();
         $this->testNewAssignmentId();
@@ -126,6 +126,7 @@ class TestUnit extends CI_Controller {
 
         /** VIO **/
         $this->deleteUser();
+        $this->updateLoginTime();
 
     /* ------------ END OF CODE ----------- */
 
@@ -137,7 +138,6 @@ class TestUnit extends CI_Controller {
         /** run report function here **/
         $this->generateFile($this->unit->report());
         $this->report();
-
         /* ------------------------------------------------------------------ */
     }
     /* GLOBAL FUNCTIONS FOR TESTING */
@@ -883,6 +883,32 @@ private function deleteUser(){
     $testName='Test to delete user';
     $testNote='Delete user';
     $this->unit->run($test,$result,$testName,$testNote);
+}
+
+private function updateLoginTime(){
+    $now = shj_now_str();
+    $test=$this->db->select('first_login_time')->get_where('users', array('username'=>'nadyavio'))->row()->first_login_time;
+    $test1=null;
+    if($test==null){
+        $test=$this->db->select('first_login_time')->get_where('users', array('username'=>'nadyavio'))->row()->first_login_time;
+        $this->User_model->update_login_time('nadyavio');
+        $test1=$this->db->select('first_login_time')->get_where('users', array('username'=>'nadyavio'))->row()->first_login_time;
+    }
+    else{
+        $test=$this->db->select('last_login_time')->get_where('users', array('username'=>'nadyavio'))->row()->last_login_time;
+        $this->User_model->update_login_time('nadyavio');
+        $test1=$this->db->select('last_login_time')->get_where('users', array('username'=>'nadyavio'))->row()->last_login_time;
+    }
+    if($test != $test1){
+      $test1=true;
+    }else {
+      $test1=false;
+    }
+    $result=true;
+    $testName='Test to update login time';
+    $testNote='Update time';
+    $this->unit->run($test,$result,$testName,$testNote);
+
 }
 
 }
