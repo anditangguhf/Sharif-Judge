@@ -75,44 +75,44 @@ class TestUnit extends CI_Controller {
         /* ------------------------------------------------------------------ */
 
         /** KIPPI's FUNCTIONS HERE **/
-        // $this->getASetting('enable_log');
-        // $this->testSetASetting('enable_log', 1);
-        // $this->getAllSettings();
-        // $this->testEmptyAQueue();
+        $this->getASetting('enable_log');
+        $this->testSetASetting('enable_log', 1);
+        $this->getAllSettings();
+        $this->testEmptyAQueue();
 
         // $this->testGetSubmission('kippi123', 'PBO1', 'Test1', 1);
         // $this->testAddQueue();
 
         /** YONATHAN's FUNCTIONS HERE **/
-         // $this->testAddUserTrue();
-        // $this->testAddUserRoleInvalid();
-        // $this->testAddUserUsernameExist();
-        // $this->testAddUserErrorLowercase();
-        // $this->testAddUserEmailExistError();
-        // $this->testAddUserLengthUsernameError();
-        // $this->testAddUserWrongUsernameAlphaNumeric();
-        // $this->testHaveUserTrue();
-        // $this->testhaveUserFalse();
-        // $this->testUsernameToUserId();
-        // $this->testUsernameToUserIdFalse();
-        // $this->testUserIdToUsernameTrueId();
-        // $this->testUserIdToUsernameFalseIdNotfound();
-        // $this->testUserIdToUsernameFalseIdAlphanumeric();
-        // $this->testInsertToLogs();
-        // $this->testValidateUserTrue();
-        // $this->testValidateUserFalseInvalidUsername();
-        // $this->testGetNames();
-        // $this->testAddUsers();
-        //$this->testGetAllUsers();
+         $this->testAddUserTrue();
+        $this->testAddUserRoleInvalid();
+        $this->testAddUserUsernameExist();
+        $this->testAddUserErrorLowercase();
+        $this->testAddUserEmailExistError();
+        $this->testAddUserLengthUsernameError();
+        $this->testAddUserWrongUsernameAlphaNumeric();
+        $this->testHaveUserTrue();
+        $this->testhaveUserFalse();
+        $this->testUsernameToUserId();
+        $this->testUsernameToUserIdFalse();
+        $this->testUserIdToUsernameTrueId();
+        $this->testUserIdToUsernameFalseIdNotfound();
+        $this->testUserIdToUsernameFalseIdAlphanumeric();
+        $this->testInsertToLogs();
+        $this->testValidateUserTrue();
+        $this->testValidateUserFalseInvalidUsername();
+        $this->testGetNames();
+        $this->testAddUsers();
+        $this->testGetAllUsers();
         $this->testGetUser();
 
         /** REYNER's FUNCTIONS HERE **/
-        // $this->testAddNotifications();
-        // $this->testGetAllNotifications();
-        // $this->testGetLatestNotifications();
-        // $this->testUpdateNotification();
-        // $this->testDeleteNotification();
-        // $this->testGetNotifications();
+        $this->testAddNotifications();
+        $this->testGetAllNotifications();
+        $this->testGetLatestNotifications();
+        $this->testUpdateNotification();
+        $this->testDeleteNotification();
+        $this->testGetNotifications();
         //
         // /** ENRICO's FUNCTIONS HERE **/
         $this->testAllAssignments();
@@ -122,7 +122,8 @@ class TestUnit extends CI_Controller {
         $this->testIsParticipant();
 
         /** VIO **/
-      //  $this->deleteUser();
+        $this->deleteUser();
+        $this->updateLoginTime();
 
     /* ------------ END OF CODE ----------- */
 
@@ -132,8 +133,8 @@ class TestUnit extends CI_Controller {
         // $this->add_queue_manual();
 
         /** run report function here **/
+        $this->generateFile($this->unit->report());
         $this->report();
-        // $this->generateFile($this->unit->report());
         /* ------------------------------------------------------------------ */
     }
     /* GLOBAL FUNCTIONS FOR TESTING */
@@ -806,6 +807,32 @@ private function deleteUser(){
     $testName='Test to delete user';
     $testNote='Delete user';
     $this->unit->run($test,$result,$testName,$testNote);
+}
+
+private function updateLoginTime(){
+    $now = shj_now_str();
+    $test=$this->db->select('first_login_time')->get_where('users', array('username'=>'nadyavio'))->row()->first_login_time;
+    $test1=null;
+    if($test==null){
+        $test=$this->db->select('first_login_time')->get_where('users', array('username'=>'nadyavio'))->row()->first_login_time;
+        $this->User_model->update_login_time('nadyavio');
+        $test1=$this->db->select('first_login_time')->get_where('users', array('username'=>'nadyavio'))->row()->first_login_time;
+    }
+    else{
+        $test=$this->db->select('last_login_time')->get_where('users', array('username'=>'nadyavio'))->row()->last_login_time;
+        $this->User_model->update_login_time('nadyavio');
+        $test1=$this->db->select('last_login_time')->get_where('users', array('username'=>'nadyavio'))->row()->last_login_time;
+    }
+    if($test != $test1){
+      $test1=true;
+    }else {
+      $test1=false;
+    }
+    $result=true;
+    $testName='Test to update login time';
+    $testNote='Update time';
+    $this->unit->run($test,$result,$testName,$testNote);
+
 }
 
 }
