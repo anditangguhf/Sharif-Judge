@@ -84,7 +84,7 @@ class TestUnit extends CI_Controller {
         //$this->testAddQueue();
 
         /** YONATHAN's FUNCTIONS HERE **/
-         $this->testAddUserTrue();
+        $this->testAddUserTrue();
         $this->testAddUserRoleInvalid();
         $this->testAddUserUsernameExist();
         $this->testAddUserErrorLowercase();
@@ -122,7 +122,8 @@ class TestUnit extends CI_Controller {
         $this->testIsParticipant();
         $this->testAssignmentInfo();
         $this->testProblemInfo();
-        $this->testMossTime();
+        $this->testSetMossTime();
+        $this->testGetMossTime();
 
         /** VIO **/
         $this->deleteUser();
@@ -852,20 +853,39 @@ class TestUnit extends CI_Controller {
 
     }
 
-    public function testMossTime(){
+    public function testSetMossTime(){
         $this->add_user_manual();
         $this->add_assignment_manual();
         $query = $this->db->query("SELECT id from shj_assignments")->result();
         $assignment_id = "";
         foreach ($query as $key => $value) {
             $assignment_id = $value->id;
-        }        $test=$this->Assignment_model->set_moss_time($assignment_id);
+        }
+        $test=$this->Assignment_model->set_moss_time($assignment_id);
         $now = shj_now_str();
         $result=$this->db->where('id', $assignment_id)->update('assignments', array('moss_update'=>$now));
         $testName='Set Moss Time';
-        $testNote='Moss Update Time" for given assignment';
+        $testNote='Moss Update Time for given assignment';
         $this->unit->run($test,$result,$testName,$testNote);
     }
+
+    public function testGetMossTime(){
+        $this->add_user_manual();
+        $this->add_assignment_manual();
+        $query = $this->db->query("SELECT id from shj_assignments")->result();
+        $assignment_id = "";
+        foreach ($query as $key => $value) {
+            $assignment_id = $value->id;
+        }
+        $test=$this->Assignment_model->get_moss_time($assignment_id);
+        $queryy = $this->db->select('moss_update')->get_where('assignments', array('id'=>$assignment_id));
+        $result=$query->row()->moss_update;
+        $testName='Get Moss Time';
+        $testNote='Returns "Moss Update Time" for given assignment';
+        $this->unit->run($test,$result,$testName,$testNote);
+	}
+
+
 
 
     /* ------------ END OF CODE ----------- */
