@@ -135,6 +135,7 @@ class TestUnit extends CI_Controller {
 
         /** VIO **/
        $this->deleteUser();
+       $this->updateLoginTime();
 
     /* ------------ END OF CODE ----------- */
 
