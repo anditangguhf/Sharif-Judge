@@ -183,6 +183,7 @@ class TestUnit extends CI_Controller {
         );
         // echo var_dump($this->db->insert('shj_users',$data));
         $this->db->insert('shj_users',$data);
+
     }
 
     /*
@@ -243,6 +244,11 @@ class TestUnit extends CI_Controller {
 
         // echo var_dump($this->db->insert('shj_assignments',$data));
         $this->db->insert('shj_assignments',$data);
+        $query = $this->db->query("SELECT id from shj_assignments")->result();
+        $assignment_id = "";
+        foreach ($query as $key => $value) {
+            $assignment_id = $value->id;
+        }
 
         /*
         *   after assignment is added, do add a test problem to db
@@ -252,7 +258,7 @@ class TestUnit extends CI_Controller {
 
         // echo var_dump($this->db->get('shj_problems')->result());
         $prob = array(
-            'assignment'        => '1', // TODO: harus ganti isinya jadi id assignment
+            'assignment'        => $assignment_id, // TODO: harus ganti isinya jadi id assignment
             'id'                => '1',
             'name'              => 'Test Problem',
             'score'             => '100',
@@ -792,7 +798,19 @@ class TestUnit extends CI_Controller {
     }
 
     public function testAllProblem(){
-      $test=$this->Assignment_model->all_problems('T15062');
+      $this->add_user_manual();
+      $this->add_assignment_manual();
+      $query = $this->db->query("SELECT id from shj_assignments")->result();
+      $assignment_id = "";
+      foreach ($query as $key => $value) {
+          $assignment_id = $value->id;
+      }
+      $test=$this->Assignment_model->all_problems($assignment_id);
+      $result = $this->db->order_by('id')->get_where('problems', array('assignment'=>$assignment_id))->result_array();
+      $problems = array();
+      foreach ($result as $row)
+          $problems[$row['id']] = $row;
+      $resultt=$problems;
       $testName='Test all Problems of an Assignment';
       $testNote='Returns an array containing all problems of given assignment';
       $this->unit->run($test,$result,$testName,$testNote);
@@ -801,9 +819,28 @@ class TestUnit extends CI_Controller {
     }
 
     public function testIsParticipant(){
-      $this->Assignment_model->is_participant('user1','i15062');
-      $test=$this->Assignment_model->is_participant('ALL','i15062');
-      $result=TRUE;
+      $this->add_user_manual();
+      $this->add_assignment_manual();
+      $query = $this->db->query("SELECT participants from shj_assignments")->result();
+      $queryy = $this->db->query("SELECT Username from shj_users")->result();
+      $participants = "";
+      $username="";
+      foreach ($query as $key => $value) {
+          $participants = $value->id;
+      }
+      foreach ($queryy as $key => $value) {
+          $username = $value->id;
+      }
+      $test=$this->Assignment_model->is_participant($participants,$username);
+      $participants = explode(',', $participants);
+      foreach ($participants as &$participant){
+          $participant = trim($participant);
+      }
+      if(in_array('ALL', $participants))
+          $result=TRUE;
+      if(in_array($username, $participants))
+          $result=TRUE;
+      $result=false;
       $testName='Test is Participant';
       $testNote='Returns TRUE if $username if one of the $participants';
       $this->unit->run($test,$result,$testName,$testNote);
@@ -814,7 +851,7 @@ class TestUnit extends CI_Controller {
         $this->add_user_manual();
         $this->add_assignment_manual();
         $query = $this->db->query("SELECT id from shj_assignments")->result();
-        $queryy = $this->db->query("SELECT id from shj_problems")->result();
+        $queryy = $this->db->query("SELECT * from shj_problems")->result();
         $assignment_id = "";
         $problem_id="";
         foreach ($query as $key => $value) {
