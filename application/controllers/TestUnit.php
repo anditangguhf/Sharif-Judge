@@ -1,9 +1,10 @@
 <?php
 
 defined('BASEPATH') OR exit('No direct script access allowed');
-
+use SebastianBergmann\CodeCoverage\CodeCoverage;
 class TestUnit extends CI_Controller {
-
+  const ENABLE_COVERAGE = true;
+  private $coverage;
     public function __construct() {
         parent::__construct();
         $this->load->library('unit_test');
@@ -17,14 +18,25 @@ class TestUnit extends CI_Controller {
         $this->load->model('Submit_model');         //KIPPI
         $this->load->model('User_model');           //YONATHAN
         $this->load->model('User');
+
+        if (self::ENABLE_COVERAGE) {
+            $this->coverage = new SebastianBergmann\CodeCoverage\CodeCoverage;
+            $this->coverage->filter()->addDirectoryToWhitelist('application/controllers');
+            $this->coverage->filter()->removeDirectoryFromWhitelist('application/controllers/tests');
+            $this->coverage->filter()->addDirectoryToWhitelist('application/libraries');
+            $this->coverage->filter()->addDirectoryToWhitelist('application/models');
+            $this->coverage->filter()->addDirectoryToWhitelist('application/views');
+            $this->coverage->start('UnitTests');
+        }
+
     }
 
     private function report() {
-        // if (self::ENABLE_COVERAGE) {
-        //     $this->coverage->stop();
-        //     $writer = new \SebastianBergmann\CodeCoverage\Report\Html\Facade;
-        //     $writer->process($this->coverage, '../reports/code-coverage');
-        // }
+        if (self::ENABLE_COVERAGE) {
+            $this->coverage->stop();
+            $writer = new \SebastianBergmann\CodeCoverage\Report\Html\Facade;
+            $writer->process($this->coverage, '../reports/code-coverage');
+        }
         // Generate Test Report HTML
         file_put_contents('../reports/test_report.html', $this->unit->report());
         // Output result to screen
@@ -55,7 +67,6 @@ class TestUnit extends CI_Controller {
     }
 
     public function index() {
-
         /*
         *   Clean sharifjudge's database tables by emptying the table
         */
@@ -134,6 +145,7 @@ class TestUnit extends CI_Controller {
         /** run report function here **/
         $this->generateFile($this->unit->report());
         $this->report();
+
         /* ------------------------------------------------------------------ */
     }
     /* GLOBAL FUNCTIONS FOR TESTING */
