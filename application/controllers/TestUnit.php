@@ -120,13 +120,10 @@ class TestUnit extends CI_Controller {
         $this->testIncreaseTotalSubmits();
         $this->testAllProblem();
         $this->testIsParticipant();
-<<<<<<< HEAD
         $this->testAssignmentInfo();
         $this->testProblemInfo();
         $this->testSetMossTime();
         $this->testGetMossTime();
-=======
->>>>>>> 51cd5d09bb650a2bc18956cf7d3e8a55c28b37e1
 
         /** VIO **/
        $this->deleteUser();
@@ -797,7 +794,6 @@ class TestUnit extends CI_Controller {
 
     }
 
-<<<<<<< HEAD
     public function testProblemInfo(){
         $this->add_user_manual();
         $this->add_assignment_manual();
@@ -869,8 +865,6 @@ class TestUnit extends CI_Controller {
 
 
 
-=======
->>>>>>> 51cd5d09bb650a2bc18956cf7d3e8a55c28b37e1
 
     /* ------------ END OF CODE ----------- */
 
