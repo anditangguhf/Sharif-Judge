@@ -6,9 +6,24 @@ use SebastianBergmann\CodeCoverage\CodeCoverage;
 
 class TestUnit extends CI_Controller {
 
+    const ENABLE_COVERAGE = true; // Requires xdebug
+    private $coverage;
+
     public function __construct() {
         parent::__construct();
+
         $this->load->library('unit_test');
+        $this->unit->use_strict(TRUE);
+        if (self::ENABLE_COVERAGE) {
+            $this->coverage = new \SebastianBergmann\CodeCoverage\CodeCoverage;
+            $this->coverage->filter()->addDirectoryToWhitelist('application/controllers');
+            $this->coverage->filter()->removeDirectoryFromWhitelist('application/controllers/tests');
+            $this->coverage->filter()->addDirectoryToWhitelist('application/libraries');
+            $this->coverage->filter()->addDirectoryToWhitelist('application/models');
+            $this->coverage->filter()->addDirectoryToWhitelist('application/views');
+            $this->coverage->start('UnitTests');
+        }
+
         $this->load->model('Assignment_model');     //VIO & COCO
         $this->load->model('Hof_model');            //REYNER
         $this->load->model('Logs_model');           //YONATHAN
@@ -19,14 +34,15 @@ class TestUnit extends CI_Controller {
         $this->load->model('Submit_model');         //KIPPI
         $this->load->model('User_model');           //YONATHAN
         $this->load->model('User');
+
     }
 
     private function report() {
-        // if (self::ENABLE_COVERAGE) {
-        //     $this->coverage->stop();
-        //     $writer = new \SebastianBergmann\CodeCoverage\Report\Html\Facade;
-        //     $writer->process($this->coverage, '../reports/code-coverage');
-        // }
+        if (self::ENABLE_COVERAGE) {
+            $this->coverage->stop();
+            $writer = new \SebastianBergmann\CodeCoverage\Report\Html\Facade;
+            $writer->process($this->coverage, '../reports/code-coverage');
+        }
         // Generate Test Report HTML
         file_put_contents('../reports/test_report.html', $this->unit->report());
         // Output result to screen
@@ -57,12 +73,6 @@ class TestUnit extends CI_Controller {
     }
 
     public function index() {
-
-        $coverage = new CodeCoverage;
-
-        $coverage->filter()->addDirectoryToWhitelist('/var/www/html/sharifjudge/application/controllers');
-
-        $coverage->start('Test Unit Sharif Judge');
 
         /*
         *   Clean sharifjudge's database tables by emptying the table
@@ -319,99 +329,6 @@ class TestUnit extends CI_Controller {
 
 
     /** ----- INPUT KIPPI's CODE HERE ----- **/
-
-    /**
-     * Testing function get_submission di file Submit_model.php
-     */
-    private function testGetSubmission($username, $assignment, $problem, $submit_id) {
-        $test       = $this->Submit_model->get_submission($username, $assignment, $problem, $submit_id);
-        $result     = FALSE;
-        $testName   = "testGetSubmissionFalse";
-        $testNote   = "Test get submission data that doesn't exists in db";
-        $this->unit->run($test, $result, $testName, $testNote);
-    }
-
-    /**
-    *   Testing function to get submission after a submission is added to db
-    *   Expected to return a table row of the added submission
-    */
-    private function testGetSubmissionAfterAdd($username, $assignment, $problem, $submit_id) {
-        // do add submission first
-
-        // do test get submission here
-        testGetSubmission($username, $assignment, $problem, $submit_id);
-    }
-
-    /**
-    *   SETTINGS_MODEL
-    *   Testing function to set single setting
-    *   Expected to return a different value than the setting before
-    *   (compare the old and new, expect to return FALSE since the old is
-    *   not the same as the new setting)
-    *   @param $key : the setting name
-    */
-    private function testSetASetting($key, $value) {
-        $currentSettingValue = $this->Settings_model->get_setting($key);
-
-        $test = $this->Settings_model->set_setting($key, $value);
-
-        $updatedSettingValue = $this->Settings_model->get_setting($key);
-
-        ($currentSettingValue != $updatedSettingValue) ? $result = FALSE : $result = TRUE;
-        $testName = "testSetASetting";
-        $testNote  = "Test set a setting key to a new value";
-        $this->unit->run($test, $result, $testName, $testNote);
-    }
-
-    /**
-    *   SETTINGS_MODEL
-    *   Testing function to get a setting
-    *   Expected to return a setting value
-    *   @param $key : the setting name
-    */
-    private function getASetting($key) {
-        //set the setting to a value first, and get the value to be tested
-        $this->Settings_model->set_setting($key, 1);
-
-        $test = $this->Settings_model->get_setting($key);
-        $result = 1;
-        $testName = "testSetASetting";
-        $testNote  = "Test get a setting value after update value";
-        $this->unit->run($test, $result, $testName, $testNote);
-    }
-
-    /**
-    *   SETTINGS MODEL
-    *   Testing function to get all settings
-    *   by comparing expected settings row with get_all_settings() function
-    */
-    private function getAllSettings() {
-        $count = $this->db->get('shj_settings')->num_rows();
-        // echo var_dump();
-        $test = sizeof($this->Settings_model->get_all_settings());
-        $result = $count;
-        $testName = "testSetAllSettings";
-        $testNote  = "Test get all setting by comparing row count, expected to return 26 rows";
-        $this->unit->run($test, $result, $testName, $testNote);
-    }
-
-    /*
-    *   QUEUE_MODEL
-    *   Testing function to empty a queue
-    *   Expected to return true, meaning test succeed
-    */
-    private function testEmptyAQueue() {
-        $this->add_user_manual();
-        $this->add_assignment_manual();
-        $this->add_queue_manual();
-
-        $test       = $this->Queue_model->empty_queue();
-        $totalQueue = sizeof($this->Queue_model->get_queue());
-        $result     = ($totalQueue == 0) ? true : false;
-        $testName   = 'testEmptyAQueue';
-        $testNote   = 'test to empty queue table from db, expected to return true if totalQueue == 0';
-        $this->unit->run($test,$result,$testName,$testNote);
-    }
 
     /*
     *   QUEUE_MODEL
