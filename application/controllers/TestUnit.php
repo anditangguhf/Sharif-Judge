@@ -80,8 +80,8 @@ class TestUnit extends CI_Controller {
         $this->getAllSettings();
         $this->testEmptyAQueue();
 
-        // $this->testGetSubmission('kippi123', 'PBO1', 'Test1', 1);
-        // $this->testAddQueue();
+        $this->testGetSubmission('kippi123', 'PBO1', 'Test1', 1);
+        $this->testAddQueue();
 
         /** YONATHAN's FUNCTIONS HERE **/
         $this->testAddUserTrue();
@@ -114,7 +114,7 @@ class TestUnit extends CI_Controller {
         $this->testDeleteNotification();
         $this->testGetNotifications();
 
-        // /** ENRICO's FUNCTIONS HERE **/
+        /** ENRICO's FUNCTIONS HERE **/
         $this->testAllAssignments();
         $this->testNewAssignmentId();
         $this->testIncreaseTotalSubmits();
@@ -856,7 +856,7 @@ class TestUnit extends CI_Controller {
         }
         $test=$this->Assignment_model->get_moss_time($assignment_id);
         $queryy = $this->db->select('moss_update')->get_where('assignments', array('id'=>$assignment_id));
-        $result=$query->row()->moss_update;
+        $result=$queryy->row()->moss_update;
         $testName='Get Moss Time';
         $testNote='Returns "Moss Update Time" for given assignment';
         $this->unit->run($test,$result,$testName,$testNote);
