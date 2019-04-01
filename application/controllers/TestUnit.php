@@ -12,15 +12,6 @@ class TestUnit extends CI_Controller {
 
         $this->load->library('unit_test');
         $this->unit->use_strict(TRUE);
-        if (self::ENABLE_COVERAGE) {
-            $this->coverage = new \SebastianBergmann\CodeCoverage\CodeCoverage;
-            $this->coverage->filter()->addDirectoryToWhitelist('application/controllers');
-            $this->coverage->filter()->removeDirectoryFromWhitelist('application/controllers/tests');
-            $this->coverage->filter()->addDirectoryToWhitelist('application/libraries');
-            $this->coverage->filter()->addDirectoryToWhitelist('application/models');
-            $this->coverage->filter()->addDirectoryToWhitelist('application/views');
-            $this->coverage->start('UnitTests');
-        }
 
         $this->load->model('Assignment_model');     //VIO & COCO
         $this->load->model('Hof_model');            //REYNER
@@ -32,16 +23,6 @@ class TestUnit extends CI_Controller {
         $this->load->model('Submit_model');         //KIPPI
         $this->load->model('User_model');           //YONATHAN
         $this->load->model('User');
-
-        if (self::ENABLE_COVERAGE) {
-            $this->coverage = new SebastianBergmann\CodeCoverage\CodeCoverage;
-            $this->coverage->filter()->addDirectoryToWhitelist('application/controllers');
-            $this->coverage->filter()->removeDirectoryFromWhitelist('application/controllers/tests');
-            $this->coverage->filter()->addDirectoryToWhitelist('application/libraries');
-            $this->coverage->filter()->addDirectoryToWhitelist('application/models');
-            $this->coverage->filter()->addDirectoryToWhitelist('application/views');
-            $this->coverage->start('UnitTests');
-        }
 
     }
 
