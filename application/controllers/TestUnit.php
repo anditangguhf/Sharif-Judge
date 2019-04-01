@@ -2,6 +2,8 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+use SebastianBergmann\CodeCoverage\CodeCoverage;
+
 class TestUnit extends CI_Controller {
 
     public function __construct() {
@@ -56,6 +58,12 @@ class TestUnit extends CI_Controller {
 
     public function index() {
 
+        $coverage = new CodeCoverage;
+
+        $coverage->filter()->addDirectoryToWhitelist('/var/www/html/sharifjudge/application/controllers');
+
+        $coverage->start('Test Unit Sharif Judge');
+
         /*
         *   Clean sharifjudge's database tables by emptying the table
         */
@@ -69,7 +77,7 @@ class TestUnit extends CI_Controller {
         // // $this->db->empty_table('shj_sessions');
         // // $this->db->empty_table('shj_settings');
         // $this->db->empty_table('shj_submissions');
-        // only for 'shj_users' table, only delete records other than id = 1 (root)
+        //only for 'shj_users' table, only delete records other than id = 1 (root)
         // $this->db->query('DELETE FROM shj_users WHERE id != 1');
 
         /* ------------------------------------------------------------------ */
@@ -84,7 +92,7 @@ class TestUnit extends CI_Controller {
         // $this->testAddQueue();
 
         /** YONATHAN's FUNCTIONS HERE **/
-        $this->testAddUserTrue();
+         $this->testAddUserTrue();
         $this->testAddUserRoleInvalid();
         $this->testAddUserUsernameExist();
         $this->testAddUserErrorLowercase();
@@ -113,7 +121,7 @@ class TestUnit extends CI_Controller {
         $this->testUpdateNotification();
         $this->testDeleteNotification();
         $this->testGetNotifications();
-
+        //
         // /** ENRICO's FUNCTIONS HERE **/
         $this->testAllAssignments();
         $this->testNewAssignmentId();
@@ -135,6 +143,14 @@ class TestUnit extends CI_Controller {
         $this->generateFile($this->unit->report());
         $this->report();
         /* ------------------------------------------------------------------ */
+
+        $coverage->stop();
+
+        $writer = new \SebastianBergmann\CodeCoverage\Report\Clover;
+        $writer->process($coverage, '/tmp/clover.xml');
+
+        $writer = new \SebastianBergmann\CodeCoverage\Report\Html\Facade;
+        $writer->process($coverage, '/tmp/code-coverage-report');
     }
     /* GLOBAL FUNCTIONS FOR TESTING */
 
@@ -231,7 +247,7 @@ class TestUnit extends CI_Controller {
 
         // echo var_dump($this->db->get('shj_problems')->result());
         $prob = array(
-            'assignment'        => '1',
+            'assignment'        => '1', // TODO: harus ganti isinya jadi id assignment
             'id'                => '1',
             'name'              => 'Test Problem',
             'score'             => '100',
