@@ -69,7 +69,7 @@ class TestUnit extends CI_Controller {
         // // $this->db->empty_table('shj_sessions');
         // // $this->db->empty_table('shj_settings');
         // $this->db->empty_table('shj_submissions');
-        //only for 'shj_users' table, only delete records other than id = 1 (root)
+        // only for 'shj_users' table, only delete records other than id = 1 (root)
         // $this->db->query('DELETE FROM shj_users WHERE id != 1');
 
         /* ------------------------------------------------------------------ */
@@ -80,8 +80,8 @@ class TestUnit extends CI_Controller {
         $this->getAllSettings();
         $this->testEmptyAQueue();
 
-        //$this->testGetSubmission('kippi123', 'PBO1', 'Test1', 1);
-        //$this->testAddQueue();
+        // $this->testGetSubmission('kippi123', 'PBO1', 'Test1', 1);
+        // $this->testAddQueue();
 
         /** YONATHAN's FUNCTIONS HERE **/
         $this->testAddUserTrue();
@@ -113,21 +113,23 @@ class TestUnit extends CI_Controller {
         $this->testUpdateNotification();
         $this->testDeleteNotification();
         $this->testGetNotifications();
-        //
+
         // /** ENRICO's FUNCTIONS HERE **/
         $this->testAllAssignments();
         $this->testNewAssignmentId();
         $this->testIncreaseTotalSubmits();
         $this->testAllProblem();
         $this->testIsParticipant();
+<<<<<<< HEAD
         $this->testAssignmentInfo();
         $this->testProblemInfo();
         $this->testSetMossTime();
         $this->testGetMossTime();
+=======
+>>>>>>> 51cd5d09bb650a2bc18956cf7d3e8a55c28b37e1
 
         /** VIO **/
-        $this->deleteUser();
-        $this->updateLoginTime();
+       $this->deleteUser();
 
     /* ------------ END OF CODE ----------- */
 
@@ -741,8 +743,6 @@ class TestUnit extends CI_Controller {
 
     /** ----- INPUT ENRICO's CODE HERE ----- **/
     public function testAllAssignments(){
-      $this->add_user_manual();
-      $this->add_assignment_manual();
       $test=$this->Assignment_model->all_assignments();
       $result = $this->db->order_by('id')->get('assignments')->result_array();
   		$resultt = array();
@@ -769,14 +769,8 @@ class TestUnit extends CI_Controller {
     public function testIncreaseTotalSubmits(){
         $this->add_user_manual();
         $this->add_assignment_manual();
-        $query = $this->db->query("SELECT id from shj_assignments")->result();
-        $assignment_id = "";
-        foreach ($query as $key => $value) {
-            $assignment_id = $value->id;
-        }
-        $test=$this->Assignment_model->increase_total_submits($assignment_id);
-        $total = $this->db->select('total_submits')->get_where('assignments', array('id'=>$assignment_id))->row()->total_submits;
-        $this->db->where('id', $assignment_id)->update('assignments', array('total_submits'=>($total+1)));
+        $this->Assignment_model->increase_total_submits('');
+        $test=$this->Assignment_model->increase_total_submits('T15062');
         $result=$total+1;
         $testName='Test increase total submits';
         $testNote='Increases number of total submits for given assignment by one';
@@ -784,23 +778,10 @@ class TestUnit extends CI_Controller {
     }
 
     public function testAllProblem(){
-      $this->add_user_manual();
-      $this->add_assignment_manual();
-      $query = $this->db->query("SELECT id from shj_assignments")->result();
-      $assignment_id = "";
-      foreach ($query as $key => $value) {
-          $assignment_id = $value->id;
-      }
-      $test=$this->Assignment_model->all_problems($assignment_id);
-      $result = $this->db->order_by('id')->get_where('problems', array('assignment'=>$assignment_id))->result_array();
-      $resultt = array();
-      foreach ($result as $row)
-      {
-          $resultt[$row['id']] = $row;
-      }
+      $test=$this->Assignment_model->all_problems('T15062');
       $testName='Test all Problems of an Assignment';
       $testNote='Returns an array containing all problems of given assignment';
-      $this->unit->run($test,$resultt,$testName,$testNote);
+      $this->unit->run($test,$result,$testName,$testNote);
 
 
     }
@@ -816,6 +797,7 @@ class TestUnit extends CI_Controller {
 
     }
 
+<<<<<<< HEAD
     public function testProblemInfo(){
         $this->add_user_manual();
         $this->add_assignment_manual();
@@ -887,6 +869,8 @@ class TestUnit extends CI_Controller {
 
 
 
+=======
+>>>>>>> 51cd5d09bb650a2bc18956cf7d3e8a55c28b37e1
 
     /* ------------ END OF CODE ----------- */
 
@@ -903,32 +887,6 @@ private function deleteUser(){
     $testName='Test to delete user';
     $testNote='Delete user';
     $this->unit->run($test,$result,$testName,$testNote);
-}
-
-private function updateLoginTime(){
-    $now = shj_now_str();
-    $test=$this->db->select('first_login_time')->get_where('users', array('username'=>'nadyavio'))->row()->first_login_time;
-    $test1=null;
-    if($test==null){
-        $test=$this->db->select('first_login_time')->get_where('users', array('username'=>'nadyavio'))->row()->first_login_time;
-        $this->User_model->update_login_time('nadyavio');
-        $test1=$this->db->select('first_login_time')->get_where('users', array('username'=>'nadyavio'))->row()->first_login_time;
-    }
-    else{
-        $test=$this->db->select('last_login_time')->get_where('users', array('username'=>'nadyavio'))->row()->last_login_time;
-        $this->User_model->update_login_time('nadyavio');
-        $test1=$this->db->select('last_login_time')->get_where('users', array('username'=>'nadyavio'))->row()->last_login_time;
-    }
-    if($test != $test1){
-      $test1=true;
-    }else {
-      $test1=false;
-    }
-    $result=true;
-    $testName='Test to update login time';
-    $testNote='Update time';
-    $this->unit->run($test,$result,$testName,$testNote);
-
 }
 
 }
