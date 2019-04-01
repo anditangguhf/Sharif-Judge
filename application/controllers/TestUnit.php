@@ -30,6 +30,7 @@ class TestUnit extends CI_Controller {
             $this->coverage->filter()->addDirectoryToWhitelist('application/views');
             $this->coverage->start('UnitTests');
         }
+        
 
     }
 
