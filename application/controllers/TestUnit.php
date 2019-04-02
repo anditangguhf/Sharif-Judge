@@ -730,7 +730,7 @@ class TestUnit extends CI_Controller {
       $resultt=$problems;
       $testName='Test all Problems of an Assignment';
       $testNote='Returns an array containing all problems of given assignment';
-      $this->unit->run($test,$result,$testName,$testNote);
+      $this->unit->run($test,$resultt,$testName,$testNote);
 
 
     }
