@@ -30,7 +30,7 @@ class TestUnit extends CI_Controller {
             $this->coverage->filter()->addDirectoryToWhitelist('application/views');
             $this->coverage->start('UnitTests');
         }
-        
+
 
     }
 
@@ -607,7 +607,6 @@ class TestUnit extends CI_Controller {
     //send password reset mail
     //pass change is valid
     //reset passwords
-    //update login time
     private function testValidateUserTrue(){
       $this->User_model->add_user('globaladmin','admin@gmail.com', 'administrator', 'Admin10', 'admin' );
       $test=$this->User_model->validate_user('globaladmin','Admin10');
@@ -615,7 +614,7 @@ class TestUnit extends CI_Controller {
       $testName= 'Test username and password valid for login';
       $testNote= 'untuk hasil passed username dan password ada dalam database';
       $this->unit->run($test,$result,$testName,$testNote);
-    }
+    } 
     private function testValidateUserFalseInvalidUsername(){
       $this->User_model->add_user('globaladmin','admin@gmail.com', 'administrator', 'Admin10', 'admin' );
       $test=$this->User_model->validate_user('globaladminnnn','Admin10');
