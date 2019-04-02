@@ -883,6 +883,14 @@ class TestUnit extends CI_Controller {
         }
         $test=$this->Assignment_model->assignment_info($assignment_id);
         $query = $this->db->get_where('assignments', array('id'=>$assignment_id));
+        if ($query->num_rows() != 1)
+	            $result=array(
+				'id' => 0,
+				'name' => 'Not Selected',
+				'finish_time' => 0,
+				'extra_time' => 0,
+				'problems' => 0
+			);
         $result=$query->row_array();
         $testName='Assignment Info';
         $testNote='Returns database row for given assignment';
