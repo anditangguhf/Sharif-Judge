@@ -610,7 +610,6 @@ class TestUnit extends CI_Controller {
     //send password reset mail
     //pass change is valid
     //reset passwords
-    //update login time
     private function testValidateUserTrue(){
       $this->User_model->add_user('globaladmin','admin@gmail.com', 'administrator', 'Admin10', 'admin' );
       $test=$this->User_model->validate_user('globaladmin','Admin10');
@@ -618,7 +617,7 @@ class TestUnit extends CI_Controller {
       $testName= 'Test username and password valid for login';
       $testNote= 'untuk hasil passed username dan password ada dalam database';
       $this->unit->run($test,$result,$testName,$testNote);
-    }
+    } 
     private function testValidateUserFalseInvalidUsername(){
       $this->User_model->add_user('globaladmin','admin@gmail.com', 'administrator', 'Admin10', 'admin' );
       $test=$this->User_model->validate_user('globaladminnnn','Admin10');
@@ -823,7 +822,7 @@ class TestUnit extends CI_Controller {
       $resultt=$problems;
       $testName='Test all Problems of an Assignment';
       $testNote='Returns an array containing all problems of given assignment';
-      $this->unit->run($test,$result,$testName,$testNote);
+      $this->unit->run($test,$resultt,$testName,$testNote);
 
 
     }
@@ -887,6 +886,14 @@ class TestUnit extends CI_Controller {
         }
         $test=$this->Assignment_model->assignment_info($assignment_id);
         $query = $this->db->get_where('assignments', array('id'=>$assignment_id));
+        if ($query->num_rows() != 1)
+	            $result=array(
+				'id' => 0,
+				'name' => 'Not Selected',
+				'finish_time' => 0,
+				'extra_time' => 0,
+				'problems' => 0
+			);
         $result=$query->row_array();
         $testName='Assignment Info';
         $testNote='Returns database row for given assignment';
