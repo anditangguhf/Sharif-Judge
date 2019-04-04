@@ -150,7 +150,7 @@ class TestUnit extends CI_Controller {
         $writer = new \SebastianBergmann\CodeCoverage\Report\Html\Facade;
         $writer->process($coverage, '/tmp/code-coverage-report');
     }
-    
+
     /* GLOBAL FUNCTIONS FOR TESTING */
 
     /**
