@@ -73,23 +73,6 @@ class TestUnit extends CI_Controller {
     }
 
     public function index() {
-        /*
-        *   Clean sharifjudge's database tables by emptying the table
-        */
-
-        // $this->db->empty_table('shj_assignments');
-        // // // $this->db->empty_table('shj_logins');
-        // $this->db->empty_table('shj_notifications');
-        // $this->db->empty_table('shj_problems');
-        // $this->db->empty_table('shj_queue');
-        // $this->db->empty_table('shj_scoreboard');
-        // // $this->db->empty_table('shj_sessions');
-        // // $this->db->empty_table('shj_settings');
-        // $this->db->empty_table('shj_submissions');
-        //only for 'shj_users' table, only delete records other than id = 1 (root)
-        // $this->db->query('DELETE FROM shj_users WHERE id != 1');
-
-        /* ------------------------------------------------------------------ */
 
         /** KIPPI's FUNCTIONS HERE **/
         $this->getASetting('enable_log');
@@ -167,6 +150,7 @@ class TestUnit extends CI_Controller {
         $writer = new \SebastianBergmann\CodeCoverage\Report\Html\Facade;
         $writer->process($coverage, '/tmp/code-coverage-report');
     }
+    
     /* GLOBAL FUNCTIONS FOR TESTING */
 
     /**
