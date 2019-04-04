@@ -24,7 +24,4 @@ assignments/
 # Ignore for ProIF purpose
 .DS_Store
 TestFile.html
-application/vendor/composer/
-application/vendor/phpunit/
-application/vendor/sebastian/
-application/vendor/theseer/
+application/vendor/
