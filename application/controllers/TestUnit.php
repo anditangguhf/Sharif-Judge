@@ -2,7 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-use SebastianBergmann\CodeCoverage\CodeCoverage;
+use SebastianBergmann\CodeCoverage\CodeCoverage; 
 
 class TestUnit extends CI_Controller {
     const ENABLE_COVERAGE = true;
