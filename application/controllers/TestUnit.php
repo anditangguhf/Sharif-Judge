@@ -2,7 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-use SebastianBergmann\CodeCoverage\CodeCoverage; 
+use SebastianBergmann\CodeCoverage\CodeCoverage;
 
 class TestUnit extends CI_Controller {
     const ENABLE_COVERAGE = true;
@@ -113,7 +113,7 @@ class TestUnit extends CI_Controller {
         $this->testUpdateNotification();
         $this->testDeleteNotification();
         $this->testGetNotifications();
-
+ 
         /** ENRICO's FUNCTIONS HERE **/
         $this->testAllAssignments();
         $this->testNewAssignmentId();
@@ -958,6 +958,6 @@ class TestUnit extends CI_Controller {
 
     }
 
-}  
+}
 
 ?>
