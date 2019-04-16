@@ -884,6 +884,6 @@ class TestUnit extends CI_Controller {
 
     }
 
-}
+}  
 
 ?>
