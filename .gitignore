@@ -23,8 +23,8 @@ assignments/
 
 # Ignore for ProIF purpose
 .DS_Store
+application/.DS_Store
 TestFile.html
-application/vendor/composer/
-application/vendor/phpunit/
-application/vendor/sebastian/
-application/vendor/theseer/
+application/vendor/
+composer.json
+composer.lock
