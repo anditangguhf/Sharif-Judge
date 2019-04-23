@@ -25,6 +25,3 @@ assignments/
 .DS_Store
 application/.DS_Store
 TestFile.html
-application/vendor/
-composer.json
-composer.lock

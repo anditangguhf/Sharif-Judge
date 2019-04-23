@@ -1033,6 +1033,12 @@ class Radius
 
         $conn = $this->sendRadiusRequest($packetData);
         if (!$conn) {
+            $this->debugInfo(sprintf(
+                'Failed to send packet to %s; error: %s',
+                $this->server,
+                $this->getErrorMessage())
+            );
+
             return false;
         }
 
@@ -1040,10 +1046,22 @@ class Radius
         @fclose($conn);
 
         if (!$receivedPacket) {
+            $this->debugInfo(sprintf(
+                'Error receiving response packet from %s; error: %s',
+                $this->server,
+                $this->getErrorMessage())
+            );
+
             return false;
         }
 
         if (!$this->parseRadiusResponsePacket($receivedPacket)) {
+            $this->debugInfo(sprintf(
+                'Bad RADIUS response from %s; error: %s',
+                $this->server,
+                $this->getErrorMessage())
+            );
+
             return false;
         }
 
@@ -1053,6 +1071,51 @@ class Radius
         }
 
         return (self::TYPE_ACCESS_ACCEPT == ($this->radiusPacketReceived));
+    }
+
+    /**
+     * Perform an accessRequest against a list of servers.  Each server must
+     * share the same RADIUS secret.  This is useful if you have more than one
+     * RADIUS server.  This function tries each server until it receives an
+     * Access-Accept or Access-Reject response.  That is, it will try more than
+     * one server in the event of a timeout or other failure.
+     *
+     * @see \Dapphp\Radius\Radius::accessRequest()
+     *
+     * @param array  $serverList  Array of servers to authenticate against
+     * @param string $username    Username to authenticate as
+     * @param string $password    Password to authenticate with using PAP
+     * @param number $timeout     The timeout (in seconds) to wait for a response packet
+     * @param string $state       The state of the request (default is Service-Type=1)
+     *
+     * @return boolean true if the server sent an Access-Accept packet, false otherwise
+     */
+    public function accessRequestList($serverList, $username = '', $password = '', $timeout = 0, $state = null)
+    {
+        if (!is_array($serverList)) {
+            $this->errorCode    = 127;
+            $this->errorMessage = sprintf(
+                'server list passed to accessRequestl must be array; %s given', gettype($serverList)
+                );
+
+            return false;
+        }
+
+        foreach($serverList as $server) {
+            $this->setServer($server);
+
+            $result = $this->accessRequest($username, $password, $timeout, $state);
+
+            if ($result === true) {
+                break; // success
+            } elseif ($this->getErrorCode() === self::TYPE_ACCESS_REJECT) {
+                break; // access rejected
+            } else {
+                /* timeout or other possible transient error; try next host */
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -1235,6 +1298,46 @@ class Radius
     }
 
     /**
+     * Perform a EAP-MSCHAP v2 4-way authentication against a list of servers.
+     * Each server must share the same RADIUS secret.
+     *
+     * @see \Dapphp\Radius\Radius::accessRequestEapMsChapV2()
+     * @see \Dapphp\Radius\Radius::accessRequestList()
+     *
+     * @param array $serverList Array of servers to authenticate against
+     * @param string $username  The username to authenticate as
+     * @param string $password  The plain text password that will be hashed using MS-CHAPv2
+     * @return boolean          true if negotiation resulted in an Access-Accept packet, false otherwise
+     */
+    public function accessRequestEapMsChapV2List($serverList, $username, $password)
+    {
+        if (!is_array($serverList)) {
+            $this->errorCode    = 127;
+            $this->errorMessage = sprintf(
+                'server list passed to accessRequestl must be array; %s given', gettype($serverList)
+                );
+
+            return false;
+        }
+
+        foreach($serverList as $server) {
+            $this->setServer($server);
+
+            $result = $this->accessRequestEapMsChapV2($username, $password);
+
+            if ($result === true) {
+                break; // success
+            } elseif ($this->getErrorCode() === self::TYPE_ACCESS_REJECT) {
+                break; // access rejected
+            } else {
+                /* timeout or other possible transient error; try next host */
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * Send a RADIUS packet over the wire using UDP.
      *
      * @param string $packetData  The raw, complete, RADIUS packet to send
@@ -1261,9 +1364,10 @@ class Radius
         if ($this->debug) {
             $this->debugInfo(
                 sprintf(
-                    '<b>Packet type %d (%s) sent</b>',
+                    '<b>Packet type %d (%s) sent to %s</b>',
                     $this->radiusPacket,
-                    $this->getRadiusPacketInfo($this->radiusPacket)
+                    $this->getRadiusPacketInfo($this->radiusPacket),
+                    $this->server
                 )
             );
             foreach($this->attributesToSend as $attrs) {
@@ -1592,9 +1696,15 @@ class Radius
     protected function debugInfo($message)
     {
         if ($this->debug) {
-            echo date('Y-m-d H:i:s').' DEBUG: ';
-            echo $message;
-            echo "<br />\n";
+            $msg = date('Y-m-d H:i:s'). ' DEBUG: ';
+            $msg .= $message;
+            $msg .= "<br>\n";
+
+            if (php_sapi_name() == 'cli') {
+                $msg = strip_tags($msg);
+            }
+
+            echo $msg;
             flush();
         }
     }
