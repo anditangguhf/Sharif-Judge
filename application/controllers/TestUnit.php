@@ -118,6 +118,10 @@ class TestUnit extends CI_Controller {
         $this->testUpdateNotification();
         $this->testDeleteNotification();
         $this->testGetNotifications();
+<<<<<<< HEAD
+=======
+        $this->testHaveNewNotifications();
+>>>>>>> cf345598f09d05fd8508714cf2c435ef6288a48a
 
         /** ENRICO's FUNCTIONS HERE **/
         $this->testAllAssignments();
@@ -801,9 +805,22 @@ class TestUnit extends CI_Controller {
         $this->unit->run($test,$result,$testName,$testNote);
     }
 
-    // public function testHaveNewNotifications(){
-    //
-    // }
+    public function testHaveNewNotifications(){
+        $notifs = $this->db->select('time')->get('notifications')->result_array();
+        $currdt = date('Y-m-d h:i:s');
+        foreach ($notifs as $notif) {
+            if(strtotime($notif['time']) > $currdt) {
+                $tmp = TRUE;
+            } else {
+                $tmp = FALSE;
+            }
+        }
+        $test=$this->Notifications_model->have_new_notification($currdt);
+        $result=$tmp;
+        $testName= 'Test have new notification on judge';
+        $testNote= 'To get newest notification';
+        $this->unit->run($test,$result,$testName,$testNote);
+    }
 
 
 
