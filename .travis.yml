@@ -7,6 +7,7 @@ before_install:
   - cp application/config/database.example.php application/config/database.php
   - cp application/config/secrets.example.php application/config/secrets.php
   - sudo mysql -e 'CREATE DATABASE sharifjudge;'
+  - composer install
 env:
   matrix:
     - DRIVER="xdebug"
