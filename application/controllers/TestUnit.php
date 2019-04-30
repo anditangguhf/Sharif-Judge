@@ -308,7 +308,7 @@ class TestUnit extends CI_Controller {
         echo var_dump($this->db->insert('shj_submissions', $submit_info));
     }
 
-    private function add_queue_manual($assignment_id, $problem_id) {
+    private function add_queue_manual($assignment_id) {
         /* clean shj_queue db */
         $this->db->query('DELETE FROM shj_queue');
 
