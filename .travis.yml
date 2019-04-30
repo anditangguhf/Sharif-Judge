@@ -4,6 +4,8 @@ php:
 services:
     - mysql
 before_install:
+  - cp application/config/database.example.php application/config/database.php
+  - cp application/config/secrets.example.php application/config/secrets.php
   - mysql -e 'CREATE DATABASE sharifjudge;'
 env:
   matrix:
