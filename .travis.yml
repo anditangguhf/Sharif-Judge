@@ -1,1 +1,12 @@
 language: php
+php:
+    - 7.2.17
+services:
+    - mysql
+before_install:
+  - mysql -e 'CREATE DATABASE sharifjudge;'
+env:
+  matrix:
+    - DRIVER="xdebug"
+script:
+    - php index.php TestUnit

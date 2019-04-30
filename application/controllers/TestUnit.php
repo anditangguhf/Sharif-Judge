@@ -78,10 +78,10 @@ class TestUnit extends CI_Controller {
         $this->getASetting('enable_log');
         $this->testSetASetting('enable_log', 1);
         $this->getAllSettings();
-        $this->testEmptyAQueue();
+        // $this->testEmptyAQueue();
 
         $this->testGetSubmission('kippi123', 'PBO1', 'Test1', 1);
-        $this->testAddQueue();
+        // $this->testAddQueue();
 
         /** YONATHAN's FUNCTIONS HERE **/
         $this->testAddUserTrue();
@@ -113,7 +113,7 @@ class TestUnit extends CI_Controller {
         $this->testUpdateNotification();
         $this->testDeleteNotification();
         $this->testGetNotifications();
- 
+
         /** ENRICO's FUNCTIONS HERE **/
         $this->testAllAssignments();
         $this->testNewAssignmentId();
@@ -128,15 +128,15 @@ class TestUnit extends CI_Controller {
         /** VIO **/
         $this->deleteUser();
         $this->updateLoginTime();
-
-        /* ------------ END OF CODE ----------- */
-
-        // $this->add_user_manual();
-        // $this->add_assignment_manual();
-        // $this->add_submission_manual(); /* TODO: masih error */
-        // $this->add_queue_manual();
-
-        /** run report function here **/
+        //
+        // /* ------------ END OF CODE ----------- */
+        //
+        // // $this->add_user_manual();
+        // // $this->add_assignment_manual();
+        // $this->add_submission_manual(72,1); /* TODO: masih error */
+        // $this->add_queue_manual(72,1);
+        //
+        // /** run report function here **/
         $this->generateFile($this->unit->report());
         $this->report();
 
@@ -275,17 +275,15 @@ class TestUnit extends CI_Controller {
     *   kemudian set submission tersebut menjadi final submission
     *   // TODO: masih error belum bisa masukin data ke db secara manual
     */
-    private function add_submission_manual() {
+    private function add_submission_manual($assignment_id, $problem_id) {
         /* clean shj_submissions db */
         // $this->db->query('DELETE FROM shj_submissions');
 
-
         $submit_info = array(
             'submit_id'     => '1',
-            'username'      => 'testuser',
-            'assignment'    => '1',
-            'problem'       => '1',
-            'is_final'      => 1,
+            'username'      => 'anditangguhf',
+            'assignment'    => $assignment_id,
+            'problem'       => $problem_id,
             'time'          => date('Y-m-d H:i:s'),
             'status'        => '0',
             'pre-score'     => 100,
@@ -300,21 +298,21 @@ class TestUnit extends CI_Controller {
         echo var_dump($this->db->insert('shj_submissions', $submit_info));
     }
 
-    private function add_queue_manual() {
+    private function add_queue_manual($assignment_id, $problem_id) {
         /* clean shj_queue db */
         $this->db->query('DELETE FROM shj_queue');
 
         $queue_info = array(
             'submit_id' => '1',
             'username' => 'testuser',
-            'assignment' => '1',
-            'problem' => '1',
+            'assignment' => $assignment_id,
+            'problem' => $problem_id,
             'type' => 'judge'
         );
 
         //add to queue db
-        // echo var_dump($this->db->insert('shj_queue', $queue_info));
-        $this->db->insert('shj_queue', $queue_info);
+        echo var_dump($this->db->insert('shj_queue', $queue_info));
+        // $this->db->insert('shj_queue', $queue_info);
     }
 
     /** ----- INPUT KIPPI's CODE HERE ----- **/
