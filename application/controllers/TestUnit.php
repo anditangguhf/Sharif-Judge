@@ -727,14 +727,26 @@ class TestUnit extends CI_Controller {
     // }
     /** ----- INPUT REYNER's CODE HERE ----- **/
     public function testGetAllNotifications(){
+        $add=$this->Notifications_model->add_notification('notifikasi','Ada ujian2');
         $test=$this->Notifications_model->get_all_notifications();
+        if($test!=null && $test != 0){
+            $test=TRUE;
+        }else{
+            $test=false;
+        }
         $result=TRUE;
         $testName= 'Test get all notification on judge';
         $testNote= 'awal tes belum ada notifkasi jadi masih false, ketika sudah di add notifkasi resultnya true';
         $this->unit->run($test,$result,$testName,$testNote);
     }
     public function testGetLatestNotifications(){
+        $add=$this->Notifications_model->add_notification('notifikasi','Ada ujian');
         $test=$this->Notifications_model->get_latest_notifications();
+        if($test!=null && $test != 0){
+            $test=TRUE;
+        }else{
+            $test=false;
+        }
         $result=TRUE;
         $testName= 'Test get latest notification on judge';
         $testNote= 'awal tes belum ada notifkasi jadi masih false, ketika sudah di add notifkasi resultnya true';
