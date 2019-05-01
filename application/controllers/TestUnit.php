@@ -137,6 +137,10 @@ class TestUnit extends CI_Controller {
         $this->testGetFirstItem();
         $this->testRemoveItem();
         $this->TestAddtoQueue();
+        $this->TestGetScoreBoard();
+        $this->testEmptyQueue();
+        $this->testInQueue();
+        $this->testGetFirstItemFound();
 
         //
         // /* ------------ END OF CODE ----------- */
@@ -316,13 +320,13 @@ class TestUnit extends CI_Controller {
             'submit_id' => '1',
             'username' => 'testuser',
             'assignment' => $assignment_id,
-            'problem' => $problem_id,
+            'problem' => 1,
             'type' => 'judge'
         );
 
         //add to queue db
-        echo var_dump($this->db->insert('shj_queue', $queue_info));
-        // $this->db->insert('shj_queue', $queue_info);
+        // echo var_dump($this->db->insert('shj_queue', $queue_info));
+        $this->db->insert('shj_queue', $queue_info);
     }
 
     /** ----- INPUT KIPPI's CODE HERE ----- **/
@@ -1062,10 +1066,10 @@ class TestUnit extends CI_Controller {
       $this->add_queue_manual($assignment_id);
       $queueSize = sizeof($this->db->get('queue')->result());
       $test=$this->Queue_model->remove_item('testuser', $assignment_id, 1, 1);
-      echo var_dump($test);
+      echo "REMOVE QUEUE --> $test";
       $result=$queueSize-1;
-      $testName='Test to get first item in queue';
-      $testNote='get first item';
+      $testName='Test to remove item in queue';
+      $testNote='remove item';
       $this->unit->run($test,$result,$testName,$testNote);
   }
   // TODO: failed
@@ -1074,10 +1078,11 @@ class TestUnit extends CI_Controller {
       $this->add_assignment_manual();
       $assignment_id = $this->db->query("SELECT id from shj_assignments")->result()[0]->id;
       $submit_info = array(
-          'submit_id'=>1,
-          'username'=>'testuser',
-          'assignment'=>$assignment_id,
-          'problem'=>1
+          'submit_id' => '1',
+          'username' => 'testuser',
+          'assignment' => $assignment_id,
+          'problem' => 1,
+          'type' => 'judge'
       );
 
       $test=$this->Queue_model->add_to_queue($submit_info);
@@ -1087,8 +1092,45 @@ class TestUnit extends CI_Controller {
       $testNote='add item';
       $this->unit->run($test,$result,$testName,$testNote);
   }
+//perlu assignment id
+  private function TestGetScoreBoard(){
+      $test = $this->Scoreboard_model->get_scoreboard(1);
+      $result='Scoreboard not found';
+      $testName = 'Test get data kosong pada Scoreboard';
+      $testNote = 'get score board';
+      $this->unit->run($test,$result,$testName,$testNote);
+      //////////////////////////
+          // $test = $this->Scoreboard_model->get_scoreboard(get_current_assignment_id());
+          // $result='Scoreboard not found';
+          // $testName='Test get data kosong pada Scoreboard';
+          // $testNote='get score board';
+          // $this->unit->run($test,$result,$testName,$testNote);
+  }
 
-  
+  private function testEmptyQueue(){
+      $test = $this->Queue_model->empty_queue();
+      $query = $this->db->get_where('queue',array('id'=>1));
+      $result = ($query != 0);
+      $testName = 'Test queue is empty';
+      $testNote = 'empty queue';
+      $this->unit->run($test,$result,$testName,$testNote);
+  }
+
+  private function testInQueue(){
+      $test = $this->Queue_model->in_queue('vio','assignment1','problem1');
+      $result = false;
+      $testName = 'Test in queue';
+      $testNote = 'cek username, assignment, problem in queue';
+      $this->unit->run($test,$result,$testName,$testNote);
+  }
+  private function testGetFirstItemFound() {
+      $query = $this->db->order_by('id')->limit(1)->get('queue');
+      $result = null;
+      $test = $this->Queue_model->get_first_item();
+      $testName = 'Test get first item';
+      $testNote = 'get first item';
+      $this->unit->run($test,$result,$testName,$testNote);
+  }
 }
 
 ?>
