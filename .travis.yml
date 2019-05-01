@@ -6,9 +6,12 @@ services:
 before_install:
   - cp application/config/database.example.php application/config/database.php
   - cp application/config/secrets.example.php application/config/secrets.php
-  - mysql -e 'CREATE DATABASE sharifjudge;'
+  
+before_script:
+  - sudo mysql -e 'CREATE DATABASE sharifjudge;'
 env:
-  matrix:
-    - DRIVER="xdebug"
+    -DB="mysql"
+    matrix:
+        - DRIVER="xdebug"
 script:
     - php index.php TestUnit

@@ -138,6 +138,10 @@ class TestUnit extends CI_Controller {
         /** VIO **/
         $this->deleteUser();
         $this->updateLoginTime();
+        $this->testGetFirstItem();
+        $this->testRemoveItem();
+        $this->TestAddtoQueue();
+
         //
         // /* ------------ END OF CODE ----------- */
         //
@@ -308,7 +312,7 @@ class TestUnit extends CI_Controller {
         echo var_dump($this->db->insert('shj_submissions', $submit_info));
     }
 
-    private function add_queue_manual($assignment_id, $problem_id) {
+    private function add_queue_manual($assignment_id) {
         /* clean shj_queue db */
         $this->db->query('DELETE FROM shj_queue');
 
@@ -1154,6 +1158,54 @@ class TestUnit extends CI_Controller {
 
     }
 
+    private function testGetFirstItem(){
+      $this->add_user_manual();
+      $this->add_assignment_manual();
+      $assignment_id = $this->db->query("SELECT id from shj_assignments")->result()[0]->id;
+      $this->add_queue_manual($assignment_id);
+      $query = $this->db->order_by('id')->limit(1)->get('queue')->row_array();
+      $test=$this->Queue_model->get_first_item();
+      $result=$query;
+      $testName='Test to get first item in queue';
+      $testNote='get first item';
+      $this->unit->run($test,$result,$testName,$testNote);
+  }
+
+  // TODO: failed
+  private function testRemoveItem(){
+      $this->add_user_manual();
+      $this->add_assignment_manual();
+      $assignment_id = $this->db->query("SELECT id from shj_assignments")->result()[0]->id;
+      $this->add_queue_manual($assignment_id);
+      $queueSize = sizeof($this->db->get('queue')->result());
+      $test=$this->Queue_model->remove_item('testuser', $assignment_id, 1, 1);
+      echo var_dump($test);
+      $result=$queueSize-1;
+      $testName='Test to get first item in queue';
+      $testNote='get first item';
+      $this->unit->run($test,$result,$testName,$testNote);
+  }
+  // TODO: failed
+  private function TestAddtoQueue(){
+      $this->add_user_manual();
+      $this->add_assignment_manual();
+      $assignment_id = $this->db->query("SELECT id from shj_assignments")->result()[0]->id;
+      $submit_info = array(
+          'submit_id'=>1,
+          'username'=>'testuser',
+          'assignment'=>$assignment_id,
+          'problem'=>1
+      );
+
+      $test=$this->Queue_model->add_to_queue($submit_info);
+      $queueSize = sizeof($this->db->get('queue')->result());
+      $result=$queueSize;
+      $testName='Test to add item in queue';
+      $testNote='add item';
+      $this->unit->run($test,$result,$testName,$testNote);
+  }
+
+  
 }
 
 ?>
