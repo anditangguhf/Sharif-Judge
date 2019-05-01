@@ -91,6 +91,7 @@ class TestUnit extends CI_Controller {
         $this->testAddUserEmailExistError();
         $this->testAddUserLengthUsernameError();
         $this->testAddUserWrongUsernameAlphaNumeric();
+        $this->testHaveEmail();
         $this->testHaveUserTrue();
         $this->testhaveUserFalse();
         $this->testUsernameToUserId();
@@ -108,8 +109,11 @@ class TestUnit extends CI_Controller {
         $this->testGetUserFalse();
         $this->testSendResetPass();
         $this->testSendResetPassEmailNotExist();
-        // $this->testPasschangeIsValid();
-        // $this->testResetPassTrue();
+        $this->testPasschangeIsValid();
+        //$this->testPasschangeIsValidTimeExpired();
+        $this->testPasschangeIsValidInvalidPass();
+        $this->testResetPass();
+
 
         /** REYNER's FUNCTIONS HERE **/
         $this->testAddNotifications();
@@ -550,6 +554,32 @@ class TestUnit extends CI_Controller {
 
     }
 
+
+    private function testHaveEmail(){
+        $this->User_model->add_user('globaladmin','admin@gmail.com', 'administrator', 'Admin10', 'admin' );
+
+        $test = $this->User_model->have_email('admin@gmail.com', false);
+        $result = true;
+        $testName = "Testing have_email ";
+        $testNotes = "untuk hasil true";
+        $this->unit->run($test,$result,$testName,$testNote);
+
+
+        $test = $this->User_model->have_email('', false);
+        $result = false;
+        $testName = "Testing have_email ";
+        $testNotes = "untuk hasil false email tidak ada";
+        $this->unit->run($test,$result,$testName,$testNote);
+
+
+        $test = $this->User_model->have_email('admin@gmail.com', true);
+        $result = false;
+        $testName = "Testing have_email ";
+        $testNotes = "untuk hasil false parameter true";
+        $this->unit->run($test,$result,$testName,$testNote);
+
+    }
+
     private function testUsernameToUserId(){
         $this->User_model->add_user('globaladmin','admin@gmail.com', 'administrator', 'Admin10', 'admin' );
         $id=$this->User_model->username_to_user_id('globaladmin');
@@ -604,6 +634,24 @@ class TestUnit extends CI_Controller {
         $testName= 'Test username and password invalid username for login';
         $testNote= 'untuk hasil passed username tidak ada dalam database';
         $this->unit->run($test,$result,$testName,$testNote);
+        ///////////////////////////////////////////////////
+        $test=$this->User_model->validate_user('Globaladmin','Admin10');
+        $result=False;
+        $testName= 'Test username and password invalid username for login';
+        $testNote= 'untuk hasil passed username tidak huruf kecil';
+        $this->unit->run($test,$result,$testName,$testNote);
+        //////////////////////////////////////////////////
+        $test=$this->User_model->validate_user('globaladmin','');
+        $result=False;
+        $testName= 'Test username and password invalid username for login';
+        $testNote= 'untuk hasil passed username tidak huruf kecil';
+        $this->unit->run($test,$result,$testName,$testNote);
+        /////////////////////////////////////////////////
+        $test=$this->User_model->validate_user('globaladmin','globaladmin');
+        $result=False;
+        $testName= 'Test username and password invalid username for login';
+        $testNote= 'untuk hasil passed username tidak huruf kecil';
+        $this->unit->run($test,$result,$testName,$testNote);
     }
     private function testGetNames(){
         $test=$this->User_model->get_names();
@@ -630,6 +678,41 @@ class TestUnit extends CI_Controller {
         }
         else{
             $test=false;
+        }
+        $result=true;
+        $testName= 'Test add users ';
+        $testNote= 'result passed if test > 0 and failed if test<=0';
+        $this->unit->run($test,$result,$testName,$testNote);
+//////////////////////////////////////////////////////////////
+        $text="";
+        $send_mail="false";
+        $delay="10";
+
+        $test=$this->User_model->add_users($text,$send_mail,$delay);
+        if(sizeof($test)>0){
+            $test=true;
+        }
+        else{
+            $test=false;
+        }
+        $result=true;
+        $testName= 'Test add users ';
+        $testNote= 'result passed if test > 0 and failed if test<=0';
+        $this->unit->run($test,$result,$testName,$testNote);
+///////////////////////////////////////////////////////////////////
+
+        $text="andy,kippi@gmail.com,andy,random[6],student \n
+              vio,vio@gmail.com,vio,123456,nothing \n
+              reyner,reyner@gmail.com, reyner,776237,student";
+        $send_mail="false";
+        $delay="10";
+
+        $test=$this->User_model->add_users($text,$send_mail,$delay);
+        if(sizeof($test)>0){
+          $test=true;
+        }
+        else{
+          $test=false;
         }
         $result=true;
         $testName= 'Test add users ';
@@ -713,18 +796,44 @@ class TestUnit extends CI_Controller {
       $testNote= 'result passed passchange_key ==""';
       $this->unit->run($test,$result,$testName,$testNote);
     }
-    // private function testPasschangeIsValid(){
-    //   $query = $this->db->get_where('users', array('passchange_key'))->result();
-    //   $send= $this->User_model->send_password_reset_mail($query[0]->email);
-    //   $query2 = $this->db->select('passchange_time')->get_where('users', array('passchange_key'=>$query[0]->passchange_key));
-    //
-    //   //$query2 = $this->db->select('passchange_time')->get_where('users', array('passchange_key'=>$query[0]->passchange_key));
-    //   var_dump($query2);
-    // }
-    // private function testResetPassTrue(){
-    //     $query = $this->db->get_where('users', array('passchange_key'));
-    //     var_dump($query->result()[0]->email);
-    // }
+    private function testPasschangeIsValid(){
+      $test= $this->User_model->send_password_reset_mail($query[0]->email);
+      $query = $this->db->get_where('users', array('passchange_key'))->result();
+      $query2 = $this->db->select('passchange_time')->get_where('users', array('passchange_key'=>$query[0]->passchange_key));
+      $test=$this->User_model->passchange_is_valid($query[0]->passchange_key);
+      $result=true;
+      $testName= 'Test passchange is valid ';
+      $testNote= 'result passed if the given password reset key is valid';
+      $this->unit->run($test,$result,$testName,$testNote);
+    }
+    private function testPasschangeIsValidInvalidPass(){
+      $query = $this->db->get_where('users', array('passchange_key'))->result();
+      $test= $this->User_model->send_password_reset_mail($query[0]->email);
+      $query2 = $this->db->select('passchange_time')->get_where('users', array('passchange_key'=>$query[0]->passchange_key));
+      $test=$this->User_model->passchange_is_valid($query[0]->passchange_key);
+      $result='Invalid password reset link.';
+      $testName= 'Test passchange is valid Invalid Pass ';
+      $testNote= 'result passed if return invalid password reset link';
+      $this->unit->run($test,$result,$testName,$testNote);
+    }
+
+    private function testResetPass(){
+        $test= $this->User_model->send_password_reset_mail($query[0]->email);
+        $query = $this->db->get_where('users', array('passchange_key'))->result();
+        $query2 = $this->db->select('passchange_time')->get_where('users', array('passchange_key'=>$query[0]->passchange_key));
+        $test=$this->User_model->reset_password($query[0]->passchange_key,"123iyg123");
+        $result=true;
+        $testName= 'Test reset password true';
+        $testNote= 'result passed if true';
+        $this->unit->run($test,$result,$testName,$testNote);
+        ///////////////////////////////////////////////////
+        $query2 = $this->db->select('passchange_time')->get_where('users', array('passchange_key'=>$query[0]->passchange_key));
+        $test=$this->User_model->reset_password("","123iyg123");
+        $result=false;
+        $testName= 'Test reset password false';
+        $testNote= 'result passed if false';
+        $this->unit->run($test,$result,$testName,$testNote);
+    }
     /** ----- INPUT REYNER's CODE HERE ----- **/
     public function testGetAllNotifications(){
         $add=$this->Notifications_model->add_notification('notifikasi','Ada ujian2');
@@ -1006,6 +1115,14 @@ class TestUnit extends CI_Controller {
         $count2 = sizeof($this->User_model->get_all_users());
         $result = FALSE;
         if($count!=$count2){$result = TRUE;}
+        $testName='Test to delete user';
+        $testNote='Delete user';
+        $this->unit->run($test,$result,$testName,$testNote);
+/////////////////////////////////////////////////////////////
+        $test=$this->User_model->delete_user("");
+        $count2 = sizeof($this->User_model->get_all_users());
+        $result = FALSE;
+        //if($count!=$count2){$result = TRUE;}
         $testName='Test to delete user';
         $testNote='Delete user';
         $this->unit->run($test,$result,$testName,$testNote);
