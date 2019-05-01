@@ -11,7 +11,5 @@ before_script:
 env:
     matrix:
         - DRIVER="xdebug"
-env:
-    -DB="mysql"
 script:
     - php index.php TestUnit
