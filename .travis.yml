@@ -1,13 +1,15 @@
 language: php
 php:
-    - 7.2.17
+    - 7.1
+    - 7.2
+    - 7.3
 services:
     - mysql
 before_install:
-  - cp application/config/database.example.php application/config/database.php
-  - cp application/config/secrets.example.php application/config/secrets.php
+    - cp application/config/database.example.php application/config/database.php
+    - cp application/config/secrets.example.php application/config/secrets.php
 before_script:
-  - sudo mysql -e 'CREATE DATABASE sharifjudge;'
+    - sudo mysql -e 'CREATE DATABASE sharifjudge;'
 env:
     matrix:
         - DRIVER="xdebug"
