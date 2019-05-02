@@ -13,6 +13,7 @@ before_script:
 env:
     matrix:
         - DRIVER="xdebug"
+        - CI_VERSION="3.0-dev"
 script:
     - phpunit
     - php index.php TestUnit
