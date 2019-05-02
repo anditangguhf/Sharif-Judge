@@ -110,7 +110,7 @@ class TestUnit extends CI_Controller {
         $this->testSendResetPass();
         $this->testSendResetPassEmailNotExist();
         $this->testPasschangeIsValid();
-        //$this->testPasschangeIsValidTimeExpired();
+        $this->testPasschangeIsValidTimeExpired();
         $this->testPasschangeIsValidInvalidPass();
         $this->testResetPass();
 
@@ -648,13 +648,13 @@ class TestUnit extends CI_Controller {
         $test=$this->User_model->validate_user('globaladmin','');
         $result=False;
         $testName= 'Test username and password invalid username for login';
-        $testNote= 'untuk hasil passed username tidak huruf kecil';
+        $testNote= 'untuk hasil passed pass no password';
         $this->unit->run($test,$result,$testName,$testNote);
         /////////////////////////////////////////////////
         $test=$this->User_model->validate_user('globaladmin','globaladmin');
         $result=False;
         $testName= 'Test username and password invalid username for login';
-        $testNote= 'untuk hasil passed username tidak huruf kecil';
+        $testNote= 'untuk hasil passed wrong password';
         $this->unit->run($test,$result,$testName,$testNote);
     }
     private function testGetNames(){
@@ -820,6 +820,30 @@ class TestUnit extends CI_Controller {
       $testNote= 'result passed if return invalid password reset link';
       $this->unit->run($test,$result,$testName,$testNote);
     }
+    private function testPasschangeIsValidTimeExpired(){
+        $users = array(
+        array(
+            'id' => '1000',
+            'username'=>'test',
+            'password'=>'test',
+            'display_name'=>'test',
+            'email'=>'test@gmail.com',
+            'role'=>'admin',
+            'passchange_key'=>'qwerty',
+            'passchange_time'=>'2010-03-28 14:47:03',
+            'first_login_time'=>'2018-02-14 09:04:03',
+            'last_login_time'=>'2018-02-14 09:04:03',
+            'selected_assignment'=>'1',
+            'dashboard_widget_positions'=>'dashboard1')
+        );
+      $this->db->insert('shj_users',$users[0]);
+      $test=$this->User_model->passchange_is_valid('qwerty');
+      $result='The link is expired.';
+      $testName= 'Test passchange is valid Invalid time expired ';
+      $testNote= 'result passed if return The link is expired';
+      $this->unit->run($test,$result,$testName,$testNote);
+
+    }
 
     private function testResetPass(){
         $test= $this->User_model->send_password_reset_mail($query[0]->email);
@@ -940,6 +964,13 @@ class TestUnit extends CI_Controller {
         $testName= 'Test have new notification on judge';
         $testNote= 'To get newest notification';
         $this->unit->run($test,$result,$testName,$testNote);
+        ////////////////////////////////////////////
+        $this->Notifications_model->__construct();
+        $test=$this->Notifications_model->have_new_notification(strtotime($notif['time']));
+        $result=False;
+        $testName= 'Test have new notification on judge FALSE';
+        $testNote= 'To get newest notification return false';
+        $this->unit->run($test,$result,$testName,$testNote);
     }
 
 
@@ -1027,7 +1058,18 @@ class TestUnit extends CI_Controller {
         $testName='Test is Participant';
         $testNote='Returns TRUE if $username if one of the $participants';
         $this->unit->run($test,$result,$testName,$testNote);
-
+        ///////////////////////////////////////////////
+        $test=$this->Assignment_model->is_participant('ALL',$username);
+        $result=TRUE;
+        $testName='Test is Participant';
+        $testNote='Returns TRUE if $username All';
+        $this->unit->run($test,$result,$testName,$testNote);
+        ////////////////////////////////////////////////
+        $test=$this->Assignment_model->is_participant($participants,"");
+        $result=false;
+        $testName='Test is Participant false';
+        $testNote='Returns Passed if result is false';
+        $this->unit->run($test,$result,$testName,$testNote);
 
     }
     public function testProblemInfo(){
@@ -1060,18 +1102,22 @@ class TestUnit extends CI_Controller {
         }
         $test=$this->Assignment_model->assignment_info($assignment_id);
         $query = $this->db->get_where('assignments', array('id'=>$assignment_id));
-        if ($query->num_rows() != 1)
+        $result=$query->row_array();
+        $testName='Assignment Info';
+        $testNote='Returns database row for given assignment';
+        $this->unit->run($test,$result,$testName,$testNote);
+/////////////////////////////////////////////////////////
+        $test=$this->Assignment_model->assignment_info("");
         $result=array(
             'id' => 0,
             'name' => 'Not Selected',
             'finish_time' => 0,
             'extra_time' => 0,
-            'problems' => 0
-        );
-        $result=$query->row_array();
+            'problems' => 0);
         $testName='Assignment Info';
-        $testNote='Returns database row for given assignment';
+        $testNote='Returns database array id=0';
         $this->unit->run($test,$result,$testName,$testNote);
+
 
     }
 
@@ -1205,7 +1251,7 @@ class TestUnit extends CI_Controller {
       $this->unit->run($test,$result,$testName,$testNote);
   }
 
-  
+
 }
 
 ?>
