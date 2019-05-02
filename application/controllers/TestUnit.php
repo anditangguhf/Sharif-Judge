@@ -122,7 +122,8 @@ class TestUnit extends CI_Controller {
         $this->testUpdateNotification();
         $this->testDeleteNotification();
         $this->testGetNotifications();
-        $this->testHaveNewNotifications();
+        $this->testHaveNewNotificationsTrue();
+        $this->testHaveNewNotificationsFalse();
 
         /** ENRICO's FUNCTIONS HERE **/
         $this->testAllAssignments();
@@ -941,7 +942,16 @@ class TestUnit extends CI_Controller {
         }
         $test=$this->Notifications_model->have_new_notification($currdt);
         $result=$tmp;
-        $testName= 'Test have new notification on judge';
+        $testName= 'Test have new notification on judge (true)';
+        $testNote= 'To get newest notification';
+        $this->unit->run($test,$result,$testName,$testNote);
+    }
+
+    public function testHaveNewNotificationsFalse(){
+        $notifs = $this->db->select('time')->get('notifications')->result_array();
+        $test=$this->Notifications_model->have_new_notification("");
+        $result=false;
+        $testName= 'Test have new notification on judge (False)';
         $testNote= 'To get newest notification';
         $this->unit->run($test,$result,$testName,$testNote);
     }
