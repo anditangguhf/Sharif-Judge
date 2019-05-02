@@ -161,7 +161,7 @@ class TestUnit extends CI_Controller {
 
         /* ------------------------------------------------------------------ */
 
-        $coverage->stop();
+        // $coverage->stop();
 
         $writer = new \SebastianBergmann\CodeCoverage\Report\Clover;
         $writer->process($coverage, '/tmp/clover.xml');
