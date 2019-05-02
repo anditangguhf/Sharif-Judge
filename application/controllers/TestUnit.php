@@ -41,10 +41,10 @@ class TestUnit extends CI_Controller {
         if (self::ENABLE_COVERAGE) {
             $this->coverage->stop();
             $writer = new \SebastianBergmann\CodeCoverage\Report\Html\Facade;
-            $writer->process($this->coverage, '../reports/code-coverage');
+            $writer->process($this->coverage, 'reports/code-coverage');
         }
         // Generate Test Report HTML
-        file_put_contents('../reports/test_report.html', $this->unit->report());
+        file_put_contents('reports/test_report.html', $this->unit->report());
         // Output result to screen
         $statistics = [
             'Pass' => 0,
@@ -930,7 +930,7 @@ class TestUnit extends CI_Controller {
         $this->unit->run($test,$result,$testName,$testNote);
     }
 
-    public function testHaveNewNotifications(){
+    public function testHaveNewNotificationsTrue(){
         $notifs = $this->db->select('time')->get('notifications')->result_array();
         $currdt = date('Y-m-d h:i:s');
         foreach ($notifs as $notif) {
@@ -1193,7 +1193,7 @@ class TestUnit extends CI_Controller {
       $this->add_queue_manual($assignment_id);
       $queueSize = sizeof($this->db->get('queue')->result());
       $test=$this->Queue_model->remove_item('testuser', $assignment_id, 1, 1);
-      echo "REMOVE QUEUE --> $test";
+      // echo "REMOVE QUEUE --> $test";
       $result=$queueSize-1;
       $testName='Test to remove item in queue';
       $testNote='remove item';
