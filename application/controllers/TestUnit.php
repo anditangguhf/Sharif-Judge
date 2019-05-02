@@ -41,10 +41,10 @@ class TestUnit extends CI_Controller {
         if (self::ENABLE_COVERAGE) {
             $this->coverage->stop();
             $writer = new \SebastianBergmann\CodeCoverage\Report\Html\Facade;
-            $writer->process($this->coverage, '../reports/code-coverage');
+            $writer->process($this->coverage, 'reports/code-coverage');
         }
         // Generate Test Report HTML
-        file_put_contents('../reports/test_report.html', $this->unit->report());
+        file_put_contents('reports/test_report.html', $this->unit->report());
         // Output result to screen
         $statistics = [
             'Pass' => 0,
@@ -81,7 +81,7 @@ class TestUnit extends CI_Controller {
         // $this->testEmptyAQueue();
 
         $this->testGetSubmission('kippi123', 'PBO1', 'Test1', 1);
-        // $this->testAddQueue();
+        $this->testAddQueue();
 
         /** YONATHAN's FUNCTIONS HERE **/
         $this->testAddUserTrue();
@@ -122,7 +122,8 @@ class TestUnit extends CI_Controller {
         $this->testUpdateNotification();
         $this->testDeleteNotification();
         $this->testGetNotifications();
-        $this->testHaveNewNotifications();
+        $this->testHaveNewNotificationsTrue();
+        $this->testHaveNewNotificationsFalse();
 
         /** ENRICO's FUNCTIONS HERE **/
         $this->testAllAssignments();
@@ -141,16 +142,20 @@ class TestUnit extends CI_Controller {
         $this->testGetFirstItem();
         $this->testRemoveItem();
         $this->TestAddtoQueue();
+        $this->TestGetScoreBoard();
+        $this->testEmptyQueue();
+        $this->testInQueue();
+        $this->testGetFirstItemFound();
 
-        //
-        // /* ------------ END OF CODE ----------- */
-        //
-        // // $this->add_user_manual();
-        // // $this->add_assignment_manual();
+
+        /* ------------ END OF CODE ----------- */
+
+        // $this->add_user_manual();
+        // $this->add_assignment_manual();
         // $this->add_submission_manual(72,1); /* TODO: masih error */
         // $this->add_queue_manual(72,1);
-        //
-        // /** run report function here **/
+
+        /** run report function here **/
         $this->generateFile($this->unit->report());
         $this->report();
 
@@ -320,13 +325,13 @@ class TestUnit extends CI_Controller {
             'submit_id' => '1',
             'username' => 'testuser',
             'assignment' => $assignment_id,
-            'problem' => $problem_id,
+            'problem' => 1,
             'type' => 'judge'
         );
 
         //add to queue db
-        echo var_dump($this->db->insert('shj_queue', $queue_info));
-        // $this->db->insert('shj_queue', $queue_info);
+        // echo var_dump($this->db->insert('shj_queue', $queue_info));
+        $this->db->insert('shj_queue', $queue_info);
     }
 
     /** ----- INPUT KIPPI's CODE HERE ----- **/
@@ -386,7 +391,7 @@ class TestUnit extends CI_Controller {
 
         $test = $this->Settings_model->get_setting($key);
         $result = 1;
-        $testName = "testSetASetting";
+        $testName = "testGetASetting";
         $testNote  = "Test get a setting value after update value";
         $this->unit->run($test, $result, $testName, $testNote);
     }
@@ -949,7 +954,7 @@ class TestUnit extends CI_Controller {
         $this->unit->run($test,$result,$testName,$testNote);
     }
 
-    public function testHaveNewNotifications(){
+    public function testHaveNewNotificationsTrue(){
         $notifs = $this->db->select('time')->get('notifications')->result_array();
         $currdt = date('Y-m-d h:i:s');
         foreach ($notifs as $notif) {
@@ -961,7 +966,16 @@ class TestUnit extends CI_Controller {
         }
         $test=$this->Notifications_model->have_new_notification($currdt);
         $result=$tmp;
-        $testName= 'Test have new notification on judge';
+        $testName= 'Test have new notification on judge (true)';
+        $testNote= 'To get newest notification';
+        $this->unit->run($test,$result,$testName,$testNote);
+    }
+
+    public function testHaveNewNotificationsFalse(){
+        $notifs = $this->db->select('time')->get('notifications')->result_array();
+        $test=$this->Notifications_model->have_new_notification("");
+        $result=false;
+        $testName= 'Test have new notification on judge (False)';
         $testNote= 'To get newest notification';
         $this->unit->run($test,$result,$testName,$testNote);
         ////////////////////////////////////////////
@@ -1225,10 +1239,10 @@ class TestUnit extends CI_Controller {
       $this->add_queue_manual($assignment_id);
       $queueSize = sizeof($this->db->get('queue')->result());
       $test=$this->Queue_model->remove_item('testuser', $assignment_id, 1, 1);
-      echo var_dump($test);
+      // echo "REMOVE QUEUE --> $test";
       $result=$queueSize-1;
-      $testName='Test to get first item in queue';
-      $testNote='get first item';
+      $testName='Test to remove item in queue';
+      $testNote='remove item';
       $this->unit->run($test,$result,$testName,$testNote);
   }
   // TODO: failed
@@ -1237,10 +1251,11 @@ class TestUnit extends CI_Controller {
       $this->add_assignment_manual();
       $assignment_id = $this->db->query("SELECT id from shj_assignments")->result()[0]->id;
       $submit_info = array(
-          'submit_id'=>1,
-          'username'=>'testuser',
-          'assignment'=>$assignment_id,
-          'problem'=>1
+          'submit_id' => '1',
+          'username' => 'testuser',
+          'assignment' => $assignment_id,
+          'problem' => 1,
+          'type' => 'judge'
       );
 
       $test=$this->Queue_model->add_to_queue($submit_info);
@@ -1250,8 +1265,49 @@ class TestUnit extends CI_Controller {
       $testNote='add item';
       $this->unit->run($test,$result,$testName,$testNote);
   }
+//perlu assignment id
+  private function TestGetScoreBoard(){
+      $test = $this->Scoreboard_model->get_scoreboard(1);
+      $result='Scoreboard not found';
+      $testName = 'Test get data kosong pada Scoreboard';
+      $testNote = 'get score board';
+      $this->unit->run($test,$result,$testName,$testNote);
+      //////////////////////////
+          // $test = $this->Scoreboard_model->get_scoreboard(get_current_assignment_id());
+          // $result='Scoreboard not found';
+          // $testName='Test get data kosong pada Scoreboard';
+          // $testNote='get score board';
+          // $this->unit->run($test,$result,$testName,$testNote);
+  }
 
+<<<<<<< HEAD
 
+=======
+  private function testEmptyQueue(){
+      $test = $this->Queue_model->empty_queue();
+      $query = $this->db->get_where('queue',array('id'=>1));
+      $result = ($query != 0);
+      $testName = 'Test queue is empty';
+      $testNote = 'empty queue';
+      $this->unit->run($test,$result,$testName,$testNote);
+  }
+
+  private function testInQueue(){
+      $test = $this->Queue_model->in_queue('vio','assignment1','problem1');
+      $result = false;
+      $testName = 'Test in queue';
+      $testNote = 'cek username, assignment, problem in queue';
+      $this->unit->run($test,$result,$testName,$testNote);
+  }
+  private function testGetFirstItemFound() {
+      $query = $this->db->order_by('id')->limit(1)->get('queue');
+      $result = null;
+      $test = $this->Queue_model->get_first_item();
+      $testName = 'Test get first item';
+      $testNote = 'get first item';
+      $this->unit->run($test,$result,$testName,$testNote);
+  }
+>>>>>>> 1b944499be8aaab6e8fa95cefc2ac8089b1e8789
 }
 
 ?>

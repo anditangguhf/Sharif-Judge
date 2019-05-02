@@ -1,4 +1,4 @@
-# SharIF Judge
+# SharIF Judge [![Build Status](https://travis-ci.org/anditangguhf/Sharif-Judge.svg?branch=Version-1)](https://travis-ci.org/anditangguhf/Sharif-Judge)
 
 [SharIF Judge](https://github.com/ftisunpar/Sharif-Judge) is a free and open source online judge for C, C++, Java and
 Python programming courses. SharIF Judge is a fork of the original [SharIF Judge](https://github.com/mjnaderi/Sharif-Judge) beautifully created by @mjnaderi. This forked version contain many improvements, mostly due to the needs by our faculty at @ftisunpar.
@@ -28,7 +28,7 @@ Download the latest release from https://github.com/ftisunpar/Sharif-Judge/relea
   * Notifications
   * Lock Student's Display Name
   * Archived Assignment
-  * Hall of Fame 
+  * Hall of Fame
   * 24-hour Logs
   * ...
 
@@ -62,3 +62,9 @@ For running SharIF Judge, a Linux server with following requirements is needed:
 ## License
 
 GPL v3
+
+## Menjalankan Testing
+ 1. Jalankan file test dengan cara menjalankan command `$ php index.php TestUnit`.
+ 2. Jika file tersebut dijalankan, maka akan muncul kumpulan testing yang dilakukan, dengan rekapitulasi jumlah test berupa Passed dan Failed.
+ 3. Untuk melihat hasil test dalam format html, anda bisa mengakses folder SharIF-Judge dan membuka file bernama `TestFile.html`.
+ 4. Untuk melihat hasil coverage test dalam format html, anda bisa mengakses folder `reports/code-coverage/` dan membuka file bernama `index.html`.
