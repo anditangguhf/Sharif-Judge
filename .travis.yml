@@ -14,4 +14,5 @@ env:
     matrix:
         - DRIVER="xdebug"
 script:
+    - phpunit
     - php index.php TestUnit
