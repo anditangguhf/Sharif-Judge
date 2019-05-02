@@ -313,7 +313,8 @@ class TestUnit extends CI_Controller {
         );
         // echo var_dump($submit_info);
 
-        //add to submission db
+        //add to submission db$this->generateFile($this->unit->report());
+        $this->report();
         echo var_dump($this->db->insert('shj_submissions', $submit_info));
     }
 
@@ -1064,11 +1065,15 @@ class TestUnit extends CI_Controller {
         foreach ($participants as &$participant){
             $participant = trim($participant);
         }
-        if(in_array('ALL', $participants))
-        $result=TRUE;
-        if(in_array($username, $participants))
-        $result=TRUE;
-        $result=false;
+        if(in_array('ALL', $participants)){
+          $result=TRUE;
+        }
+        else if(in_array($username, $participants)){
+          $result=TRUE;
+        }
+        else {
+          $result=FALSE;
+        }
         $testName='Test is Participant';
         $testNote='Returns TRUE if $username if one of the $participants';
         $this->unit->run($test,$result,$testName,$testNote);
@@ -1194,10 +1199,9 @@ class TestUnit extends CI_Controller {
 
     private function updateLoginTime(){
         $now = shj_now_str();
+        $this->User_model->add_user('nadyavio','7315005@student.unpar.ac.id','nadya','Nadya123','admin');
         $test=$this->db->select('first_login_time')->get_where('users', array('username'=>'nadyavio'))->row()->first_login_time;
-        $test1=null;
         if($test==null){
-            $test=$this->db->select('first_login_time')->get_where('users', array('username'=>'nadyavio'))->row()->first_login_time;
             $this->User_model->update_login_time('nadyavio');
             $test1=$this->db->select('first_login_time')->get_where('users', array('username'=>'nadyavio'))->row()->first_login_time;
         }
@@ -1207,9 +1211,9 @@ class TestUnit extends CI_Controller {
             $test1=$this->db->select('last_login_time')->get_where('users', array('username'=>'nadyavio'))->row()->last_login_time;
         }
         if($test != $test1){
-            $test1=true;
+            $test=true;
         }else {
-            $test1=false;
+            $test=false;
         }
         $result=true;
         $testName='Test to update login time';
@@ -1239,13 +1243,14 @@ class TestUnit extends CI_Controller {
       $this->add_queue_manual($assignment_id);
       $queueSize = sizeof($this->db->get('queue')->result());
       $test=$this->Queue_model->remove_item('testuser', $assignment_id, 1, 1);
+      $test=sizeof($this->db->get('queue')->result());
       // echo "REMOVE QUEUE --> $test";
       $result=$queueSize-1;
       $testName='Test to remove item in queue';
       $testNote='remove item';
       $this->unit->run($test,$result,$testName,$testNote);
   }
-  // TODO: failed
+
   private function TestAddtoQueue(){
       $this->add_user_manual();
       $this->add_assignment_manual();
@@ -1258,9 +1263,16 @@ class TestUnit extends CI_Controller {
           'type' => 'judge'
       );
 
-      $test=$this->Queue_model->add_to_queue($submit_info);
       $queueSize = sizeof($this->db->get('queue')->result());
-      $result=$queueSize;
+      $test=$this->Queue_model->add_to_queue($submit_info);
+      $queueSize1 = sizeof($this->db->get('queue')->result());
+      if($queueSize!=$queueSize1){
+          $result=True;
+      }
+      else {
+        $result=False;
+      }
+      $test= true;
       $testName='Test to add item in queue';
       $testNote='add item';
       $this->unit->run($test,$result,$testName,$testNote);
@@ -1280,9 +1292,6 @@ class TestUnit extends CI_Controller {
           // $this->unit->run($test,$result,$testName,$testNote);
   }
 
-<<<<<<< HEAD
-
-=======
   private function testEmptyQueue(){
       $test = $this->Queue_model->empty_queue();
       $query = $this->db->get_where('queue',array('id'=>1));
@@ -1307,7 +1316,6 @@ class TestUnit extends CI_Controller {
       $testNote = 'get first item';
       $this->unit->run($test,$result,$testName,$testNote);
   }
->>>>>>> 1b944499be8aaab6e8fa95cefc2ac8089b1e8789
 }
 
 ?>
