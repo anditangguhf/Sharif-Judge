@@ -75,93 +75,93 @@ class TestUnit extends CI_Controller {
     public function index() {
 
         /** KIPPI's FUNCTIONS HERE **/
-        // $this->getASetting('enable_log');
-        // $this->testSetASetting('enable_log', 1);
-        // $this->getAllSettings();
-        // // $this->testEmptyAQueue();
-        //
-        // $this->testGetSubmission('kippi123', 'PBO1', 'Test1', 1);
-        // $this->testAddQueue();
+        $this->getASetting('enable_log');
+        $this->testSetASetting('enable_log', 1);
+        $this->getAllSettings();
+        // $this->testEmptyAQueue();
+
+        $this->testGetSubmission('kippi123', 'PBO1', 'Test1', 1);
+        $this->testAddQueue();
 
         /** YONATHAN's FUNCTIONS HERE **/
         $this->testAddUserTrue();
-        // $this->testAddUserRoleInvalid();
-        // $this->testAddUserUsernameExist();
-        // $this->testAddUserErrorLowercase();
-        // $this->testAddUserEmailExistError();
-        // $this->testAddUserLengthUsernameError();
-        // $this->testAddUserWrongUsernameAlphaNumeric();
-        // $this->testHaveEmail();
-        // $this->testHaveUserTrue();
-        // $this->testhaveUserFalse();
-        // $this->testUsernameToUserId();
-        // $this->testUsernameToUserIdFalse();
-        // $this->testUserIdToUsernameTrueId();
-        // $this->testUserIdToUsernameFalseIdNotfound();
-        // $this->testUserIdToUsernameFalseIdAlphanumeric();
-        // $this->testInsertToLogs();
-        // $this->testValidateUserTrue();
-        // $this->testValidateUserFalseInvalidUsername();
-        // $this->testGetNames();
-        // $this->testAddUsers();
-        // $this->testGetAllUsers();
-        // $this->testGetUserTrue();
-        // $this->testGetUserFalse();
-        // $this->testSendResetPass();
-        // $this->testSendResetPassEmailNotExist();
-        // $this->testPasschangeIsValid();
-        // //$this->testPasschangeIsValidTimeExpired();
-        // $this->testPasschangeIsValidInvalidPass();
-        // $this->testResetPass();
-        //
-        //
-        // /** REYNER's FUNCTIONS HERE **/
-        // $this->testAddNotifications();
-        // $this->testGetAllNotifications();
-        // $this->testGetLatestNotifications();
-        // $this->testUpdateNotification();
-        // $this->testDeleteNotification();
-        // $this->testGetNotifications();
-        // $this->testHaveNewNotificationsTrue();
-        // $this->testHaveNewNotificationsFalse();
-        //
-        // /** ENRICO's FUNCTIONS HERE **/
-        // $this->testAllAssignments();
-        // $this->testNewAssignmentId();
-        // $this->testIncreaseTotalSubmits();
-        // $this->testAllProblem();
-        // $this->testIsParticipant();
-        // $this->testAssignmentInfo();
-        // $this->testProblemInfo();
-        // $this->testSetMossTime();
-        // $this->testGetMossTime();
-        //
-        // /** VIO **/
-        // $this->deleteUser();
-        // $this->updateLoginTime();
-        // $this->testGetFirstItem();
-        // $this->testRemoveItem();
-        // $this->TestAddtoQueue();
-        // $this->TestGetScoreBoard();
-        // $this->testEmptyQueue();
-        // $this->testInQueue();
-        // $this->testGetFirstItemFound();
+        $this->testAddUserRoleInvalid();
+        $this->testAddUserUsernameExist();
+        $this->testAddUserErrorLowercase();
+        $this->testAddUserEmailExistError();
+        $this->testAddUserLengthUsernameError();
+        $this->testAddUserWrongUsernameAlphaNumeric();
+        $this->testHaveEmail();
+        $this->testHaveUserTrue();
+        $this->testhaveUserFalse();
+        $this->testUsernameToUserId();
+        $this->testUsernameToUserIdFalse();
+        $this->testUserIdToUsernameTrueId();
+        $this->testUserIdToUsernameFalseIdNotfound();
+        $this->testUserIdToUsernameFalseIdAlphanumeric();
+        $this->testInsertToLogs();
+        $this->testValidateUserTrue();
+        $this->testValidateUserFalseInvalidUsername();
+        $this->testGetNames();
+        $this->testAddUsers();
+        $this->testGetAllUsers();
+        $this->testGetUserTrue();
+        $this->testGetUserFalse();
+        $this->testSendResetPass();
+        $this->testSendResetPassEmailNotExist();
+        $this->testPasschangeIsValid();
+        //$this->testPasschangeIsValidTimeExpired();
+        $this->testPasschangeIsValidInvalidPass();
+        $this->testResetPass();
 
-        //
-        // /* ------------ END OF CODE ----------- */
-        //
-        // // $this->add_user_manual();
-        // // $this->add_assignment_manual();
+
+        /** REYNER's FUNCTIONS HERE **/
+        $this->testAddNotifications();
+        $this->testGetAllNotifications();
+        $this->testGetLatestNotifications();
+        $this->testUpdateNotification();
+        $this->testDeleteNotification();
+        $this->testGetNotifications();
+        $this->testHaveNewNotificationsTrue();
+        $this->testHaveNewNotificationsFalse();
+
+        /** ENRICO's FUNCTIONS HERE **/
+        $this->testAllAssignments();
+        $this->testNewAssignmentId();
+        $this->testIncreaseTotalSubmits();
+        $this->testAllProblem();
+        $this->testIsParticipant();
+        $this->testAssignmentInfo();
+        $this->testProblemInfo();
+        $this->testSetMossTime();
+        $this->testGetMossTime();
+
+        /** VIO **/
+        $this->deleteUser();
+        $this->updateLoginTime();
+        $this->testGetFirstItem();
+        $this->testRemoveItem();
+        $this->TestAddtoQueue();
+        $this->TestGetScoreBoard();
+        $this->testEmptyQueue();
+        $this->testInQueue();
+        $this->testGetFirstItemFound();
+
+
+        /* ------------ END OF CODE ----------- */
+
+        // $this->add_user_manual();
+        // $this->add_assignment_manual();
         // $this->add_submission_manual(72,1); /* TODO: masih error */
         // $this->add_queue_manual(72,1);
-        //
-        // /** run report function here **/
+
+        /** run report function here **/
         $this->generateFile($this->unit->report());
         $this->report();
 
         /* ------------------------------------------------------------------ */
 
-        // $coverage->stop();
+        $coverage->stop();
 
         $writer = new \SebastianBergmann\CodeCoverage\Report\Clover;
         $writer->process($coverage, '/tmp/clover.xml');
