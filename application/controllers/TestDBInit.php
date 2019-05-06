@@ -236,6 +236,20 @@ class TestDBInit extends CI_Controller {
                 // show_error("Error creating database table ".$this->db->dbprefix('users'));
                 echo "Failed creating database: users\n";
 
+
+			// create table 'logins'
+			$fields = array(
+				'login_id'            => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'auto_increment' => TRUE),
+				'username'         		=> array('type' => 'VARCHAR', 'constraint' => 20),
+				'ip_address'          => array('type' => 'VARCHAR', 'constraint' => 15),
+				'timestamp'          	=> array('type' => 'TIMESTAMP'),
+				'last_24h_login_id'   => array('type' => 'INT', 'constraint' => 11, 'null' => TRUE),
+			);
+			$this->dbforge->add_field($fields);
+			$this->dbforge->add_key('login_id', TRUE); // PRIMARY KEY
+			if ( ! $this->dbforge->create_table('logins', TRUE))
+				show_error("Error creating database table ".$this->db->dbprefix('logins'));
+
             // // Using a random string as encryption key
             // $config_path = rtrim(APPPATH,'/').'/config/config.php';
             // $config_content = file_get_contents($config_path);
