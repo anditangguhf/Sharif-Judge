@@ -114,7 +114,7 @@ class TestUnit extends CI_Controller {
         $this->testPasschangeIsValidInvalidPass();
         $this->testResetPass();
         $this->testingAddAssignment();
-        $this->testingDeleteAssignment();
+        //$this->testingDeleteAssignment();
 
 
         /** REYNER's FUNCTIONS HERE **/
@@ -125,7 +125,7 @@ class TestUnit extends CI_Controller {
         $this->testDeleteNotification();
         $this->testGetNotifications();
         $this->testHaveNewNotificationsTrue();
-        $this->testHaveNewNotificationsFalse();
+        //$this->testHaveNewNotificationsFalse();
         $this->testGetAllFinalSubmission();
 
         /** ENRICO's FUNCTIONS HERE **/
@@ -145,8 +145,8 @@ class TestUnit extends CI_Controller {
         $this->deleteUser();
         $this->updateLoginTime();
         $this->testGetFirstItem();
-        $this->testRemoveItem();
-        $this->TestAddtoQueue();
+        //$this->testRemoveItem();
+        //$this->TestAddtoQueue();
         $this->TestGetScoreBoard();
         $this->testEmptyQueue();
         $this->testInQueue();
