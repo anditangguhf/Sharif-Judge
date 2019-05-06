@@ -135,6 +135,8 @@ class TestUnit extends CI_Controller {
         $this->testProblemInfo();
         $this->testSetMossTime();
         $this->testGetMossTime();
+        $this->testUpdateScoreBoards();
+        $this->testGetScoreBoard();
 
         /** VIO **/
         $this->deleteUser();
