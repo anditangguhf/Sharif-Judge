@@ -84,73 +84,73 @@ class TestUnit extends CI_Controller {
         $this->testAddQueue();
 
         /** YONATHAN's FUNCTIONS HERE **/
-        $this->testAddUserTrue();
-        $this->testAddUserRoleInvalid();
-        $this->testAddUserUsernameExist();
-        $this->testAddUserErrorLowercase();
-        $this->testAddUserEmailExistError();
-        $this->testAddUserLengthUsernameError();
-        $this->testAddUserWrongUsernameAlphaNumeric();
-        $this->testHaveEmail();
-        $this->testHaveUserTrue();
-        $this->testhaveUserFalse();
-        $this->testUsernameToUserId();
-        $this->testUsernameToUserIdFalse();
-        $this->testUserIdToUsernameTrueId();
-        $this->testUserIdToUsernameFalseIdNotfound();
-        $this->testUserIdToUsernameFalseIdAlphanumeric();
-        $this->testInsertToLogs();
-        $this->testValidateUserTrue();
-        $this->testValidateUserFalseInvalidUsername();
-        $this->testGetNames();
-        $this->testAddUsers();
-        $this->testGetAllUsers();
-        $this->testGetUserTrue();
-        $this->testGetUserFalse();
-        $this->testSendResetPass();
-        $this->testSendResetPassEmailNotExist();
-        $this->testPasschangeIsValid();
-        $this->testPasschangeIsValidTimeExpired();
+        // $this->testAddUserTrue();
+        // $this->testAddUserRoleInvalid();
+        // $this->testAddUserUsernameExist();
+        // $this->testAddUserErrorLowercase();
+        // $this->testAddUserEmailExistError();
+        // $this->testAddUserLengthUsernameError();
+        // $this->testAddUserWrongUsernameAlphaNumeric();
+        // $this->testHaveEmail();
+        // $this->testHaveUserTrue();
+        // $this->testhaveUserFalse();
+        // $this->testUsernameToUserId();
+        // $this->testUsernameToUserIdFalse();
+        // $this->testUserIdToUsernameTrueId();
+        // $this->testUserIdToUsernameFalseIdNotfound();
+        // $this->testUserIdToUsernameFalseIdAlphanumeric();
+        // $this->testInsertToLogs();
+        // $this->testValidateUserTrue();
+        // $this->testValidateUserFalseInvalidUsername();
+        // $this->testGetNames();
+        // $this->testAddUsers();
+        // $this->testGetAllUsers();
+        // $this->testGetUserTrue();
+        // $this->testGetUserFalse();
+        // $this->testSendResetPass();
+        // $this->testSendResetPassEmailNotExist();
+        // $this->testPasschangeIsValid();
+        // $this->testPasschangeIsValidTimeExpired();
         $this->testPasschangeIsValidInvalidPass();
-        $this->testResetPass();
-        //$this->testingAddAssignment();
-        //$this->testingDeleteAssignment();
+        // $this->testResetPass();
+        // $this->testingAddAssignment();
+        // $this->testingDeleteAssignment();
 
 
         /** REYNER's FUNCTIONS HERE **/
-        $this->testAddNotifications();
-        $this->testGetAllNotifications();
-        $this->testGetLatestNotifications();
-        $this->testUpdateNotification();
-        $this->testDeleteNotification();
-        $this->testGetNotifications();
-        $this->testHaveNewNotificationsTrue();
-        //$this->testHaveNewNotificationsFalse();
-        $this->testGetAllFinalSubmission();
+        // $this->testAddNotifications();
+        // $this->testGetAllNotifications();
+        // $this->testGetLatestNotifications();
+        // $this->testUpdateNotification();
+        // $this->testDeleteNotification();
+        // $this->testGetNotifications();
+        // $this->testHaveNewNotificationsTrue();
+        // $this->testHaveNewNotificationsFalse();
+        // $this->testGetAllFinalSubmission();
 
         /** ENRICO's FUNCTIONS HERE **/
-        $this->testAllAssignments();
-        $this->testNewAssignmentId();
-        $this->testIncreaseTotalSubmits();
-        $this->testAllProblem();
-        $this->testIsParticipant();
+        // $this->testAllAssignments();
+        // $this->testNewAssignmentId();
+        // $this->testIncreaseTotalSubmits();
+        // $this->testAllProblem();
+        // $this->testIsParticipant();
         $this->testAssignmentInfo();
-        $this->testProblemInfo();
-        $this->testSetMossTime();
-        $this->testGetMossTime();
-        $this->testUpdateScoreBoards();
-        $this->testGetScoreBoard();
+        // $this->testProblemInfo();
+        // $this->testSetMossTime();
+        // $this->testGetMossTime();
+        // $this->testUpdateScoreBoards();
+        // $this->testGetScoreBoard();
 
         /** VIO **/
-        $this->deleteUser();
-        $this->updateLoginTime();
-        $this->testGetFirstItem();
+        // $this->deleteUser();
+        // $this->updateLoginTime();
+        // $this->testGetFirstItem();
         //$this->testRemoveItem();
         //$this->TestAddtoQueue();
-        $this->TestGetScoreBoard();
-        $this->testEmptyQueue();
-        $this->testInQueue();
-        $this->testGetFirstItemFound();
+        // $this->TestGetScoreBoard();
+        // $this->testEmptyQueue();
+        // $this->testInQueue();
+        // $this->testGetFirstItemFound();
 
 
         /* ------------ END OF CODE ----------- */
