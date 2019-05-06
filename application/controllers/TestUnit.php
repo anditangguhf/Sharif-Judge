@@ -145,7 +145,6 @@ class TestUnit extends CI_Controller {
         $this->testGetFirstItem();
         $this->testRemoveItem();
         $this->TestAddtoQueue();
-        $this->TestGetScoreBoard();
         $this->testEmptyQueue();
         $this->testInQueue();
         $this->testGetFirstItemFound();
@@ -1003,7 +1002,7 @@ class TestUnit extends CI_Controller {
     public function testGetAllFinalSubmission(){
         $this->add_user_manual();
         $datas=$this->User_model->get_all_users();
-        
+
         $result=true;
         $testName= 'Test get all final submission';
         $testNote= 'To get all final submission';
@@ -1227,16 +1226,16 @@ class TestUnit extends CI_Controller {
         }
         $test=$this->Scoreboard_model->get_scoreboard($assignment_id);
         $queryy =  $this->db->select('scoreboard')->get_where('scoreboard', array('assignment'=>$assignment_id));
-		if ($queryy->num_rows() != 1)
-			$result = 'Scoreboard not found';
-		else
-			$result = $queryy->row()->scoreboard;
+        if ($queryy->num_rows() != 1)
+            $result = 'Scoreboard not found';
+        else
+            $result = $queryy->row()->scoreboard;
 
         $testName='Get Cached Scoreboard';
         $testNote='Update All ScoreboardsReturns the cached scoreboard of given assignment as a html text';
         $this->unit->run($test,$result,$testName,$testNote);
 
-	}
+    }
 
     /* ------------ END OF CODE ----------- */
 
@@ -1345,20 +1344,7 @@ class TestUnit extends CI_Controller {
       $testNote='add item';
       $this->unit->run($test,$result,$testName,$testNote);
   }
-//perlu assignment id
-  // private function TestGetScoreBoard(){
-  //     $test = $this->Scoreboard_model->get_scoreboard(1);
-  //     $result='Scoreboard not found';
-  //     $testName = 'Test get data kosong pada Scoreboard';
-  //     $testNote = 'get score board';
-  //     $this->unit->run($test,$result,$testName,$testNote);
-  //     //////////////////////////
-  //         // $test = $this->Scoreboard_model->get_scoreboard(get_current_assignment_id());
-  //         // $result='Scoreboard not found';
-  //         // $testName='Test get data kosong pada Scoreboard';
-  //         // $testNote='get score board';
-  //         // $this->unit->run($test,$result,$testName,$testNote);
-  // }
+
 
   private function testEmptyQueue(){
       $test = $this->Queue_model->empty_queue();
