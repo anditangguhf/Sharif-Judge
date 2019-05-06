@@ -1247,7 +1247,8 @@ class TestUnit extends CI_Controller {
         }
         $test=$this->Assignment_model->set_moss_time($assignment_id);
         $now = shj_now_str();
-        $result=$this->db->where('id', $assignment_id)->update('assignments', array('moss_update'=>$now));
+        $result=$now;
+        $this->db->where('id', $assignment_id)->update('assignments', array('moss_update'=>$now));
         $testName='Set Moss Time';
         $testNote='Moss Update Time for given assignment';
         $this->unit->run($test,$result,$testName,$testNote);
