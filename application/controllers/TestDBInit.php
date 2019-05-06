@@ -240,6 +240,14 @@ class TestDBInit extends CI_Controller {
             $data['installed'] = TRUE;
             $data['enc_key'] = $this->config->item('encryption_key');
             $data['random_key'] = random_string('alnum', 32);
+
+            $tables = $this->db->list_tables();
+
+            foreach ($tables as $table)
+            {
+                    echo "TABLE: $table\n";
+            }
+
         }
 
 
