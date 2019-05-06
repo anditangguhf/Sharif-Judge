@@ -113,8 +113,8 @@ class TestUnit extends CI_Controller {
         $this->testPasschangeIsValidTimeExpired();
         $this->testPasschangeIsValidInvalidPass();
         $this->testResetPass();
-        $this->testingAddAssignment();
-        $this->testingDeleteAssignment();
+        //$this->testingAddAssignment();
+        //$this->testingDeleteAssignment();
 
 
         /** REYNER's FUNCTIONS HERE **/
@@ -125,7 +125,7 @@ class TestUnit extends CI_Controller {
         $this->testDeleteNotification();
         $this->testGetNotifications();
         $this->testHaveNewNotificationsTrue();
-        $this->testHaveNewNotificationsFalse();
+        //$this->testHaveNewNotificationsFalse();
         $this->testGetAllFinalSubmission();
 
         /** ENRICO's FUNCTIONS HERE **/
@@ -145,8 +145,8 @@ class TestUnit extends CI_Controller {
         $this->deleteUser();
         $this->updateLoginTime();
         $this->testGetFirstItem();
-        $this->testRemoveItem();
-        $this->TestAddtoQueue();
+        //$this->testRemoveItem();
+        //$this->TestAddtoQueue();
         $this->TestGetScoreBoard();
         $this->testEmptyQueue();
         $this->testInQueue();
@@ -1057,8 +1057,8 @@ class TestUnit extends CI_Controller {
         $notifs = $this->db->select('time')->get('notifications')->result_array();
         //var_dump($notifs['time']);
         // $test=$this->Notifications_model->have_new_notification(strtotime($notifs[0]['time']));
-        $test=$this->Notifications_model->have_new_notification("");
-        var_dump($notifs);
+        $test=$this->Notifications_model->have_new_notification("null");
+        var_dump($test);
         $result=False;
         $testName= 'Test have new notification on judge FALSE';
         $testNote= 'To get newest notification return false';
