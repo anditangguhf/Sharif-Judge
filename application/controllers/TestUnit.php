@@ -1174,6 +1174,57 @@ class TestUnit extends CI_Controller {
 
     /* ------------ END OF CODE ----------- */
 
+    /** ----- INPUT ENRICO's CODE HERE ----- **/
+
+    public function testUpdateScoreBoards(){
+        $this->add_user_manual();
+        $this->add_assignment_manual();
+        $query = $this->db->query("SELECT id from shj_assignments")->result();
+        $assignment_id = "";
+        foreach ($query as $key => $value) {
+            $assignment_id = $value->id;
+        }
+        $test=$this->Scoreboard_model->update_scoreboards();
+        foreach ($query as $assignment){
+			$result = $this->update_scoreboard($assignment_id);
+		}
+        $testName='Update All Scoreboards';
+        $testNote='Updates the cached scoreboard of all assignments,
+        this function is called each time a user is deleted, or all submissions of a user is deleted';
+        $this->unit->run($test,$result,$testName,$testNote);
+
+
+    }
+
+    public function testGetScoreBoard(){
+        $this->add_user_manual();
+        $this->add_assignment_manual();
+        $query = $this->db->query("SELECT id from shj_assignments")->result();
+        $assignment_id = "";
+        foreach ($query as $key => $value) {
+            $assignment_id = $value->id;
+        }
+        $test=$this->Scoreboard_model->get_scoreboard($assignment_id);
+        $queryy =  $this->db->select('scoreboard')->get_where('scoreboard', array('assignment'=>$assignment_id));
+		if ($queryy->num_rows() != 1)
+			result = 'Scoreboard not found';
+		else
+			result = $queryy->row()->scoreboard;
+
+        $testName='Get Cached Scoreboard';
+        $testNote='Update All ScoreboardsReturns the cached scoreboard of given assignment as a html text';
+        $this->unit->run($test,$result,$testName,$testNote);
+
+	}
+
+
+
+    }
+
+    /* ------------ END OF CODE ----------- */
+
+
+
 
     /** ----- INPUT VIO's CODE HERE ----- **/
     private function deleteUser(){
