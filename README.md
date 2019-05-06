@@ -64,7 +64,8 @@ For running SharIF Judge, a Linux server with following requirements is needed:
 GPL v3
 
 ## Menjalankan Testing
- 1. Jalankan file test dengan cara menjalankan command `$ php index.php TestUnit`.
- 2. Jika file tersebut dijalankan, maka akan muncul kumpulan testing yang dilakukan, dengan rekapitulasi jumlah test berupa Passed dan Failed.
- 3. Untuk melihat hasil test dalam format html, anda bisa mengakses folder SharIF-Judge dan membuka file bernama `TestFile.html`.
- 4. Untuk melihat hasil coverage test dalam format html, anda bisa mengakses folder `reports/code-coverage/` dan membuka file bernama `index.html`.
+ 1. Jalankan file `TestDBInit.php` sebelum melakukan test untuk menginisialisasi database tanpa perlu menginstal Sharif-Judge dengan menjalankan command `$ php index.php TestDBInit`.
+ 2. Jalankan file test dengan cara menjalankan command `$ php index.php TestUnit`.
+ 3. Jika file tersebut dijalankan, maka akan muncul kumpulan testing yang dilakukan, dengan rekapitulasi jumlah test berupa Passed dan Failed.
+ 4. Untuk melihat hasil **Test Plan & Test Report** dalam format html, anda bisa mengakses folder `reports/` dan membuka file bernama `test_report.html`.
+ 5. Untuk melihat hasil **Test Coverage** dalam format html, anda bisa mengakses folder `reports/code-coverage/` dan membuka file bernama `index.html`.
