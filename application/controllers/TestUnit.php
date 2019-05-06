@@ -39,7 +39,7 @@ class TestUnit extends CI_Controller {
 
     private function report() {
         if (self::ENABLE_COVERAGE) {
-            $this->coverage->stop();
+            // $this->coverage->stop();
             $writer = new \SebastianBergmann\CodeCoverage\Report\Html\Facade;
             $writer->process($this->coverage, 'reports/code-coverage');
         }
@@ -113,6 +113,8 @@ class TestUnit extends CI_Controller {
         $this->testPasschangeIsValidTimeExpired();
         $this->testPasschangeIsValidInvalidPass();
         $this->testResetPass();
+        //$this->testingAddAssignment();
+        //$this->testingDeleteAssignment();
 
 
         /** REYNER's FUNCTIONS HERE **/
@@ -123,7 +125,8 @@ class TestUnit extends CI_Controller {
         $this->testDeleteNotification();
         $this->testGetNotifications();
         $this->testHaveNewNotificationsTrue();
-        $this->testHaveNewNotificationsFalse();
+        //$this->testHaveNewNotificationsFalse();
+        $this->testGetAllFinalSubmission();
 
         /** ENRICO's FUNCTIONS HERE **/
         $this->testAllAssignments();
@@ -142,8 +145,8 @@ class TestUnit extends CI_Controller {
         $this->deleteUser();
         $this->updateLoginTime();
         $this->testGetFirstItem();
-        $this->testRemoveItem();
-        $this->TestAddtoQueue();
+        //$this->testRemoveItem();
+        //$this->TestAddtoQueue();
         $this->TestGetScoreBoard();
         $this->testEmptyQueue();
         $this->testInQueue();
@@ -163,13 +166,13 @@ class TestUnit extends CI_Controller {
 
         /* ------------------------------------------------------------------ */
 
-        $coverage->stop();
+        // $coverage->stop();
 
-        $writer = new \SebastianBergmann\CodeCoverage\Report\Clover;
-        $writer->process($coverage, '/tmp/clover.xml');
-
-        $writer = new \SebastianBergmann\CodeCoverage\Report\Html\Facade;
-        $writer->process($coverage, '/tmp/code-coverage-report');
+        // $writer = new \SebastianBergmann\CodeCoverage\Report\Clover;
+        // $writer->process($coverage, '/tmp/clover.xml');
+        //
+        // $writer = new \SebastianBergmann\CodeCoverage\Report\Html\Facade;
+        // $writer->process($coverage, '/tmp/code-coverage-report');
     }
 
     /* GLOBAL FUNCTIONS FOR TESTING */
@@ -471,6 +474,7 @@ class TestUnit extends CI_Controller {
 
     /** ----- INPUT YONATHAN's CODE HERE ----- **/
     private function testAddUserTrue(){
+        $this->User_model->__construct();
         $test=$this->User_model->add_user('globaladmin','admin@gmail.com', 'administrator', 'Admin10', 'admin' );
         $result=true;
         $testName= 'Test Add User on judge';
@@ -875,6 +879,73 @@ class TestUnit extends CI_Controller {
         $testNote= 'result passed if false';
         $this->unit->run($test,$result,$testName,$testNote);
     }
+
+    private function post($num){
+      $_POST['id'] = 1;
+      $_POST['assignment_name'] = "test assignment";
+      $_POST['number_of_problems'] = $num;
+      $_POST['total_submits'] = 0;
+      $_POST['open'] = 1;
+      $_POST['scoreboard'] = 1;
+      $_POST['javaexceptions'] = 0;
+      $_POST['description'] = 'add assignment test'; /* todo */
+      $_POST['start_time'] = date('Y-m-d H:i:s', strtotime('04/12/2018 00:00:00'));
+      $_POST['finish_time'] = date('Y-m-d H:i:s', strtotime('04/12/2018 12:00:00'));
+      $_POST['extra_time'] = 0;
+      $_POST['late_rule'] = '';
+      $_POST['participants'] = 'ALL';
+      $_POST['archived_assignment'] = 0;
+      $_POST['name'] = array('Assignment 1', 'Assignment 2');
+      $_POST['score'] = array(100, 100);
+      $_POST['c_time_limit'] = array(100, 100);
+      $_POST['python_time_limit'] = array(500, 500);
+      $_POST['java_time_limit'] = array(1000, 1000);
+      $_POST['memory_limit'] = array(25000, 25000);
+      $_POST['languages'] = array('C,C++,Python 2,Python 3,Java', 'C,C++,Python 2,Python 3,Java');
+      $_POST['diff_cmd'] = array('', '');
+      $_POST['diff_arg'] = array('', '');
+      $_POST['is_upload_only'] = array(1, 1);
+
+    }
+
+    private function testingAddAssignment(){
+       $this->post(1);
+       $ceker = $this->db->order_by('id')->get('assignments')->result_array();
+       $this->Assignment_model->add_assignment(1, FALSE);
+       $ceker2 = $this->db->order_by('id')->get('assignments')->result_array();
+       $test = sizeof($ceker2)-sizeof($ceker);
+       $result = 1;
+       $testName = "Test add assignment ";
+       $testNote= "Result passed if size of array > 0";
+       $this->unit->run($test,$result,$testName,$testNote);
+       ////////////////////////////////////////////////////
+       // $this->db->delete('assignments', array('id'=>1));
+       // $this->post(100);
+       // $ceker = $this->db->order_by('id')->get('assignments')->result_array();
+       // $this->Assignment_model->add_assignment(1, TRUE);
+       // $ceker2 = $this->db->order_by('id')->get('assignments')->result_array();
+       // $test = sizeof($ceker2)-sizeof($ceker);
+       // var_dump($ceker2);
+       // $result = 1;
+       // $testName = "Test add assignment ";
+       // $testNote= "Result passed if size of array > 0";
+       // $this->unit->run($test,$result,$testName,$testNote);
+
+     }
+     //todo method berhasil dijalankan tetapi result gagal karena assignment tidak ter delete
+     private function testingDeleteAssignment(){
+       $this->db->delete('assignments', array('id'=>1));
+       $this->post(1);
+       $this->Assignment_model->add_assignment(1, FALSE);
+       $ceker2 = $this->db->order_by('id')->get('assignments')->result_array();
+       $this->Assignment_model->delete_assignment(1);
+       $ceker = $this->db->order_by('id')->get('assignments')->result_array();
+       $test = sizeof($ceker2)-sizeof($ceker);
+       $result = 1;
+       $testName = "Test delete assignment ";
+       $testNote= "Result passed if size of array = size of array -1";
+       $this->unit->run($test,$result,$testName,$testNote);
+     }
     /** ----- INPUT REYNER's CODE HERE ----- **/
     public function testGetAllNotifications(){
         $add=$this->Notifications_model->add_notification('notifikasi','Ada ujian2');
@@ -984,24 +1055,30 @@ class TestUnit extends CI_Controller {
         $this->Notifications_model->__construct();
         $test=$this->Notifications_model->add_notification('notifikasi','Ada ujian');
         $notifs = $this->db->select('time')->get('notifications')->result_array();
-        var_dump($notifs['time']);
-        $test=$this->Notifications_model->have_new_notification(strtotime($notifs['time']));
-        $result=False;
-        $testName= 'Test have new notification on judge FALSE';
-        $testNote= 'To get newest notification return false';
-        $this->unit->run($test,$result,$testName,$testNote);
-        ////////////////////////////////////////////
-        $this->Notifications_model->__construct();
-        $test=$this->Notifications_model->have_new_notification(strtotime($notif['time']));
+        //var_dump($notifs['time']);
+        // $test=$this->Notifications_model->have_new_notification(strtotime($notifs[0]['time']));
+        $test=$this->Notifications_model->have_new_notification("null");
+        var_dump($test);
         $result=False;
         $testName= 'Test have new notification on judge FALSE';
         $testNote= 'To get newest notification return false';
         $this->unit->run($test,$result,$testName,$testNote);
     }
 
+    public function testGetAllFinalSubmission(){
+        $this->add_user_manual();
+        $datas=$this->User_model->get_all_users();
+
+        $result=true;
+        $testName= 'Test get all final submission';
+        $testNote= 'To get all final submission';
+        $this->unit->run($test,$result,$testName,$testNote);
+    }
+
 
     /** ----- INPUT ENRICO's CODE HERE ----- **/
     public function testAllAssignments(){
+        $this->Assignment_model->__construct();
         $test=$this->Assignment_model->all_assignments();
         $result = $this->db->order_by('id')->get('assignments')->result_array();
         $resultt = array();
@@ -1383,6 +1460,7 @@ class TestUnit extends CI_Controller {
       $testNote = 'get first item';
       $this->unit->run($test,$result,$testName,$testNote);
   }
+
 }
 
 ?>

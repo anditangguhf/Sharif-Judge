@@ -3,16 +3,11 @@ php:
     - 7.2
 services:
     - mysql
-before_install:
+before_script:
     - cp application/config/database.example.php application/config/database.php
     - cp application/config/secrets.example.php application/config/secrets.php
     - sudo mysql -e 'CREATE DATABASE sharifjudge;'
     - composer self-update
-env:
-    matrix:
-        - DRIVER="xdebug"
-        - CI_VERSION="3.0-dev"
 script:
-    - phpunit
     - php index.php TestDBInit
     - php index.php TestUnit
