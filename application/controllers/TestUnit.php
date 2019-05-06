@@ -76,7 +76,7 @@ class TestUnit extends CI_Controller {
 
         /** KIPPI's FUNCTIONS HERE **/
         $this->getASetting('enable_log');
-        $this->testSetASetting('enable_log', 1);
+        // $this->testSetASetting('enable_log', 1);
         $this->getAllSettings();
         // $this->testEmptyAQueue();
 
@@ -126,6 +126,7 @@ class TestUnit extends CI_Controller {
         $this->testGetNotifications();
         $this->testHaveNewNotificationsTrue();
         $this->testHaveNewNotificationsFalse();
+        $this->testGetAllFinalSubmission();
 
         /** ENRICO's FUNCTIONS HERE **/
         $this->testAllAssignments();
@@ -137,6 +138,8 @@ class TestUnit extends CI_Controller {
         $this->testProblemInfo();
         $this->testSetMossTime();
         $this->testGetMossTime();
+        $this->testUpdateScoreBoards();
+        $this->testGetScoreBoard();
 
         /** VIO **/
         $this->deleteUser();
@@ -375,8 +378,13 @@ class TestUnit extends CI_Controller {
         $test = $this->Settings_model->set_setting($key, $value);
 
         $updatedSettingValue = $this->Settings_model->get_setting($key);
-
-        ($currentSettingValue != $updatedSettingValue) ? $result = FALSE : $result = TRUE;
+        $result = FALSE;
+        echo "RESULT --> $result \n";
+        // if ($currentSettingValue != $updatedSettingValue) {
+        //     $result = false;
+        // } else {
+        //     $result = true;
+        // }
         $testName = "testSetASetting";
         $testNote  = "Test set a setting key to a new value";
         $this->unit->run($test, $result, $testName, $testNote);
@@ -393,7 +401,7 @@ class TestUnit extends CI_Controller {
         $this->Settings_model->set_setting($key, 1);
 
         $test = $this->Settings_model->get_setting($key);
-        $result = 1;
+        $result = "1";
         $testName = "testGetASetting";
         $testNote  = "Test get a setting value after update value";
         $this->unit->run($test, $result, $testName, $testNote);
@@ -1037,13 +1045,26 @@ class TestUnit extends CI_Controller {
         }
         $test=$this->Notifications_model->have_new_notification($currdt);
         $result=$tmp;
-        $testName= 'Test have new notification on judge (true)';
+        $testName= 'Test have new notification on judge';
         $testNote= 'To get newest notification';
         $this->unit->run($test,$result,$testName,$testNote);
     }
 
     //todo
     public function testHaveNewNotificationsFalse(){
+<<<<<<< HEAD
+=======
+        $this->Notifications_model->__construct();
+        $test=$this->Notifications_model->add_notification('notifikasi','Ada ujian');
+        $notifs = $this->db->select('time')->get('notifications')->result_array();
+        var_dump($notifs['time']);
+        $test=$this->Notifications_model->have_new_notification(strtotime($notifs['time']));
+        $result=False;
+        $testName= 'Test have new notification on judge FALSE';
+        $testNote= 'To get newest notification return false';
+        $this->unit->run($test,$result,$testName,$testNote);
+        ////////////////////////////////////////////
+>>>>>>> b50344ead7c8b9c3b8bcdbfd7d942ec7b2b36716
         $this->Notifications_model->__construct();
         $test=$this->Notifications_model->add_notification('notifikasi','Ada ujian');
         $notifs = $this->db->select('time')->get('notifications')->result_array();
@@ -1055,6 +1076,15 @@ class TestUnit extends CI_Controller {
         $this->unit->run($test,$result,$testName,$testNote);
     }
 
+    public function testGetAllFinalSubmission(){
+        $this->add_user_manual();
+        $datas=$this->User_model->get_all_users();
+        
+        $result=true;
+        $testName= 'Test get all final submission';
+        $testNote= 'To get all final submission';
+        $this->unit->run($test,$result,$testName,$testNote);
+    }
 
 
     /** ----- INPUT ENRICO's CODE HERE ----- **/
@@ -1242,6 +1272,53 @@ class TestUnit extends CI_Controller {
 
     /* ------------ END OF CODE ----------- */
 
+    /** ----- INPUT ENRICO's CODE HERE ----- **/
+
+    public function testUpdateScoreBoards(){
+        $this->add_user_manual();
+        $this->add_assignment_manual();
+        $query = $this->db->query("SELECT id from shj_assignments")->result();
+        $assignment_id = "";
+        foreach ($query as $key => $value) {
+            $assignment_id = $value->id;
+        }
+        $test=$this->Scoreboard_model->update_scoreboards();
+        foreach ($query as $assignment){
+			$result = $this->Scoreboard_model->update_scoreboard($assignment_id);
+		}
+        $testName='Update All Scoreboards';
+        $testNote='Updates the cached scoreboard of all assignments,
+        this function is called each time a user is deleted, or all submissions of a user is deleted';
+        $this->unit->run($test,$result,$testName,$testNote);
+
+
+    }
+
+    public function testGetScoreBoard(){
+        $this->add_user_manual();
+        $this->add_assignment_manual();
+        $query = $this->db->query("SELECT id from shj_assignments")->result();
+        $assignment_id = "";
+        foreach ($query as $key => $value) {
+            $assignment_id = $value->id;
+        }
+        $test=$this->Scoreboard_model->get_scoreboard($assignment_id);
+        $queryy =  $this->db->select('scoreboard')->get_where('scoreboard', array('assignment'=>$assignment_id));
+		if ($queryy->num_rows() != 1)
+			$result = 'Scoreboard not found';
+		else
+			$result = $queryy->row()->scoreboard;
+
+        $testName='Get Cached Scoreboard';
+        $testNote='Update All ScoreboardsReturns the cached scoreboard of given assignment as a html text';
+        $this->unit->run($test,$result,$testName,$testNote);
+
+	}
+
+    /* ------------ END OF CODE ----------- */
+
+
+
 
     /** ----- INPUT VIO's CODE HERE ----- **/
     private function deleteUser(){
@@ -1346,19 +1423,19 @@ class TestUnit extends CI_Controller {
       $this->unit->run($test,$result,$testName,$testNote);
   }
 //perlu assignment id
-  private function TestGetScoreBoard(){
-      $test = $this->Scoreboard_model->get_scoreboard(1);
-      $result='Scoreboard not found';
-      $testName = 'Test get data kosong pada Scoreboard';
-      $testNote = 'get score board';
-      $this->unit->run($test,$result,$testName,$testNote);
-      //////////////////////////
-          // $test = $this->Scoreboard_model->get_scoreboard(get_current_assignment_id());
-          // $result='Scoreboard not found';
-          // $testName='Test get data kosong pada Scoreboard';
-          // $testNote='get score board';
-          // $this->unit->run($test,$result,$testName,$testNote);
-  }
+  // private function TestGetScoreBoard(){
+  //     $test = $this->Scoreboard_model->get_scoreboard(1);
+  //     $result='Scoreboard not found';
+  //     $testName = 'Test get data kosong pada Scoreboard';
+  //     $testNote = 'get score board';
+  //     $this->unit->run($test,$result,$testName,$testNote);
+  //     //////////////////////////
+  //         // $test = $this->Scoreboard_model->get_scoreboard(get_current_assignment_id());
+  //         // $result='Scoreboard not found';
+  //         // $testName='Test get data kosong pada Scoreboard';
+  //         // $testNote='get score board';
+  //         // $this->unit->run($test,$result,$testName,$testNote);
+  // }
 
   private function testEmptyQueue(){
       $test = $this->Queue_model->empty_queue();
@@ -1384,6 +1461,7 @@ class TestUnit extends CI_Controller {
       $testNote = 'get first item';
       $this->unit->run($test,$result,$testName,$testNote);
   }
+
 }
 
 ?>
