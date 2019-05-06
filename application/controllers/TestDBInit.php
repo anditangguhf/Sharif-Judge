@@ -22,7 +22,6 @@ class TestDBInit extends CI_Controller {
 
         $data['installed'] = FALSE;
 
-        if ($this->form_validation->run()) {
             echo "run creating db\n";
 
             $DATETIME = 'DATETIME';
@@ -246,7 +245,6 @@ class TestDBInit extends CI_Controller {
 
         $this->twig->display('pages/admin/install.twig', $data);
 
-    }
 }
 
 ?>
