@@ -241,7 +241,8 @@ class TestDBInit extends CI_Controller {
             $data['enc_key'] = $this->config->item('encryption_key');
             $data['random_key'] = random_string('alnum', 32);
 
-            $tables = $this->db->list_tables();
+            echo "List of db below:\n";
+            $tables = $this->dbforge->list_tables();
 
             foreach ($tables as $table)
             {
