@@ -1015,14 +1015,24 @@ class TestUnit extends CI_Controller {
     }
 
     public function testNewAssignmentId(){
-        $this->add_user_manual();
-        $this->add_assignment_manual();
-        $current_id = $this->get_current_assignment_id();
+        // $this->add_user_manual();
+        // $this->add_assignment_manual();
+        // $current_id = $this->get_current_assignment_id();
         $test=$this->Assignment_model->new_assignment_id();
-        $result=$current_id+1;
+        $max = ($this->db->select_max('id', 'max_id')->get('assignments')->row()->max_id) + 1;
+
+		$assignments_root = rtrim($this->settings_model->get_setting('assignments_root'), '/');
+		while (file_exists($assignments_root.'/assignment_'.$max)){
+			$max=$max+1;
+		}
+
+		$result = $max;
+        //$result=$current_id+1;
         $testName='Test new assignment id';
         $testNote='Finds the smallest integer that can be uses as id for a new assignment';
         $this->unit->run($test,$result,$testName,$testNote);
+
+
     }
 
     public function testIncreaseTotalSubmits(){
