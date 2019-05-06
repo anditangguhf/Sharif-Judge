@@ -134,7 +134,7 @@ class TestUnit extends CI_Controller {
         // $this->testIncreaseTotalSubmits();
         // $this->testAllProblem();
         // $this->testIsParticipant();
-        $this->testAssignmentInfo();
+        //$this->testAssignmentInfo();
         // $this->testProblemInfo();
         // $this->testSetMossTime();
         // $this->testGetMossTime();
