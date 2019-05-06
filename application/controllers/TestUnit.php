@@ -1196,7 +1196,7 @@ class TestUnit extends CI_Controller {
         }
         $test=$this->Scoreboard_model->update_scoreboards();
         foreach ($query as $assignment){
-			$result = $this->update_scoreboard($assignment_id);
+			$result = $this->Scoreboard_model->update_scoreboard($assignment_id);
 		}
         $testName='Update All Scoreboards';
         $testNote='Updates the cached scoreboard of all assignments,
@@ -1226,10 +1226,6 @@ class TestUnit extends CI_Controller {
         $this->unit->run($test,$result,$testName,$testNote);
 
 	}
-
-
-
-    }
 
     /* ------------ END OF CODE ----------- */
 
@@ -1339,19 +1335,19 @@ class TestUnit extends CI_Controller {
       $this->unit->run($test,$result,$testName,$testNote);
   }
 //perlu assignment id
-  private function TestGetScoreBoard(){
-      $test = $this->Scoreboard_model->get_scoreboard(1);
-      $result='Scoreboard not found';
-      $testName = 'Test get data kosong pada Scoreboard';
-      $testNote = 'get score board';
-      $this->unit->run($test,$result,$testName,$testNote);
-      //////////////////////////
-          // $test = $this->Scoreboard_model->get_scoreboard(get_current_assignment_id());
-          // $result='Scoreboard not found';
-          // $testName='Test get data kosong pada Scoreboard';
-          // $testNote='get score board';
-          // $this->unit->run($test,$result,$testName,$testNote);
-  }
+  // private function TestGetScoreBoard(){
+  //     $test = $this->Scoreboard_model->get_scoreboard(1);
+  //     $result='Scoreboard not found';
+  //     $testName = 'Test get data kosong pada Scoreboard';
+  //     $testNote = 'get score board';
+  //     $this->unit->run($test,$result,$testName,$testNote);
+  //     //////////////////////////
+  //         // $test = $this->Scoreboard_model->get_scoreboard(get_current_assignment_id());
+  //         // $result='Scoreboard not found';
+  //         // $testName='Test get data kosong pada Scoreboard';
+  //         // $testNote='get score board';
+  //         // $this->unit->run($test,$result,$testName,$testNote);
+  // }
 
   private function testEmptyQueue(){
       $test = $this->Queue_model->empty_queue();
