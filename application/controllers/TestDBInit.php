@@ -52,7 +52,8 @@ class TestDBInit extends CI_Controller {
             $this->dbforge->add_key('session_id', TRUE); // PRIMARY KEY
             $this->dbforge->add_key('last_activity');
             if ( ! $this->dbforge->create_table('sessions', TRUE))
-                show_error("Error creating database table ".$this->db->dbprefix('sessions'));
+                // show_error("Error creating database table ".$this->db->dbprefix('sessions'));
+                echo "Failed creating database: sessions\n";
 
             // create table 'submissions'
             $fields = array(
@@ -72,7 +73,8 @@ class TestDBInit extends CI_Controller {
             $this->dbforge->add_field($fields);
             $this->dbforge->add_key(array('assignment', 'submit_id'));
             if ( ! $this->dbforge->create_table('submissions', TRUE))
-                show_error("Error creating database table ".$this->db->dbprefix('submissions'));
+                // show_error("Error creating database table ".$this->db->dbprefix('submissions'));
+                echo "Failed creating database: submission\n";
 
             // create table 'assignments'
             $fields = array(
@@ -94,7 +96,8 @@ class TestDBInit extends CI_Controller {
             $this->dbforge->add_field($fields);
             $this->dbforge->add_key('id', TRUE); // PRIMARY KEY
             if ( ! $this->dbforge->create_table('assignments', TRUE))
-                show_error("Error creating database table ".$this->db->dbprefix('assignments'));
+                // show_error("Error creating database table ".$this->db->dbprefix('assignments'));
+                echo "Failed creating database: assignments\n";
 
             // create table 'notifications'
             $fields = array(
@@ -128,7 +131,8 @@ class TestDBInit extends CI_Controller {
             $this->dbforge->add_field($fields);
             $this->dbforge->add_key(array('assignment', 'id'));
             if ( ! $this->dbforge->create_table('problems', TRUE))
-                show_error("Error creating database table ".$this->db->dbprefix('problems'));
+                // show_error("Error creating database table ".$this->db->dbprefix('problems'));
+                echo "Failed creating database: problems\n";
 
             // create table 'queue'
             $fields = array(
@@ -142,7 +146,9 @@ class TestDBInit extends CI_Controller {
             $this->dbforge->add_key('id', TRUE); // PRIMARY KEY
             $this->dbforge->add_field($fields);
             if ( ! $this->dbforge->create_table('queue', TRUE))
-                show_error("Error creating database table ".$this->db->dbprefix('queue'));
+                // show_error("Error creating database table ".$this->db->dbprefix('queue'));
+                echo "Failed creating database: queue\n";
+
             //Add UNIQUE (submit_id, username, assignment, problem) constraint
             $this->db->query(
                 "ALTER TABLE {$this->db->dbprefix('queue')}
@@ -157,7 +163,9 @@ class TestDBInit extends CI_Controller {
             $this->dbforge->add_field($fields);
             $this->dbforge->add_key('assignment');
             if ( ! $this->dbforge->create_table('scoreboard', TRUE))
-                show_error("Error creating database table ".$this->db->dbprefix('scoreboard'));
+                // show_error("Error creating database table ".$this->db->dbprefix('scoreboard'));
+                echo "Failed creating database: scoreboard\n";
+
 
 
 
@@ -169,7 +177,8 @@ class TestDBInit extends CI_Controller {
             $this->dbforge->add_field($fields);
             $this->dbforge->add_key('shj_key');
             if ( ! $this->dbforge->create_table('settings', TRUE))
-                show_error("Error creating database table ".$this->db->dbprefix('settings'));
+                // show_error("Error creating database table ".$this->db->dbprefix('settings'));
+                echo "Failed creating database: settings\n";
 
 
 
@@ -202,9 +211,8 @@ class TestDBInit extends CI_Controller {
                 array('shj_key' => 'week_start',             'shj_value' => '0'),
             ));
             if ( ! $result)
-                show_error("Error adding data to table ".$this->db->dbprefix('settings'));
-
-
+                // show_error("Error adding data to table ".$this->db->dbprefix('settings'));
+                echo "Failed creating database: settings\n";
 
             // create table 'users'
             $fields = array(
@@ -225,28 +233,37 @@ class TestDBInit extends CI_Controller {
             $this->dbforge->add_key('id', TRUE); // PRIMARY KEY
             $this->dbforge->add_key('username'); // @todo is this needed?
             if ( ! $this->dbforge->create_table('users', TRUE))
-                show_error("Error creating database table ".$this->db->dbprefix('users'));
+                // show_error("Error creating database table ".$this->db->dbprefix('users'));
+                echo "Failed creating database: users\n";
 
-            // Using a random string as encryption key
-            $config_path = rtrim(APPPATH,'/').'/config/config.php';
-            $config_content = file_get_contents($config_path);
-            $random_key = random_string('alnum', 32);
-            $res = @file_put_contents($config_path, str_replace($this->config->item('encryption_key'), $random_key, $config_content));
-            if ($res === FALSE)
-                $data['key_changed'] = FALSE;
-            else
-                $data['key_changed'] = TRUE;
 
-            $data['installed'] = TRUE;
-            $data['enc_key'] = $this->config->item('encryption_key');
-            $data['random_key'] = random_string('alnum', 32);
+			// create table 'logins'
+			$fields = array(
+				'login_id'            => array('type' => 'INT', 'constraint' => 11, 'unsigned' => TRUE, 'auto_increment' => TRUE),
+				'username'         		=> array('type' => 'VARCHAR', 'constraint' => 20),
+				'ip_address'          => array('type' => 'VARCHAR', 'constraint' => 15),
+				'timestamp'          	=> array('type' => 'TIMESTAMP'),
+				'last_24h_login_id'   => array('type' => 'INT', 'constraint' => 11, 'null' => TRUE),
+			);
+			$this->dbforge->add_field($fields);
+			$this->dbforge->add_key('login_id', TRUE); // PRIMARY KEY
+			if ( ! $this->dbforge->create_table('logins', TRUE))
+				show_error("Error creating database table ".$this->db->dbprefix('logins'));
 
-            $tables = $this->db->list_tables();
+            // // Using a random string as encryption key
+            // $config_path = rtrim(APPPATH,'/').'/config/config.php';
+            // $config_content = file_get_contents($config_path);
+            // $random_key = random_string('alnum', 32);
+            // $res = @file_put_contents($config_path, str_replace($this->config->item('encryption_key'), $random_key, $config_content));
+            // if ($res === FALSE)
+            //     $data['key_changed'] = FALSE;
+            // else
+            //     $data['key_changed'] = TRUE;
+            //
+            // $data['installed'] = TRUE;
+            // $data['enc_key'] = $this->config->item('encryption_key');
+            // $data['random_key'] = random_string('alnum', 32);
 
-            foreach ($tables as $table)
-            {
-                    echo "TABLE: $table\n";
-            }
 
         }
 
