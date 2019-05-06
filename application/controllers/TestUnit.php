@@ -110,7 +110,7 @@ class TestUnit extends CI_Controller {
         $this->testSendResetPass();
         $this->testSendResetPassEmailNotExist();
         $this->testPasschangeIsValid();
-        //$this->testPasschangeIsValidTimeExpired();
+        $this->testPasschangeIsValidTimeExpired();
         $this->testPasschangeIsValidInvalidPass();
         $this->testResetPass();
 
@@ -135,6 +135,8 @@ class TestUnit extends CI_Controller {
         $this->testProblemInfo();
         $this->testSetMossTime();
         $this->testGetMossTime();
+        $this->testUpdateScoreBoards();
+        $this->testGetScoreBoard();
 
         /** VIO **/
         $this->deleteUser();
@@ -313,7 +315,8 @@ class TestUnit extends CI_Controller {
         );
         // echo var_dump($submit_info);
 
-        //add to submission db
+        //add to submission db$this->generateFile($this->unit->report());
+        $this->report();
         echo var_dump($this->db->insert('shj_submissions', $submit_info));
     }
 
@@ -658,13 +661,13 @@ class TestUnit extends CI_Controller {
         $test=$this->User_model->validate_user('globaladmin','');
         $result=False;
         $testName= 'Test username and password invalid username for login';
-        $testNote= 'untuk hasil passed username tidak huruf kecil';
+        $testNote= 'untuk hasil passed pass no password';
         $this->unit->run($test,$result,$testName,$testNote);
         /////////////////////////////////////////////////
         $test=$this->User_model->validate_user('globaladmin','globaladmin');
         $result=False;
         $testName= 'Test username and password invalid username for login';
-        $testNote= 'untuk hasil passed username tidak huruf kecil';
+        $testNote= 'untuk hasil passed wrong password';
         $this->unit->run($test,$result,$testName,$testNote);
     }
     private function testGetNames(){
@@ -830,6 +833,30 @@ class TestUnit extends CI_Controller {
       $testNote= 'result passed if return invalid password reset link';
       $this->unit->run($test,$result,$testName,$testNote);
     }
+    private function testPasschangeIsValidTimeExpired(){
+        $users = array(
+        array(
+            'id' => '1000',
+            'username'=>'test',
+            'password'=>'test',
+            'display_name'=>'test',
+            'email'=>'test@gmail.com',
+            'role'=>'admin',
+            'passchange_key'=>'qwerty',
+            'passchange_time'=>'2010-03-28 14:47:03',
+            'first_login_time'=>'2018-02-14 09:04:03',
+            'last_login_time'=>'2018-02-14 09:04:03',
+            'selected_assignment'=>'1',
+            'dashboard_widget_positions'=>'dashboard1')
+        );
+      $this->db->insert('shj_users',$users[0]);
+      $test=$this->User_model->passchange_is_valid('qwerty');
+      $result='The link is expired.';
+      $testName= 'Test passchange is valid Invalid time expired ';
+      $testNote= 'result passed if return The link is expired';
+      $this->unit->run($test,$result,$testName,$testNote);
+
+    }
 
     private function testResetPass(){
         $test= $this->User_model->send_password_reset_mail($query[0]->email);
@@ -947,20 +974,30 @@ class TestUnit extends CI_Controller {
         }
         $test=$this->Notifications_model->have_new_notification($currdt);
         $result=$tmp;
-        $testName= 'Test have new notification on judge (true)';
+        $testName= 'Test have new notification on judge';
         $testNote= 'To get newest notification';
         $this->unit->run($test,$result,$testName,$testNote);
     }
 
+    //todo
     public function testHaveNewNotificationsFalse(){
+        $this->Notifications_model->__construct();
+        $test=$this->Notifications_model->add_notification('notifikasi','Ada ujian');
         $notifs = $this->db->select('time')->get('notifications')->result_array();
-        $test=$this->Notifications_model->have_new_notification("");
-        $result=false;
-        $testName= 'Test have new notification on judge (False)';
-        $testNote= 'To get newest notification';
+        var_dump($notifs['time']);
+        $test=$this->Notifications_model->have_new_notification(strtotime($notifs['time']));
+        $result=False;
+        $testName= 'Test have new notification on judge FALSE';
+        $testNote= 'To get newest notification return false';
+        $this->unit->run($test,$result,$testName,$testNote);
+        ////////////////////////////////////////////
+        $this->Notifications_model->__construct();
+        $test=$this->Notifications_model->have_new_notification(strtotime($notif['time']));
+        $result=False;
+        $testName= 'Test have new notification on judge FALSE';
+        $testNote= 'To get newest notification return false';
         $this->unit->run($test,$result,$testName,$testNote);
     }
-
 
 
     /** ----- INPUT ENRICO's CODE HERE ----- **/
@@ -1038,15 +1075,30 @@ class TestUnit extends CI_Controller {
         foreach ($participants as &$participant){
             $participant = trim($participant);
         }
-        if(in_array('ALL', $participants))
-        $result=TRUE;
-        if(in_array($username, $participants))
-        $result=TRUE;
-        $result=false;
+        if(in_array('ALL', $participants)){
+          $result=TRUE;
+        }
+        else if(in_array($username, $participants)){
+          $result=TRUE;
+        }
+        else {
+          $result=FALSE;
+        }
         $testName='Test is Participant';
         $testNote='Returns TRUE if $username if one of the $participants';
         $this->unit->run($test,$result,$testName,$testNote);
-
+        ///////////////////////////////////////////////
+        $test=$this->Assignment_model->is_participant('ALL',$username);
+        $result=TRUE;
+        $testName='Test is Participant';
+        $testNote='Returns TRUE if $username All';
+        $this->unit->run($test,$result,$testName,$testNote);
+        ////////////////////////////////////////////////
+        $test=$this->Assignment_model->is_participant($participants,"");
+        $result=false;
+        $testName='Test is Participant false';
+        $testNote='Returns Passed if result is false';
+        $this->unit->run($test,$result,$testName,$testNote);
 
     }
     public function testProblemInfo(){
@@ -1079,18 +1131,22 @@ class TestUnit extends CI_Controller {
         }
         $test=$this->Assignment_model->assignment_info($assignment_id);
         $query = $this->db->get_where('assignments', array('id'=>$assignment_id));
-        if ($query->num_rows() != 1)
+        $result=$query->row_array();
+        $testName='Assignment Info';
+        $testNote='Returns database row for given assignment';
+        $this->unit->run($test,$result,$testName,$testNote);
+/////////////////////////////////////////////////////////
+        $test=$this->Assignment_model->assignment_info("");
         $result=array(
             'id' => 0,
             'name' => 'Not Selected',
             'finish_time' => 0,
             'extra_time' => 0,
-            'problems' => 0
-        );
-        $result=$query->row_array();
+            'problems' => 0);
         $testName='Assignment Info';
-        $testNote='Returns database row for given assignment';
+        $testNote='Returns database array id=0';
         $this->unit->run($test,$result,$testName,$testNote);
+
 
     }
 
@@ -1128,6 +1184,57 @@ class TestUnit extends CI_Controller {
 
     /* ------------ END OF CODE ----------- */
 
+    /** ----- INPUT ENRICO's CODE HERE ----- **/
+
+    public function testUpdateScoreBoards(){
+        $this->add_user_manual();
+        $this->add_assignment_manual();
+        $query = $this->db->query("SELECT id from shj_assignments")->result();
+        $assignment_id = "";
+        foreach ($query as $key => $value) {
+            $assignment_id = $value->id;
+        }
+        $test=$this->Scoreboard_model->update_scoreboards();
+        foreach ($query as $assignment){
+			$result = $this->update_scoreboard($assignment_id);
+		}
+        $testName='Update All Scoreboards';
+        $testNote='Updates the cached scoreboard of all assignments,
+        this function is called each time a user is deleted, or all submissions of a user is deleted';
+        $this->unit->run($test,$result,$testName,$testNote);
+
+
+    }
+
+    public function testGetScoreBoard(){
+        $this->add_user_manual();
+        $this->add_assignment_manual();
+        $query = $this->db->query("SELECT id from shj_assignments")->result();
+        $assignment_id = "";
+        foreach ($query as $key => $value) {
+            $assignment_id = $value->id;
+        }
+        $test=$this->Scoreboard_model->get_scoreboard($assignment_id);
+        $queryy =  $this->db->select('scoreboard')->get_where('scoreboard', array('assignment'=>$assignment_id));
+		if ($queryy->num_rows() != 1)
+			result = 'Scoreboard not found';
+		else
+			result = $queryy->row()->scoreboard;
+
+        $testName='Get Cached Scoreboard';
+        $testNote='Update All ScoreboardsReturns the cached scoreboard of given assignment as a html text';
+        $this->unit->run($test,$result,$testName,$testNote);
+
+	}
+
+
+
+    }
+
+    /* ------------ END OF CODE ----------- */
+
+
+
 
     /** ----- INPUT VIO's CODE HERE ----- **/
     private function deleteUser(){
@@ -1153,10 +1260,9 @@ class TestUnit extends CI_Controller {
 
     private function updateLoginTime(){
         $now = shj_now_str();
+        $this->User_model->add_user('nadyavio','7315005@student.unpar.ac.id','nadya','Nadya123','admin');
         $test=$this->db->select('first_login_time')->get_where('users', array('username'=>'nadyavio'))->row()->first_login_time;
-        $test1=null;
         if($test==null){
-            $test=$this->db->select('first_login_time')->get_where('users', array('username'=>'nadyavio'))->row()->first_login_time;
             $this->User_model->update_login_time('nadyavio');
             $test1=$this->db->select('first_login_time')->get_where('users', array('username'=>'nadyavio'))->row()->first_login_time;
         }
@@ -1166,9 +1272,9 @@ class TestUnit extends CI_Controller {
             $test1=$this->db->select('last_login_time')->get_where('users', array('username'=>'nadyavio'))->row()->last_login_time;
         }
         if($test != $test1){
-            $test1=true;
+            $test=true;
         }else {
-            $test1=false;
+            $test=false;
         }
         $result=true;
         $testName='Test to update login time';
@@ -1198,13 +1304,14 @@ class TestUnit extends CI_Controller {
       $this->add_queue_manual($assignment_id);
       $queueSize = sizeof($this->db->get('queue')->result());
       $test=$this->Queue_model->remove_item('testuser', $assignment_id, 1, 1);
+      $test=sizeof($this->db->get('queue')->result());
       // echo "REMOVE QUEUE --> $test";
       $result=$queueSize-1;
       $testName='Test to remove item in queue';
       $testNote='remove item';
       $this->unit->run($test,$result,$testName,$testNote);
   }
-  // TODO: failed
+
   private function TestAddtoQueue(){
       $this->add_user_manual();
       $this->add_assignment_manual();
@@ -1217,9 +1324,16 @@ class TestUnit extends CI_Controller {
           'type' => 'judge'
       );
 
-      $test=$this->Queue_model->add_to_queue($submit_info);
       $queueSize = sizeof($this->db->get('queue')->result());
-      $result=$queueSize;
+      $test=$this->Queue_model->add_to_queue($submit_info);
+      $queueSize1 = sizeof($this->db->get('queue')->result());
+      if($queueSize!=$queueSize1){
+          $result=True;
+      }
+      else {
+        $result=False;
+      }
+      $test= true;
       $testName='Test to add item in queue';
       $testNote='add item';
       $this->unit->run($test,$result,$testName,$testNote);
