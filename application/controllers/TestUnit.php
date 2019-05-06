@@ -1217,9 +1217,9 @@ class TestUnit extends CI_Controller {
         $test=$this->Scoreboard_model->get_scoreboard($assignment_id);
         $queryy =  $this->db->select('scoreboard')->get_where('scoreboard', array('assignment'=>$assignment_id));
 		if ($queryy->num_rows() != 1)
-			result = 'Scoreboard not found';
+			$result = 'Scoreboard not found';
 		else
-			result = $queryy->row()->scoreboard;
+			$result = $queryy->row()->scoreboard;
 
         $testName='Get Cached Scoreboard';
         $testNote='Update All ScoreboardsReturns the cached scoreboard of given assignment as a html text';
