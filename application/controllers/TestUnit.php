@@ -124,6 +124,7 @@ class TestUnit extends CI_Controller {
         $this->testGetNotifications();
         $this->testHaveNewNotificationsTrue();
         $this->testHaveNewNotificationsFalse();
+        $this->testGetAllFinalSubmission();
 
         /** ENRICO's FUNCTIONS HERE **/
         $this->testAllAssignments();
@@ -992,6 +993,19 @@ class TestUnit extends CI_Controller {
         $testName= 'Test have new notification on judge FALSE';
         $testNote= 'To get newest notification return false';
         $this->unit->run($test,$result,$testName,$testNote);
+    }
+
+    public function testGetAllFinalSubmission(){
+        $add=$this->User_model>add_user('JojoYon','jojo@yonathan.com','jojoyon','123456','mahasiswa');
+        $datas=$this->User_model->get_all_users();
+        foreach ($datas as $key => $data) {
+			$user_id = $this->user_model->username_to_user_id($data['username']);
+			$datas[$key]['display_name'] = $this->user_model->get_user($user_id)->display_name;
+        }
+        $result=true;
+        $testName= 'Test get all final submission';
+        $testNote= 'To get all final submission';
+        $this->unit->run($datas,$result,$testName,$testNote);
     }
 
 
