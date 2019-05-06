@@ -243,7 +243,7 @@ class TestDBInit extends CI_Controller {
         }
 
 
-        $this->twig->display('pages/admin/install.twig', $data);
+        // $this->twig->display('pages/admin/install.twig', $data);
 
 }
 
