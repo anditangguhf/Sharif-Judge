@@ -39,7 +39,7 @@ class TestUnit extends CI_Controller {
 
     private function report() {
         if (self::ENABLE_COVERAGE) {
-            // $this->coverage->stop();
+            $this->coverage->stop();
             $writer = new \SebastianBergmann\CodeCoverage\Report\Html\Facade;
             $writer->process($this->coverage, 'reports/code-coverage');
         }
