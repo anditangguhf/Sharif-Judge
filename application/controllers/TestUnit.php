@@ -1052,19 +1052,6 @@ class TestUnit extends CI_Controller {
 
     //todo
     public function testHaveNewNotificationsFalse(){
-<<<<<<< HEAD
-=======
-        $this->Notifications_model->__construct();
-        $test=$this->Notifications_model->add_notification('notifikasi','Ada ujian');
-        $notifs = $this->db->select('time')->get('notifications')->result_array();
-        var_dump($notifs['time']);
-        $test=$this->Notifications_model->have_new_notification(strtotime($notifs['time']));
-        $result=False;
-        $testName= 'Test have new notification on judge FALSE';
-        $testNote= 'To get newest notification return false';
-        $this->unit->run($test,$result,$testName,$testNote);
-        ////////////////////////////////////////////
->>>>>>> b50344ead7c8b9c3b8bcdbfd7d942ec7b2b36716
         $this->Notifications_model->__construct();
         $test=$this->Notifications_model->add_notification('notifikasi','Ada ujian');
         $notifs = $this->db->select('time')->get('notifications')->result_array();
@@ -1079,7 +1066,7 @@ class TestUnit extends CI_Controller {
     public function testGetAllFinalSubmission(){
         $this->add_user_manual();
         $datas=$this->User_model->get_all_users();
-        
+
         $result=true;
         $testName= 'Test get all final submission';
         $testNote= 'To get all final submission';
