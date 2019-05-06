@@ -113,8 +113,8 @@ class TestUnit extends CI_Controller {
         $this->testPasschangeIsValidTimeExpired();
         $this->testPasschangeIsValidInvalidPass();
         $this->testResetPass();
-        $this->testingAddAssignment();
-        //$this->testingDeleteAssignment();
+        //$this->testingAddAssignment();
+        $this->testingDeleteAssignment();
 
 
         /** REYNER's FUNCTIONS HERE **/
