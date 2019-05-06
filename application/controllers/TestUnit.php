@@ -26,11 +26,11 @@ class TestUnit extends CI_Controller {
 
         if (self::ENABLE_COVERAGE) {
             $this->coverage = new SebastianBergmann\CodeCoverage\CodeCoverage;
-            $this->coverage->filter()->addDirectoryToWhitelist('application/controllers');
+            // $this->coverage->filter()->addDirectoryToWhitelist('application/controllers');
             $this->coverage->filter()->removeDirectoryFromWhitelist('application/controllers/tests');
-            $this->coverage->filter()->addDirectoryToWhitelist('application/libraries');
+            // $this->coverage->filter()->addDirectoryToWhitelist('application/libraries');
             $this->coverage->filter()->addDirectoryToWhitelist('application/models');
-            $this->coverage->filter()->addDirectoryToWhitelist('application/views');
+            // $this->coverage->filter()->addDirectoryToWhitelist('application/views');
             $this->coverage->start('UnitTests');
         }
 
@@ -39,7 +39,7 @@ class TestUnit extends CI_Controller {
 
     private function report() {
         if (self::ENABLE_COVERAGE) {
-            // $this->coverage->stop();
+            $this->coverage->stop();
             $writer = new \SebastianBergmann\CodeCoverage\Report\Html\Facade;
             $writer->process($this->coverage, 'reports/code-coverage');
         }
@@ -1092,14 +1092,24 @@ class TestUnit extends CI_Controller {
     }
 
     public function testNewAssignmentId(){
-        $this->add_user_manual();
-        $this->add_assignment_manual();
-        $current_id = $this->get_current_assignment_id();
+        // $this->add_user_manual();
+        // $this->add_assignment_manual();
+        // $current_id = $this->get_current_assignment_id();
         $test=$this->Assignment_model->new_assignment_id();
-        $result=$current_id+1;
+        $max = ($this->db->select_max('id', 'max_id')->get('assignments')->row()->max_id) + 1;
+
+		$assignments_root = rtrim($this->settings_model->get_setting('assignments_root'), '/');
+		while (file_exists($assignments_root.'/assignment_'.$max)){
+			$max=$max+1;
+		}
+
+		$result = $max;
+        //$result=$current_id+1;
         $testName='Test new assignment id';
         $testNote='Finds the smallest integer that can be uses as id for a new assignment';
         $this->unit->run($test,$result,$testName,$testNote);
+
+
     }
 
     public function testIncreaseTotalSubmits(){
@@ -1238,6 +1248,7 @@ class TestUnit extends CI_Controller {
         $test=$this->Assignment_model->set_moss_time($assignment_id);
         $now = shj_now_str();
         $result=$this->db->where('id', $assignment_id)->update('assignments', array('moss_update'=>$now));
+        $this->db->where('id', $assignment_id)->update('assignments', array('moss_update'=>$now));
         $testName='Set Moss Time';
         $testNote='Moss Update Time for given assignment';
         $this->unit->run($test,$result,$testName,$testNote);
