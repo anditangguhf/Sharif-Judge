@@ -26,11 +26,11 @@ class TestUnit extends CI_Controller {
 
         if (self::ENABLE_COVERAGE) {
             $this->coverage = new SebastianBergmann\CodeCoverage\CodeCoverage;
-            $this->coverage->filter()->addDirectoryToWhitelist('application/controllers');
+            // $this->coverage->filter()->addDirectoryToWhitelist('application/controllers');
             $this->coverage->filter()->removeDirectoryFromWhitelist('application/controllers/tests');
-            $this->coverage->filter()->addDirectoryToWhitelist('application/libraries');
+            // $this->coverage->filter()->addDirectoryToWhitelist('application/libraries');
             $this->coverage->filter()->addDirectoryToWhitelist('application/models');
-            $this->coverage->filter()->addDirectoryToWhitelist('application/views');
+            // $this->coverage->filter()->addDirectoryToWhitelist('application/views');
             $this->coverage->start('UnitTests');
         }
 
@@ -1247,7 +1247,7 @@ class TestUnit extends CI_Controller {
         }
         $test=$this->Assignment_model->set_moss_time($assignment_id);
         $now = shj_now_str();
-        $result=$now;
+        $result=$this->db->where('id', $assignment_id)->update('assignments', array('moss_update'=>$now));
         $this->db->where('id', $assignment_id)->update('assignments', array('moss_update'=>$now));
         $testName='Set Moss Time';
         $testNote='Moss Update Time for given assignment';
