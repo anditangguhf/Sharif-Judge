@@ -942,20 +942,23 @@ class TestUnit extends CI_Controller {
         }
         $test=$this->Notifications_model->have_new_notification($currdt);
         $result=$tmp;
-        $testName= 'Test have new notification on judge (true)';
+        $testName= 'Test have new notification on judge';
         $testNote= 'To get newest notification';
         $this->unit->run($test,$result,$testName,$testNote);
     }
 
+    //todo
     public function testHaveNewNotificationsFalse(){
+        $this->Notifications_model->__construct();
+        $test=$this->Notifications_model->add_notification('notifikasi','Ada ujian');
         $notifs = $this->db->select('time')->get('notifications')->result_array();
-        $test=$this->Notifications_model->have_new_notification("");
-        $result=false;
-        $testName= 'Test have new notification on judge (False)';
-        $testNote= 'To get newest notification';
+        var_dump($notifs['time']);
+        $test=$this->Notifications_model->have_new_notification(strtotime($notifs['time']));
+        $result=False;
+        $testName= 'Test have new notification on judge FALSE';
+        $testNote= 'To get newest notification return false';
         $this->unit->run($test,$result,$testName,$testNote);
     }
-
 
 
     /** ----- INPUT ENRICO's CODE HERE ----- **/
