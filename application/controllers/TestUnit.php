@@ -1337,14 +1337,6 @@ class TestUnit extends CI_Controller {
         $testName='Test to delete user';
         $testNote='Delete user';
         $this->unit->run($test,$result,$testName,$testNote);
-/////////////////////////////////////////////////////////////
-        $test=$this->User_model->delete_user("");
-        $count2 = sizeof($this->User_model->get_all_users());
-        $result = FALSE;
-        //if($count!=$count2){$result = TRUE;}
-        $testName='Test to delete user';
-        $testNote='Delete user';
-        $this->unit->run($test,$result,$testName,$testNote);
     }
 
     private function updateLoginTime(){
