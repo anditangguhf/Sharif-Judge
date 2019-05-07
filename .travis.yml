@@ -9,6 +9,5 @@ before_script:
     - sudo mysql -e 'CREATE DATABASE sharifjudge;'
     - composer self-update
 script:
-    - phpunit
     - php index.php TestDBInit
     - php index.php TestUnit
