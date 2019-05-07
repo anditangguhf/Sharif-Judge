@@ -86,7 +86,7 @@ class TestUnit extends CI_Controller {
 
         /** YONATHAN's FUNCTIONS HERE **/
         $this->testAddUserTrue();
-        $this->testAddUserRoleInvalid();
+        // $this->testAddUserRoleInvalid();
         $this->testAddUserUsernameExist();
         $this->testAddUserErrorLowercase();
         $this->testAddUserEmailExistError();
