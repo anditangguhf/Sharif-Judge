@@ -76,12 +76,14 @@ class TestUnit extends CI_Controller {
 
         /** KIPPI's FUNCTIONS HERE **/
         $this->getASetting('enable_log');
-        // $this->testSetASetting('enable_log', 1);
+        $this->testSetASetting();
+        $this->testSettings();
         $this->getAllSettings();
         // $this->testEmptyAQueue();
+        $this->testGetScoreBoardFound();
+        $this->testDeleteUserFalse();
 
         $this->testGetSubmission('kippi123', 'PBO1', 'Test1', 1);
-        $this->testAddQueue();
 
         /** YONATHAN's FUNCTIONS HERE **/
         $this->testAddUserTrue();
@@ -145,14 +147,9 @@ class TestUnit extends CI_Controller {
         $this->deleteUser();
         $this->updateLoginTime();
         $this->testGetFirstItem();
-<<<<<<< HEAD
-        $this->testRemoveItem();
-        $this->TestAddtoQueue();
-=======
         // $this->testRemoveItem();failed travis
         // $this->TestAddtoQueue(); failed travis
         $this->TestGetScoreBoard();
->>>>>>> 41eae95e6bba992bb45bf002231a6f7172702be8
         $this->testEmptyQueue();
         $this->testInQueue();
         $this->testGetFirstItemFound();
@@ -162,8 +159,9 @@ class TestUnit extends CI_Controller {
 
         // $this->add_user_manual();
         // $this->add_assignment_manual();
-        // $this->add_submission_manual(72,1); /* TODO: masih error */
+        // $this->add_submission_manual(370,1); /* TODO: masih error */
         // $this->add_queue_manual(72,1);
+        // $this->add_scoreboard_manual(340);
 
         /** run report function here **/
         $this->generateFile($this->unit->report());
@@ -299,6 +297,15 @@ class TestUnit extends CI_Controller {
         $this->db->insert('shj_problems', $prob);
     }
 
+    private function add_scoreboard_manual($assignment_id) {
+        $args = array(
+            'assignment' => $assignment_id,
+            'scoreboard' => "SCOREBOARD"
+        );
+        $query = $this->db->insert('scoreboard', $args);
+        // echo var_dump($query);
+    }
+
     /*
     *   Function untuk menambah submission ke dalam queue
     *   kemudian set submission tersebut menjadi final submission
@@ -309,8 +316,7 @@ class TestUnit extends CI_Controller {
         // $this->db->query('DELETE FROM shj_submissions');
 
         $submit_info = array(
-            'submit_id'     => '1',
-            'username'      => 'anditangguhf',
+            'username'      => 'testuser',
             'assignment'    => $assignment_id,
             'problem'       => $problem_id,
             'time'          => date('Y-m-d H:i:s'),
@@ -323,8 +329,6 @@ class TestUnit extends CI_Controller {
         );
         // echo var_dump($submit_info);
 
-        //add to submission db$this->generateFile($this->unit->report());
-        $this->report();
         echo var_dump($this->db->insert('shj_submissions', $submit_info));
     }
 
@@ -377,21 +381,24 @@ class TestUnit extends CI_Controller {
     *   not the same as the new setting)
     *   @param $key : the setting name
     */
-    private function testSetASetting($key, $value) {
-        $currentSettingValue = $this->Settings_model->get_setting($key);
-
-        $test = $this->Settings_model->set_setting($key, $value);
-
-        $updatedSettingValue = $this->Settings_model->get_setting($key);
-        $result = FALSE;
-        echo "RESULT --> $result \n";
-        // if ($currentSettingValue != $updatedSettingValue) {
-        //     $result = false;
-        // } else {
-        //     $result = true;
-        // }
+    private function testSetASetting() {
+        $set = $this->Settings_model->set_setting('enable_log', 1);
+        $test = $this->Settings_model->get_setting('enable_log');
+        $result = "1";
         $testName = "testSetASetting";
         $testNote  = "Test set a setting key to a new value";
+        $this->unit->run($test, $result, $testName, $testNote);
+    }
+
+    private function testSettings() {
+        $args = array(
+            'enable_registration' => 1
+        );
+        $set = $this->Settings_model->set_settings($args);
+        $test = $this->Settings_model->get_setting('enable_registration');
+        $result = "1";
+        $testName = "testSetMultipleSetting";
+        $testNote  = "Test set multiple settings key to a new value";
         $this->unit->run($test, $result, $testName, $testNote);
     }
 
@@ -445,36 +452,29 @@ class TestUnit extends CI_Controller {
         $this->unit->run($test,$result,$testName,$testNote);
     }
 
-    /*
-    *   QUEUE_MODEL
-    *   Testing function to add a submission to submission table and queue table
-    *   Expected to return rows+1 on both submission & queue table
-    *   var $submit_info contains submit_id, username, assignment, and problem
-    */
-    private function testAddQueue() {
+    private function testDeleteUserFalse() {
+        $test = $this->User_model->delete_user(2);
+        $result     = false;
+        $testName   = 'testDeleteUserFalse';
+        $testNote   = 'test to delete user with no same id in db table, expected to return false';
+        $this->unit->run($test,$result,$testName,$testNote);
+    }
 
-        /*
-        *   flow: get available assignment id->add new assignment->add to queue
-        */
-        // $this->add_user_manual();
-        // $this->add_assignment_manual();
-        // $this->add_queue_manual();
-        //
-        // $current_queue = sizeof($this->Queue_model->get_queue());
-        //
-        // $queue_info = array(
-        //     'submit_id' => '1',
-        //     'username' => 'testuser',
-        //     'assignment' => '1',
-        //     'problem' => '1',
-        //     'type' => 'judge'
-        // );
-        //
-        // $test       = $this->Queue_model->add_to_queue($queue_info);
-        // $result     = $current_queue+1;
-        // $testName   = 'testAddQueue';
-        // $testNote   = 'test to add queue to db, expected to return queue_count + 1';
-        // $this->unit->run($test,$result,$testName,$testNote);
+    private function testGetScoreBoardFound() {
+        $this->add_user_manual();
+        $this->add_assignment_manual();
+        $assignment_id = "";
+        $query = $this->db->query("SELECT id from shj_assignments")->result();
+        foreach ($query as $key => $value) {
+            $assignment_id = $value->id;
+        }
+        $this->add_scoreboard_manual($assignment_id);
+        $test=$this->Scoreboard_model->get_scoreboard($assignment_id);
+        $queryy =  $this->db->select('scoreboard')->get_where('scoreboard', array('assignment'=>$assignment_id));
+		$result = $queryy->row()->scoreboard;
+        $testName='Get Cached Scoreboard (Found Scoreboard)';
+        $testNote='Update All Scoreboards Returns the cached scoreboard of given assignment as a html text';
+        $this->unit->run($test,$result,$testName,$testNote);
     }
 
     /** ----- INPUT YONATHAN's CODE HERE ----- **/
@@ -1309,16 +1309,16 @@ class TestUnit extends CI_Controller {
         }
         $test=$this->Scoreboard_model->get_scoreboard($assignment_id);
         $queryy =  $this->db->select('scoreboard')->get_where('scoreboard', array('assignment'=>$assignment_id));
-        if ($queryy->num_rows() != 1)
-            $result = 'Scoreboard not found';
-        else
-            $result = $queryy->row()->scoreboard;
+		if ($queryy->num_rows() != 1)
+			$result = 'Scoreboard not found';
+		else
+			$result = $queryy->row()->scoreboard;
 
         $testName='Get Cached Scoreboard';
         $testNote='Update All ScoreboardsReturns the cached scoreboard of given assignment as a html text';
         $this->unit->run($test,$result,$testName,$testNote);
 
-    }
+	}
 
     /* ------------ END OF CODE ----------- */
 
@@ -1427,7 +1427,20 @@ class TestUnit extends CI_Controller {
       $testNote='add item';
       $this->unit->run($test,$result,$testName,$testNote);
   }
-
+//perlu assignment id
+  // private function TestGetScoreBoard(){
+  //     $test = $this->Scoreboard_model->get_scoreboard(1);
+  //     $result='Scoreboard not found';
+  //     $testName = 'Test get data kosong pada Scoreboard';
+  //     $testNote = 'get score board';
+  //     $this->unit->run($test,$result,$testName,$testNote);
+  //     //////////////////////////
+  //         // $test = $this->Scoreboard_model->get_scoreboard(get_current_assignment_id());
+  //         // $result='Scoreboard not found';
+  //         // $testName='Test get data kosong pada Scoreboard';
+  //         // $testNote='get score board';
+  //         // $this->unit->run($test,$result,$testName,$testNote);
+  // }
 
   private function testEmptyQueue(){
       $test = $this->Queue_model->empty_queue();
